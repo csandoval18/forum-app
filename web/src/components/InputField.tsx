@@ -22,7 +22,9 @@ const InputField: React.FC<InputFieldProps> = ({
 	const [field, { error }] = useField(props)
 	return (
 		<FormControl isInvalid={!!error}>
-			<FormLabel htmlFor={field.name}>{label}</FormLabel>
+			<FormLabel mt={4} htmlFor={field.name}>
+				{label}
+			</FormLabel>
 			<Input
 				{...field}
 				{...props}
@@ -30,6 +32,8 @@ const InputField: React.FC<InputFieldProps> = ({
 				backgroundColor={'white'}
 				bgColor={'white'}
 				bg='white'
+				paddingLeft={3}
+				paddingRight={3}
 			/>
 			<FormErrorMessage>{error}</FormErrorMessage>
 		</FormControl>

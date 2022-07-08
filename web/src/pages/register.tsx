@@ -7,42 +7,36 @@ import {
 	FormErrorMessage,
 	ColorModeScript,
 	Button,
+	Box,
 } from '@chakra-ui/react'
 import Wrapper from '../components/Wrapper'
 import InputField from '../components/InputField'
 import { DarkModeSwitch } from '../components/chakra/DarkModeSwitch'
 import Container from '../components/Container'
 import { useMutation } from 'urql'
+import { useRegisterMutation } from '../generated/graphql'
+import { toErrorMap } from '../utils/toErrorMap'
 
 interface registerProps {}
 
-const REGISTER_MUT = `
-  mutation Register($username: String!, $password: String!) {
-    register(options: {username: $username, password: $password}) {
-      errors {
-        field
-        message
-      }
-      user {
-        id
-        username
-      }
-    }
-  }
-`
-
 const Register: React.FC<registerProps> = ({}) => {
-	const [{}, register] = useMutation(REGISTER_MUT)
+	const [{}, register] = useRegisterMutation()
+
+	const registerUser = async (values, { setErrors }) => {
+		const response = await register(values)
+		console.log(response)
+		//? returns either errors or undefined
+		if (response.data?.register.errors) {
+			setErrors(toErrorMap(response.data.register.errors))
+		}
+	}
 	return (
 		<Container>
 			<Wrapper variant='small'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ username: '', password: '' }}
-					onSubmit={(values) => {
-						console.log(values)
-						register(values)
-					}}
+					onSubmit={registerUser}
 				>
 					{({ isSubmitting }) => (
 						<Form>
@@ -57,15 +51,20 @@ const Register: React.FC<registerProps> = ({}) => {
 								label='Password'
 								type='password'
 							></InputField>
-							<Button
-								type='submit'
-								mt={4}
-								isLoading={isSubmitting}
-								// bg='#98d6e6'
-								variant='primary'
+							<Box
+								display={'flex'}
+								alignItems={'center'}
+								justifyContent={'right'}
 							>
-								Register
-							</Button>
+								<Button
+									type='submit'
+									mt={6}
+									isLoading={isSubmitting}
+									variant='primary'
+								>
+									Register
+								</Button>
+							</Box>
 						</Form>
 					)}
 				</Formik>
