@@ -6,27 +6,24 @@ import InputField from '../components/InputField'
 import { DarkModeSwitch } from '../components/chakra/DarkModeSwitch'
 import Container from '../components/Container'
 import { useMutation } from 'urql'
-import {
-	useRegisterMutation,
-	UsernamePasswordInput,
-} from '../generated/graphql'
+import { useLoginMutation, UsernamePasswordInput } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 import Router, { useRouter } from 'next/router'
 
-interface registerProps {}
+interface loginProps {}
 
-const Register: React.FC<registerProps> = ({}) => {
+const Login: React.FC<{}> = ({}) => {
 	const router = useRouter()
-	const [{}, register] = useRegisterMutation()
+	const [{}, login] = useLoginMutation()
 
-	const registerUser = async (values: UsernamePasswordInput, { setErrors }) => {
-		const response = await register(values)
+	const loginUser = async (values: UsernamePasswordInput, { setErrors }) => {
+		const response = await login({ options: values })
 		console.log(response)
 		//? returns either errors or undefined
-		if (response.data?.register.errors) {
-			setErrors(toErrorMap(response.data.register.errors))
-		} else if (response.data?.register.user) {
-			//registered successfully
+		if (response.data?.login.errors) {
+			setErrors(toErrorMap(response.data.login.errors))
+		} else if (response.data?.login.user) {
+			//logined successfully
 			console.log('worked')
 			Router.push('/')
 		}
@@ -34,13 +31,13 @@ const Register: React.FC<registerProps> = ({}) => {
 	return (
 		<Container>
 			<Heading mb={7} mt={7} ml={2} width={'450px'} color='whiteAlpha.800'>
-				Register
+				Login
 			</Heading>
 			<Wrapper variant='small'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ username: '', password: '' }}
-					onSubmit={registerUser}
+					onSubmit={loginUser}
 				>
 					{({ isSubmitting }) => (
 						<Form>
@@ -66,7 +63,7 @@ const Register: React.FC<registerProps> = ({}) => {
 									isLoading={isSubmitting}
 									variant='primary'
 								>
-									Register
+									login
 								</Button>
 							</Box>
 						</Form>
@@ -77,4 +74,4 @@ const Register: React.FC<registerProps> = ({}) => {
 	)
 }
 
-export default Register
+export default Login

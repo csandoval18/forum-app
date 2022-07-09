@@ -12,7 +12,8 @@ const Wrapper = ({ children, variant = 'regular' }: WrapperProps) => {
 			mx='auto'
 			maxW={variant === 'regular' ? '800px' : '450px'}
 			w='100%'
-			backgroundColor={'whiteAlpha.400'}
+			h={360}
+			backgroundColor={'whiteAlpha.300'}
 			padding={'20px'}
 			borderRadius={15}
 		>

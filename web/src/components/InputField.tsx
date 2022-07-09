@@ -35,7 +35,11 @@ const InputField: React.FC<InputFieldProps> = ({
 				paddingLeft={3}
 				paddingRight={3}
 			/>
-			<FormErrorMessage>{error}</FormErrorMessage>
+			{error ? (
+				<FormErrorMessage>{error}</FormErrorMessage>
+			) : (
+				<div style={{ height: '27px' }}></div>
+			)}
 		</FormControl>
 	)
 }

@@ -1,0 +1,13 @@
+#Mutation must be named for generation command yarn gen to work "mutation Login()"
+mutation Login($options: UsernamePasswordInput!) {
+	login(options: $options) {
+		errors {
+			field
+			message
+		}
+		user {
+			id
+			username
+		}
+	}
+}
