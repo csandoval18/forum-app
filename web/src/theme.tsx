@@ -42,7 +42,7 @@ const theme = extendTheme({
 		},
 	},
 	colors: {
-		black: '#16161D',
+		black: '#1e2329',
 		primary: '#98d6e6',
 	},
 	fonts,
