@@ -8,7 +8,6 @@ interface ExtendedRequest extends Request {
 
 export type MyContext = {
 	em: EntityManager<IDatabaseDriver<Connection>>
-
 	req: ExtendedRequest
 	res: Response
 }

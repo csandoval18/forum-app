@@ -70,7 +70,7 @@ export class UserResolver {
 				errors: [
 					{
 						field: 'username',
-						message: 'length must be greater tha 2',
+						message: 'Length must be greater than 2',
 					},
 				],
 			}
@@ -80,8 +80,8 @@ export class UserResolver {
 			return {
 				errors: [
 					{
-						field: 'username',
-						message: 'length must be greater tha 3',
+						field: 'password',
+						message: 'Length must be greater than 3',
 					},
 				],
 			}
@@ -103,6 +103,7 @@ export class UserResolver {
 			//this will set a cokie on the user
 			//and keep them logged in after they register
 			req.session.userId = user.id
+			console.log('cookie:', req.session)
 			return { user }
 		} else {
 			//if username is taken return an error array object
@@ -149,6 +150,8 @@ export class UserResolver {
 		//sets cookie session to maintain user logged in after login
 		//also stores user.id into redis
 		req.session.userId = user.id
+		console.log('cookie:', req.session)
+		console.log('sessionID', req.session.sessionID)
 
 		return {
 			user,

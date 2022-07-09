@@ -84,7 +84,7 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: 'username',
-                            message: 'length must be greater tha 2',
+                            message: 'Length must be greater than 2',
                         },
                     ],
                 };
@@ -93,8 +93,8 @@ let UserResolver = class UserResolver {
                 return {
                     errors: [
                         {
-                            field: 'username',
-                            message: 'length must be greater tha 3',
+                            field: 'password',
+                            message: 'Length must be greater than 3',
                         },
                     ],
                 };
@@ -110,6 +110,7 @@ let UserResolver = class UserResolver {
             if (!usernameTaken) {
                 yield em.persistAndFlush(user);
                 req.session.userId = user.id;
+                console.log('cookie:', req.session);
                 return { user };
             }
             else {
@@ -149,6 +150,8 @@ let UserResolver = class UserResolver {
                 };
             }
             req.session.userId = user.id;
+            console.log('cookie:', req.session);
+            console.log('sessionID', req.session.sessionID);
             return {
                 user,
             };

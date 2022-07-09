@@ -16,10 +16,12 @@ import Container from '../components/Container'
 import { useMutation } from 'urql'
 import { useRegisterMutation } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
+import Router, { useRouter } from 'next/router'
 
 interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
+	const router = useRouter()
 	const [{}, register] = useRegisterMutation()
 
 	const registerUser = async (values, { setErrors }) => {
@@ -28,6 +30,10 @@ const Register: React.FC<registerProps> = ({}) => {
 		//? returns either errors or undefined
 		if (response.data?.register.errors) {
 			setErrors(toErrorMap(response.data.register.errors))
+		} else if (response.data?.register.user) {
+			//registered successfully
+			console.log('worked')
+			Router.push('/')
 		}
 	}
 	return (

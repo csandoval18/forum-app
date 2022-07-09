@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const core_1 = require("@mikro-orm/core");
-const constants_1 = require("./constants");
 const mikro_orm_config_1 = __importDefault(require("./mikro-orm.config"));
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
@@ -22,18 +21,21 @@ const type_graphql_1 = require("type-graphql");
 const hello_1 = require("./resolvers/hello");
 const posts_1 = require("./resolvers/posts");
 const users_1 = require("./resolvers/users");
+const cors_1 = __importDefault(require("cors"));
 const session = require('express-session');
 let RedisStore = require('connect-redis')(session);
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.getMigrator().up();
     const app = (0, express_1.default)();
-    app.set('trust proxy', !constants_1.__prod__);
-    app.set('Access-Control-Allow-Origin', 'https://studio.apollographql.com');
-    app.set('Access-Control-Allow-Credentials', true);
+    app.set('trust proxy', 1);
     const { createClient } = require('redis');
     let redisClient = createClient({ legacyMode: true });
     redisClient.connect().catch(console.error);
+    app.use((0, cors_1.default)({
+        origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+        credentials: true,
+    }));
     app.use(session({
         name: 'qid',
         store: new RedisStore({ client: redisClient }),
@@ -57,7 +59,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield apolloServer.start();
     apolloServer.applyMiddleware({
         app,
-        cors: { credentials: true, origin: 'https://studio.apollographql.com' },
+        cors: false,
     });
     app.listen(4000, () => {
         console.log('server started on localhost:4000');
