@@ -1,14 +1,14 @@
-import React from 'react'
+import { Box, Button, Heading } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
-import { Button, Box, Heading } from '@chakra-ui/react'
-import Wrapper from '../components/Wrapper'
-import InputField from '../components/InputField'
-import { DarkModeSwitch } from '../components/chakra/DarkModeSwitch'
-import Container from '../components/Container'
-import { useMutation } from 'urql'
-import { useLoginMutation, UsernamePasswordInput } from '../generated/graphql'
-import { toErrorMap } from '../utils/toErrorMap'
+import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
+import React from 'react'
+import Container from '../components/Container'
+import InputField from '../components/InputField'
+import Wrapper from '../components/Wrapper'
+import { useLoginMutation, UsernamePasswordInput } from '../generated/graphql'
+import { createUrqlClient } from '../utils/createUrqlClient'
+import { toErrorMap } from '../utils/toErrorMap'
 
 interface loginProps {}
 
@@ -16,7 +16,10 @@ const Login: React.FC<{}> = ({}) => {
 	const router = useRouter()
 	const [{}, login] = useLoginMutation()
 
-	const loginUser = async (values: UsernamePasswordInput, { setErrors }) => {
+	const handleLoginUser = async (
+		values: UsernamePasswordInput,
+		{ setErrors },
+	) => {
 		const response = await login({ options: values })
 		console.log(response)
 		//? returns either errors or undefined
@@ -37,7 +40,7 @@ const Login: React.FC<{}> = ({}) => {
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ username: '', password: '' }}
-					onSubmit={loginUser}
+					onSubmit={handleLoginUser}
 				>
 					{({ isSubmitting }) => (
 						<Form>
@@ -74,4 +77,4 @@ const Login: React.FC<{}> = ({}) => {
 	)
 }
 
-export default Login
+export default withUrqlClient(createUrqlClient)(Login)

@@ -1,5 +1,5 @@
 import { Resolver, Query, Ctx, Arg, Int, Mutation } from 'type-graphql'
-import { MyContext } from '../types/types'
+import { MyContext } from '../types'
 import { Posts } from '../entities/Posts'
 import { RequiredEntityData } from '@mikro-orm/core'
 
