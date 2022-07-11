@@ -1,0 +1,4 @@
+fragment UserProperties on Users {
+	id
+	username
+}

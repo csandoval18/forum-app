@@ -1,5 +1,5 @@
 import { Users } from '../entities/Users'
-import { MyContext } from '../types/types'
+import { MyContext } from '../types'
 import {
 	Resolver,
 	Arg,
@@ -13,6 +13,7 @@ import {
 import { RequiredEntityData } from '@mikro-orm/core'
 //argon2 is for hashing password and making it secure in case the DB is compromised
 import argon2 from 'argon2'
+import { COOKIE_NAME } from '../constants'
 
 //input types are used for arguments
 @InputType()
@@ -131,7 +132,7 @@ export class UserResolver {
 				errors: [
 					{
 						field: 'username',
-						message: "that username doesn't exist",
+						message: 'That username does not exist',
 					},
 				],
 			}
@@ -142,7 +143,7 @@ export class UserResolver {
 				errors: [
 					{
 						field: 'password',
-						message: 'incorrect password',
+						message: 'Incorrect password',
 					},
 				],
 			}
@@ -156,5 +157,21 @@ export class UserResolver {
 		return {
 			user,
 		}
+	}
+
+	@Mutation(() => Boolean)
+	logout(@Ctx() { req, res }: MyContext) {
+		return new Promise((resolve) =>
+			req.session.destroy((err) => {
+				res.clearCookie(COOKIE_NAME)
+				if (err) {
+					console.log(err)
+					resolve(false)
+					return
+				}
+
+				resolve(true)
+			}),
+		)
 	}
 }

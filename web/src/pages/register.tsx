@@ -1,17 +1,17 @@
-import React from 'react'
+import { Box, Button, Heading } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
-import { Button, Box, Heading } from '@chakra-ui/react'
-import Wrapper from '../components/Wrapper'
-import InputField from '../components/InputField'
-import { DarkModeSwitch } from '../components/chakra/DarkModeSwitch'
+import { withUrqlClient } from 'next-urql'
+import Router, { useRouter } from 'next/router'
+import React from 'react'
 import Container from '../components/Container'
-import { useMutation } from 'urql'
+import InputField from '../components/InputField'
+import Wrapper from '../components/Wrapper'
 import {
 	useRegisterMutation,
 	UsernamePasswordInput,
 } from '../generated/graphql'
+import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
-import Router, { useRouter } from 'next/router'
 
 interface registerProps {}
 
@@ -19,7 +19,10 @@ const Register: React.FC<registerProps> = ({}) => {
 	const router = useRouter()
 	const [{}, register] = useRegisterMutation()
 
-	const registerUser = async (values: UsernamePasswordInput, { setErrors }) => {
+	const handleRegisterUser = async (
+		values: UsernamePasswordInput,
+		{ setErrors },
+	) => {
 		const response = await register(values)
 		console.log(response)
 		//? returns either errors or undefined
@@ -40,7 +43,7 @@ const Register: React.FC<registerProps> = ({}) => {
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ username: '', password: '' }}
-					onSubmit={registerUser}
+					onSubmit={handleRegisterUser}
 				>
 					{({ isSubmitting }) => (
 						<Form>
@@ -77,4 +80,4 @@ const Register: React.FC<registerProps> = ({}) => {
 	)
 }
 
-export default Register
+export default withUrqlClient(createUrqlClient)(Register)
