@@ -165,7 +165,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
-	async logout(@Ctx() { req, res }: MyContext) {
+	logout(@Ctx() { req, res }: MyContext) {
 		console.log('cookie:', req.session)
 		return new Promise((resolve) =>
 			req.session.destroy((err) => {

@@ -25,12 +25,12 @@ const users_1 = require("./resolvers/users");
 const cors_1 = __importDefault(require("cors"));
 const session = require('express-session');
 let RedisStore = require('connect-redis')(session);
+const { createClient } = require('redis');
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.getMigrator().up();
     const app = (0, express_1.default)();
-    app.set('trust proxy', !constants_1.__prod__);
-    const { createClient } = require('redis');
+    app.set('trust proxy', 1);
     let redisClient = createClient({ legacyMode: true });
     redisClient.connect().catch(console.error);
     app.use((0, cors_1.default)({
@@ -41,7 +41,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         name: constants_1.COOKIE_NAME,
         store: new RedisStore({ client: redisClient }),
         cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 365 * 5,
+            maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
             httpOnly: true,
             sameSite: 'none',
             secure: true,

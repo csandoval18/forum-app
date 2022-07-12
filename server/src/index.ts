@@ -12,6 +12,7 @@ import { MyContext } from './types'
 import cors from 'cors'
 const session = require('express-session')
 let RedisStore = require('connect-redis')(session)
+const { createClient } = require('redis')
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -20,11 +21,10 @@ const main = async () => {
 
 	const app = express()
 
-	app.set('trust proxy', !__prod__)
+	app.set('trust proxy', 1)
 	// app.set('Access-Control-Allow-Origin', 'https://studio.apollographql.com')
 	// app.set('Access-Control-Allow-Credentials', true)
 
-	const { createClient } = require('redis')
 	let redisClient = createClient({ legacyMode: true })
 	redisClient.connect().catch(console.error)
 
@@ -41,7 +41,7 @@ const main = async () => {
 			name: COOKIE_NAME,
 			store: new RedisStore({ client: redisClient }),
 			cookie: {
-				maxAge: 1000 * 60 * 60 * 24 * 365 * 5, // 5 years
+				maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
 				httpOnly: true,
 				sameSite: 'none', //lax csrf
 				secure: true, // __prod__

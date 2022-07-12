@@ -164,20 +164,18 @@ let UserResolver = class UserResolver {
         });
     }
     logout({ req, res }) {
-        return __awaiter(this, void 0, void 0, function* () {
+        console.log('cookie:', req.session);
+        return new Promise((resolve) => req.session.destroy((err) => {
+            if (err) {
+                console.log(err);
+                resolve(false);
+                return;
+            }
+            res.clearCookie(constants_1.COOKIE_NAME);
+            console.log('removed cookie');
             console.log('cookie:', req.session);
-            return new Promise((resolve) => req.session.destroy((err) => {
-                if (err) {
-                    console.log(err);
-                    resolve(false);
-                    return;
-                }
-                res.clearCookie(constants_1.COOKIE_NAME);
-                console.log('removed cookie');
-                console.log('cookie:', req.session);
-                resolve(true);
-            }));
-        });
+            resolve(true);
+        }));
     }
 };
 __decorate([
@@ -216,7 +214,7 @@ __decorate([
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "logout", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()

@@ -2,6 +2,8 @@ import { Box, Button, ColorModeScript, Flex, Link } from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
+import { withUrqlClient } from 'next-urql'
+import { createUrqlClient } from '../utils/createUrqlClient'
 
 interface NavbarProps {}
 

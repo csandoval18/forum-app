@@ -13,6 +13,8 @@ const Index = () => {
 			bgGradient='linear(to-l, heroGradientStart, heroGradientEnd)'
 		>
 			<Navbar />
+			<div>hello world</div>
+			<br />
 			{!data ? (
 				<div>loading...</div>
 			) : (
@@ -22,4 +24,5 @@ const Index = () => {
 	)
 }
 
+// export default Index
 export default withUrqlClient(createUrqlClient, { ssr: true })(Index)
