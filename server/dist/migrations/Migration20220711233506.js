@@ -9,25 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Migration20220706020616 = void 0;
+exports.Migration20220711233506 = void 0;
 const migrations_1 = require("@mikro-orm/migrations");
-class Migration20220706020616 extends migrations_1.Migration {
+class Migration20220711233506 extends migrations_1.Migration {
     up() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.addSql('alter table "users" drop constraint "user_username_unique";');
-            this.addSql('alter table "users" add constraint "users_username_unique" unique ("username");');
-            this.addSql('alter table "posts" alter column "title" type text using ("title"::text);');
-            this.addSql('alter table "posts" alter column "title" set not null;');
+            this.addSql('alter table "users" drop constraint "users_email_unique";');
+            this.addSql('alter table "users" drop column "email";');
         });
     }
     down() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.addSql('alter table "posts" alter column "title" type text using ("title"::text);');
-            this.addSql('alter table "posts" alter column "title" drop not null;');
-            this.addSql('alter table "users" drop constraint "users_username_unique";');
-            this.addSql('alter table "users" add constraint "user_username_unique" unique ("username");');
+            this.addSql('alter table "users" add column "email" text not null default null;');
+            this.addSql('alter table "users" add constraint "users_email_unique" unique ("email");');
         });
     }
 }
-exports.Migration20220706020616 = Migration20220706020616;
-//# sourceMappingURL=Migration20220706020616.js.map
+exports.Migration20220711233506 = Migration20220711233506;
+//# sourceMappingURL=Migration20220711233506.js.map

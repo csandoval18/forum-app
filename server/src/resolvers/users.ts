@@ -47,6 +47,11 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+	@Mutation(() => Boolean)
+	async forgotPassword(@Arg('email') email: string, @Ctx() { req }: MyContext) {
+		// const user = await em.findOne(User, {email})
+		return true
+	}
 	@Query(() => Users, { nullable: true })
 	async me(@Ctx() { req, em }: MyContext) {
 		//user is not logged in since no cookie is set null is returned
@@ -132,7 +137,7 @@ export class UserResolver {
 				errors: [
 					{
 						field: 'username',
-						message: 'That username does not exist',
+						message: "That username doesn't exist",
 					},
 				],
 			}
@@ -152,7 +157,7 @@ export class UserResolver {
 		//also stores user.id into redis
 		req.session.userId = user.id
 		console.log('cookie:', req.session)
-		console.log('sessionID', req.session.sessionID)
+		console.log('sessionID', req.sessionID)
 
 		return {
 			user,
@@ -160,16 +165,18 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
-	logout(@Ctx() { req, res }: MyContext) {
+	async logout(@Ctx() { req, res }: MyContext) {
+		console.log('cookie:', req.session)
 		return new Promise((resolve) =>
 			req.session.destroy((err) => {
-				res.clearCookie(COOKIE_NAME)
 				if (err) {
 					console.log(err)
 					resolve(false)
 					return
 				}
-
+				res.clearCookie(COOKIE_NAME)
+				console.log('removed cookie')
+				console.log('cookie:', req.session)
 				resolve(true)
 			}),
 		)
