@@ -21,13 +21,13 @@ const Login: React.FC<{}> = ({}) => {
 		{ setErrors },
 	) => {
 		const response = await login({ options: values })
-		console.log(response)
+		console.log('login:', response)
 		//? returns either errors or undefined
 		if (response.data?.login.errors) {
 			setErrors(toErrorMap(response.data.login.errors))
 		} else if (response.data?.login.user) {
 			//logined successfully
-			console.log('worked')
+			console.log('login success')
 			Router.push('/')
 		}
 	}

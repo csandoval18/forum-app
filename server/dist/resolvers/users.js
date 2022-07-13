@@ -69,6 +69,11 @@ UserResponse = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], UserResponse);
 let UserResolver = class UserResolver {
+    forgotPassword(email, { req }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return true;
+        });
+    }
     me({ req, em }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req.session.userId) {
@@ -134,7 +139,7 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: 'username',
-                            message: 'That username does not exist',
+                            message: "That username doesn't exist",
                         },
                     ],
                 };
@@ -152,24 +157,35 @@ let UserResolver = class UserResolver {
             }
             req.session.userId = user.id;
             console.log('cookie:', req.session);
-            console.log('sessionID', req.session.sessionID);
+            console.log('sessionID', req.sessionID);
             return {
                 user,
             };
         });
     }
     logout({ req, res }) {
+        console.log('cookie:', req.session);
         return new Promise((resolve) => req.session.destroy((err) => {
-            res.clearCookie(constants_1.COOKIE_NAME);
             if (err) {
                 console.log(err);
                 resolve(false);
                 return;
             }
+            res.clearCookie(constants_1.COOKIE_NAME);
+            console.log('removed cookie');
+            console.log('cookie:', req.session);
             resolve(true);
         }));
     }
 };
+__decorate([
+    (0, type_graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, type_graphql_1.Arg)('email')),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "forgotPassword", null);
 __decorate([
     (0, type_graphql_1.Query)(() => Users_1.Users, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),

@@ -12,6 +12,8 @@ import { MyContext } from './types'
 import cors from 'cors'
 const session = require('express-session')
 let RedisStore = require('connect-redis')(session)
+const { createClient } = require('redis')
+// import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
 	const orm = await MikroORM.init(microConfig)
@@ -23,7 +25,6 @@ const main = async () => {
 	// app.set('Access-Control-Allow-Origin', 'https://studio.apollographql.com')
 	// app.set('Access-Control-Allow-Credentials', true)
 
-	const { createClient } = require('redis')
 	let redisClient = createClient({ legacyMode: true })
 	redisClient.connect().catch(console.error)
 

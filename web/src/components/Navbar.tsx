@@ -2,6 +2,8 @@ import { Box, Button, ColorModeScript, Flex, Link } from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
+import { withUrqlClient } from 'next-urql'
+import { createUrqlClient } from '../utils/createUrqlClient'
 
 interface NavbarProps {}
 
@@ -11,6 +13,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 		// pause: true,
 	})
 	let body = null
+	console.log(data)
 
 	//data is loading
 	if (fetching) {
@@ -32,8 +35,8 @@ const Navbar: React.FC<NavbarProps> = () => {
 			<Flex>
 				<Box mr={10}>{data.me.username} </Box>
 				<Button
-					onClick={() => {
-						logout()
+					onClick={async () => {
+						await logout()
 					}}
 					variant={'link'}
 					isLoading={logoutFetching}
