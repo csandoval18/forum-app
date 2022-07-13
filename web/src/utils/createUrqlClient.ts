@@ -1,6 +1,11 @@
 import { dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange, Cache, QueryInput } from '@urql/exchange-graphcache'
-import { LoginMutation, MeDocument, MeQuery } from '../generated/graphql'
+import {
+	LoginMutation,
+	MeDocument,
+	MeQuery,
+	RegisterMutation,
+} from '../generated/graphql'
 import { betterUpdateQuery } from './betterUpdateQuery'
 
 export const createUrqlClient = (ssrExchange: any) => ({
@@ -34,18 +39,18 @@ export const createUrqlClient = (ssrExchange: any) => ({
 						)
 					},
 					register: (_result, args, cache, info) => {
-						betterUpdateQuery<LoginMutation, MeQuery>(
+						betterUpdateQuery<RegisterMutation, MeQuery>(
 							cache,
 							{ query: MeDocument },
 							_result,
 							(result, query) => {
 								//if result of login query is an error then return the current query
-								if (result.login.errors) {
+								if (result.register.errors) {
 									return query
 									//else return user data {id, username} when logged in successfully
 								} else {
 									return {
-										me: result.login.user,
+										me: result.register.user,
 									}
 								}
 							},
