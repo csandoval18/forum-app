@@ -7,7 +7,7 @@ interface ExtendedRequest extends Request {
 }
 
 export type MyContext = {
-	em: EntityManager<IDatabaseDriver<Connection>>
+	em: EntityManager<any> & EntityManager<IDatabaseDriver<Connection>>
 	req: ExtendedRequest
 	res: Response
 }

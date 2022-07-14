@@ -4,7 +4,6 @@ import {
 	Resolver,
 	Arg,
 	Mutation,
-	InputType,
 	Field,
 	Ctx,
 	ObjectType,
@@ -14,15 +13,9 @@ import { RequiredEntityData } from '@mikro-orm/core'
 //argon2 is for hashing password and making it secure in case the DB is compromised
 import argon2 from 'argon2'
 import { COOKIE_NAME } from '../constants'
-
-//input types are used for arguments
-@InputType()
-class UsernamePasswordInput {
-	@Field()
-	username: string
-	@Field()
-	password: string
-}
+import { RegisterInputs } from './inputTypes/RegisterInputs'
+import { LoginInputs } from './inputTypes/LoginInputs'
+import { validateRegister } from '../utils/validateRegister'
 
 @ObjectType()
 class FieldError {
@@ -47,55 +40,23 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-	@Mutation(() => Boolean)
-	async forgotPassword(@Arg('email') email: string, @Ctx() { req }: MyContext) {
-		// const user = await em.findOne(User, {email})
-		return true
-	}
-	@Query(() => Users, { nullable: true })
-	async me(@Ctx() { req, em }: MyContext) {
-		//user is not logged in since no cookie is set null is returned
-		if (!req.session.userId) {
-			return null
-		}
-
-		//else if the session cookie is set return the user info
-		const user = em.findOne(Users, { id: req.session.userId })
-		return user
-	}
-
 	//register handling
 	@Mutation(() => UserResponse)
 	async register(
 		//options is an object with containing the username and password as parameter fields
-		@Arg('options') options: UsernamePasswordInput,
+		@Arg('options') options: RegisterInputs,
 		@Ctx() { em, req }: MyContext,
 	): Promise<UserResponse> {
-		if (options.username.length <= 2) {
-			return {
-				errors: [
-					{
-						field: 'username',
-						message: 'Length must be greater than 2',
-					},
-				],
-			}
-		}
-
-		if (options.password.length <= 3) {
-			return {
-				errors: [
-					{
-						field: 'password',
-						message: 'Length must be greater than 3',
-					},
-				],
-			}
+		//validate user input
+		const errors = validateRegister(options)
+		if (errors) {
+			return { errors }
 		}
 		const hashsedPassword = await argon2.hash(options.password)
 		const user = em.fork({}).create(Users, {
 			username: options.username,
 			password: hashsedPassword,
+			email: options.email,
 		} as RequiredEntityData<Users>)
 
 		//querie to check if username already is already taken
@@ -127,16 +88,21 @@ export class UserResolver {
 	//login handling
 	@Mutation(() => UserResponse)
 	async login(
-		@Arg('options') options: UsernamePasswordInput,
+		@Arg('options') options: LoginInputs,
 		@Ctx() { em, req }: MyContext,
 	): Promise<UserResponse> {
 		//querie for row containing data of user
-		const user = await em.findOne(Users, { username: options.username })
+		const user = await em.findOne(
+			Users,
+			options.usernameOrEmail.includes('@')
+				? { email: options.usernameOrEmail }
+				: { username: options.usernameOrEmail },
+		)
 		if (!user) {
 			return {
 				errors: [
 					{
-						field: 'username',
+						field: 'usernameOrEmail',
 						message: "That username doesn't exist",
 					},
 				],
@@ -166,19 +132,41 @@ export class UserResolver {
 
 	@Mutation(() => Boolean)
 	logout(@Ctx() { req, res }: MyContext) {
-		console.log('cookie:', req.session)
 		return new Promise((resolve) =>
 			req.session.destroy((err) => {
+				res.clearCookie(COOKIE_NAME)
 				if (err) {
 					console.log(err)
 					resolve(false)
 					return
 				}
-				res.clearCookie(COOKIE_NAME)
 				console.log('removed cookie')
 				console.log('cookie:', req.session)
+				console.log('sessionID:', req.session)
 				resolve(true)
 			}),
 		)
+	}
+
+	@Query(() => Users, { nullable: true })
+	async me(@Ctx() { req, em }: MyContext) {
+		//user is not logged in since no cookie is set null is returned
+		console.log('me query cookie:', req.session)
+		if (!req.session.userId) {
+			return null
+		}
+
+		//else if the session cookie is set return the user info
+		const user = em.findOne(Users, { id: req.session.userId })
+		return user
+	}
+
+	@Mutation(() => Boolean)
+	async forgotPassword(
+		@Arg('email') email: string,
+		@Ctx() { req }: MyContext,
+	) {
+		// const user = await em.findOne(User, {email})
+		return true
 	}
 }
