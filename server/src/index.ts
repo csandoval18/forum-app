@@ -10,28 +10,32 @@ import { PostResolver } from './resolvers/posts'
 import { UserResolver } from './resolvers/users'
 import { MyContext } from './types'
 import cors from 'cors'
+import { Users } from './entities/Users'
 const session = require('express-session')
 let RedisStore = require('connect-redis')(session)
 const { createClient } = require('redis')
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
+	console.log('NODE_ENV:', process.env.NODE_ENV)
 	const orm = await MikroORM.init(microConfig)
+	//delete all rows from users table
+	// await orm.em.nativeDelete(Users, {})
 	await orm.getMigrator().up()
 
 	const app = express()
 
-	app.set('trust proxy', 1)
-	// app.set('Access-Control-Allow-Origin', 'https://studio.apollographql.com')
-	// app.set('Access-Control-Allow-Credentials', true)
-
+	app.set('trust proxy', !__prod__)
 	let redisClient = createClient({ legacyMode: true })
 	redisClient.connect().catch(console.error)
 
 	app.use(
 		//aplies to all routes
 		cors({
-			origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+			origin: [
+				'https://studio.apollographql.com',
+				'http://localhost:3000',
+			],
 			credentials: true,
 		}),
 	)
@@ -43,8 +47,8 @@ const main = async () => {
 			cookie: {
 				maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
 				httpOnly: true,
-				sameSite: 'none', //lax csrf
-				secure: true, // __prod__
+				sameSite: 'lax',
+				secure: __prod__,
 			},
 			secret: 'keyboard cat',
 			resave: false,
@@ -59,7 +63,11 @@ const main = async () => {
 		}),
 		//function that returns an object for the context.
 		//context can take req and res object from express
-		context: ({ req, res }: MyContext): MyContext => ({ em: orm.em, req, res }),
+		context: ({ req, res }: MyContext): MyContext => ({
+			em: orm.em,
+			req,
+			res,
+		}),
 	})
 
 	await apolloServer.start()

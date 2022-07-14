@@ -27,14 +27,18 @@ const session = require('express-session');
 let RedisStore = require('connect-redis')(session);
 const { createClient } = require('redis');
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('NODE_ENV:', process.env.NODE_ENV);
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.getMigrator().up();
     const app = (0, express_1.default)();
-    app.set('trust proxy', 1);
+    app.set('trust proxy', !constants_1.__prod__);
     let redisClient = createClient({ legacyMode: true });
     redisClient.connect().catch(console.error);
     app.use((0, cors_1.default)({
-        origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+        origin: [
+            'https://studio.apollographql.com',
+            'http://localhost:3000',
+        ],
         credentials: true,
     }));
     app.use(session({
@@ -43,8 +47,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
             httpOnly: true,
-            sameSite: 'none',
-            secure: true,
+            sameSite: 'lax',
+            secure: constants_1.__prod__,
         },
         secret: 'keyboard cat',
         resave: false,
@@ -55,7 +59,11 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             resolvers: [hello_1.HelloResolver, posts_1.PostResolver, users_1.UserResolver],
             validate: false,
         }),
-        context: ({ req, res }) => ({ em: orm.em, req, res }),
+        context: ({ req, res }) => ({
+            em: orm.em,
+            req,
+            res,
+        }),
     });
     yield apolloServer.start();
     apolloServer.applyMiddleware({
