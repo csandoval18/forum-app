@@ -1,12 +1,12 @@
-import { Box, Button, Heading } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
-import Container from '../components/Container'
 import InputField from '../components/InputField'
+import RegisterLoginContainer from '../components/RegisterLoginContainer'
 import Wrapper from '../components/Wrapper'
-import { useLoginMutation, UsernamePasswordInput } from '../generated/graphql'
+import { LoginInputs, useLoginMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
 
@@ -16,12 +16,9 @@ const Login: React.FC<{}> = ({}) => {
 	const router = useRouter()
 	const [{}, login] = useLoginMutation()
 
-	const handleLoginUser = async (
-		values: UsernamePasswordInput,
-		{ setErrors },
-	) => {
+	const handleLogin = async (values: LoginInputs, { setErrors }) => {
 		const response = await login({ options: values })
-		console.log('login:', response)
+		console.log('login:', response.data)
 		//? returns either errors or undefined
 		if (response.data?.login.errors) {
 			setErrors(toErrorMap(response.data.login.errors))
@@ -32,21 +29,18 @@ const Login: React.FC<{}> = ({}) => {
 		}
 	}
 	return (
-		<Container>
-			<Heading mb={7} mt={7} ml={2} width={'450px'} color='whiteAlpha.800'>
-				Login
-			</Heading>
+		<RegisterLoginContainer heading='Log In'>
 			<Wrapper variant='small'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
-					initialValues={{ username: '', password: '' }}
-					onSubmit={handleLoginUser}
+					initialValues={{ usernameOrEmail: '', password: '' }}
+					onSubmit={handleLogin}
 				>
 					{({ isSubmitting }) => (
 						<Form>
 							<InputField
-								name='username'
-								placeholder='username'
+								name='usernameOrEmail'
+								placeholder='username or email'
 								label='Username'
 							></InputField>
 							<InputField
@@ -73,7 +67,7 @@ const Login: React.FC<{}> = ({}) => {
 					)}
 				</Formik>
 			</Wrapper>
-		</Container>
+		</RegisterLoginContainer>
 	)
 }
 

@@ -32,6 +32,7 @@ const constants_1 = require("../constants");
 const RegisterInputs_1 = require("./inputTypes/RegisterInputs");
 const LoginInputs_1 = require("./inputTypes/LoginInputs");
 const validateRegister_1 = require("../utils/validateRegister");
+const sendEmail_1 = require("src/utils/sendEmail");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -150,8 +151,14 @@ let UserResolver = class UserResolver {
             return user;
         });
     }
-    forgotPassword(email, { req }) {
+    forgotPassword(email, { em }) {
         return __awaiter(this, void 0, void 0, function* () {
+            const user = yield em.findOne(Users_1.Users, { email });
+            if (!user) {
+                return true;
+            }
+            const token = 'fasfasiuoi908iks';
+            yield (0, sendEmail_1.sendEmail)(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
             return true;
         });
     }

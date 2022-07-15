@@ -1,14 +1,14 @@
-import { Box, Button, Heading } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
-import Container from '../components/Container'
 import InputField from '../components/InputField'
+import RegisterLoginContainer from '../components/RegisterLoginContainer'
 import Wrapper from '../components/Wrapper'
 import {
+	RegisterInputs,
 	useRegisterMutation,
-	UsernamePasswordInput,
 } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
@@ -19,31 +19,28 @@ const Register: React.FC<registerProps> = ({}) => {
 	const router = useRouter()
 	const [{}, register] = useRegisterMutation()
 
-	const handleRegisterUser = async (
-		values: UsernamePasswordInput,
+	const handleRegister = async (
+		values: RegisterInputs,
 		{ setErrors },
 	) => {
-		const response = await register(values)
+		const response = await register({ options: values })
 		console.log(response)
 		//? returns either errors or undefined
 		if (response.data?.register.errors) {
 			setErrors(toErrorMap(response.data.register.errors))
 		} else if (response.data?.register.user) {
 			//registered successfully
-			console.log('worked')
+			console.log('registraition succesful')
 			Router.push('/')
 		}
 	}
 	return (
-		<Container>
-			<Heading mb={7} mt={7} ml={2} width={'450px'} color='whiteAlpha.800'>
-				Register
-			</Heading>
-			<Wrapper variant='small'>
+		<RegisterLoginContainer heading='Register'>
+			<Wrapper variant='regular'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
-					initialValues={{ username: '', password: '' }}
-					onSubmit={handleRegisterUser}
+					initialValues={{ email: '', username: '', password: '' }}
+					onSubmit={handleRegister}
 				>
 					{({ isSubmitting }) => (
 						<Form>
@@ -51,6 +48,11 @@ const Register: React.FC<registerProps> = ({}) => {
 								name='username'
 								placeholder='username'
 								label='Username'
+							></InputField>
+							<InputField
+								name='email'
+								placeholder='email'
+								label='Email'
 							></InputField>
 							<InputField
 								name='password'
@@ -76,7 +78,7 @@ const Register: React.FC<registerProps> = ({}) => {
 					)}
 				</Formik>
 			</Wrapper>
-		</Container>
+		</RegisterLoginContainer>
 	)
 }
 
