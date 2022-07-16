@@ -32,7 +32,8 @@ const constants_1 = require("../constants");
 const RegisterInputs_1 = require("./inputTypes/RegisterInputs");
 const LoginInputs_1 = require("./inputTypes/LoginInputs");
 const validateRegister_1 = require("../utils/validateRegister");
-const sendEmail_1 = require("src/utils/sendEmail");
+const sendEmail_1 = require("../utils/sendEmail");
+const uuid_1 = require("uuid");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -151,13 +152,14 @@ let UserResolver = class UserResolver {
             return user;
         });
     }
-    forgotPassword(email, { em }) {
+    forgotPassword(email, { em, redisClient }) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield em.findOne(Users_1.Users, { email });
             if (!user) {
                 return true;
             }
-            const token = 'fasfasiuoi908iks';
+            const token = (0, uuid_1.v4)();
+            redisClient.set(constants_1.FORGET_PASSWORD_PREFIX + token, user.id, 'EX', 1000 * 60 * 60 * 24 * 2);
             yield (0, sendEmail_1.sendEmail)(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
             return true;
         });

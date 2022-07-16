@@ -23,17 +23,17 @@ const hello_1 = require("./resolvers/hello");
 const posts_1 = require("./resolvers/posts");
 const users_1 = require("./resolvers/users");
 const cors_1 = __importDefault(require("cors"));
-const session = require('express-session');
-let RedisStore = require('connect-redis')(session);
-const { createClient } = require('redis');
+const express_session_1 = __importDefault(require("express-session"));
+const connect_redis_1 = __importDefault(require("connect-redis"));
+const ioredis_1 = __importDefault(require("ioredis"));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('NODE_ENV:', process.env.NODE_ENV);
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.getMigrator().up();
     const app = (0, express_1.default)();
     app.set('trust proxy', !constants_1.__prod__);
-    let redisClient = createClient({ legacyMode: true });
-    redisClient.connect().catch(console.error);
+    const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
+    const redisClient = new ioredis_1.default();
     app.use((0, cors_1.default)({
         origin: [
             'https://studio.apollographql.com',
@@ -41,7 +41,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         ],
         credentials: true,
     }));
-    app.use(session({
+    app.use((0, express_session_1.default)({
         name: constants_1.COOKIE_NAME,
         store: new RedisStore({ client: redisClient }),
         cookie: {
@@ -63,6 +63,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             em: orm.em,
             req,
             res,
+            redisClient,
         }),
     });
     yield apolloServer.start();

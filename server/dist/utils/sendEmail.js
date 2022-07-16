@@ -14,21 +14,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const sendEmail = (to, html) => __awaiter(void 0, void 0, void 0, function* () {
+const sendEmail = (emailTo, html) => __awaiter(void 0, void 0, void 0, function* () {
     let testAccount = yield nodemailer_1.default.createTestAccount();
-    console.log('testAccount', testAccount);
+    console.log('testAccount:', testAccount);
     let transporter = nodemailer_1.default.createTransport({
         host: 'smtp.ethereal.email',
         port: 587,
         secure: false,
         auth: {
-            user: 'crrn54ddia6ouatk@ethereal.email',
-            pass: '39sXJ5WWG5qvt6jmf7',
+            user: testAccount.user,
+            pass: testAccount.pass,
         },
     });
     let info = yield transporter.sendMail({
         from: '"Fred Foo 👻" <foo@example.com>',
-        to: 'bar@example.com, baz@example.com',
+        to: emailTo,
         subject: 'Change password',
         html: html,
     });

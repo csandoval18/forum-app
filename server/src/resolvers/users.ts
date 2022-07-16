@@ -12,11 +12,13 @@ import {
 import { RequiredEntityData } from '@mikro-orm/core'
 //argon2 is for hashing password and making it secure in case the DB is compromised
 import argon2 from 'argon2'
-import { COOKIE_NAME } from '../constants'
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants'
 import { RegisterInputs } from './inputTypes/RegisterInputs'
 import { LoginInputs } from './inputTypes/LoginInputs'
 import { validateRegister } from '../utils/validateRegister'
-import { sendEmail } from 'src/utils/sendEmail'
+import { sendEmail } from '../utils/sendEmail'
+import { v4 } from 'uuid'
+// import { RedisClient } from 'redis'
 
 @ObjectType()
 class FieldError {
@@ -165,14 +167,23 @@ export class UserResolver {
 	@Mutation(() => Boolean)
 	async forgotPassword(
 		@Arg('email') email: string,
-		@Ctx() { em }: MyContext,
+		@Ctx() { em, redisClient }: MyContext,
 	) {
 		const user = await em.findOne(Users, { email })
 		if (!user) {
 			//the email is not in the db
 			return true
 		}
-		const token = 'fasfasiuoi908iks'
+
+		//v4 generates random token
+		const token = v4()
+
+		redisClient.set(
+			FORGET_PASSWORD_PREFIX + token,
+			user.id,
+			'EX',
+			1000 * 60 * 60 * 24 * 2, //3days
+		)
 		await sendEmail(
 			email,
 			`<a href="http://localhost:3000/change-password/${token}">reset password</a>`,
