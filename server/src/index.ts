@@ -10,10 +10,9 @@ import { PostResolver } from './resolvers/posts'
 import { UserResolver } from './resolvers/users'
 import { MyContext } from './types'
 import cors from 'cors'
-import { Users } from './entities/Users'
-const session = require('express-session')
-let RedisStore = require('connect-redis')(session)
-const { createClient } = require('redis')
+import session from 'express-session'
+import connectRedis from 'connect-redis'
+import Redis from 'ioredis'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -24,10 +23,12 @@ const main = async () => {
 	await orm.getMigrator().up()
 
 	const app = express()
+	// await sendEmail('chris@chris.com', 'hello world')
 
 	app.set('trust proxy', !__prod__)
-	let redisClient = createClient({ legacyMode: true })
-	redisClient.connect().catch(console.error)
+
+	const RedisStore = connectRedis(session)
+	const redisClient = new Redis()
 
 	app.use(
 		//aplies to all routes
@@ -67,6 +68,7 @@ const main = async () => {
 			em: orm.em,
 			req,
 			res,
+			redisClient,
 		}),
 	})
 

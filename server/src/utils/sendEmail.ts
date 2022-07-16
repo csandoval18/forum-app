@@ -1,11 +1,11 @@
 import nodemailer from 'nodemailer'
 
 // async..await is not allowed in global scope, must use a wrapper
-export const sendEmail = async (to: string, html: string) => {
+export const sendEmail = async (emailTo: string, html: string) => {
 	// Generate test SMTP service account from ethereal.email
 	// Only needed if you don't have a real mail account for testing
 	let testAccount = await nodemailer.createTestAccount()
-	console.log('testAccount', testAccount)
+	console.log('testAccount:', testAccount)
 
 	// create reusable transporter object using the default SMTP transport
 	let transporter = nodemailer.createTransport({
@@ -13,15 +13,15 @@ export const sendEmail = async (to: string, html: string) => {
 		port: 587,
 		secure: false, // true for 465, false for other ports
 		auth: {
-			user: 'crrn54ddia6ouatk@ethereal.email', // generated ethereal user
-			pass: '39sXJ5WWG5qvt6jmf7', // generated ethereal password
+			user: testAccount.user, // generated ethereal user
+			pass: testAccount.pass, // generated ethereal password
 		},
 	})
 
 	// send mail with defined transport object
 	let info = await transporter.sendMail({
 		from: '"Fred Foo 👻" <foo@example.com>', // sender address
-		to: 'bar@example.com, baz@example.com', // list of receivers
+		to: emailTo, // list of receivers
 		subject: 'Change password', // Subject line
 		html: html, // html body
 	})

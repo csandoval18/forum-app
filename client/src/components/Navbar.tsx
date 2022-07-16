@@ -1,13 +1,21 @@
-import { Box, Button, ColorModeScript, Flex, Link } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	ColorModeScript,
+	Flex,
+	Link,
+} from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import { withUrqlClient } from 'next-urql'
 import { createUrqlClient } from '../utils/createUrqlClient'
+import Router, { useRouter } from 'next/router'
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
+	const router = useRouter()
 	const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
 	const [{ data, fetching }] = useMeQuery({
 		// pause: true,
@@ -34,15 +42,19 @@ const Navbar: React.FC<NavbarProps> = () => {
 		body = (
 			<Flex>
 				<Box mr={10}>{data.me.username} </Box>
-				<Button
-					onClick={async () => {
-						await logout()
-					}}
-					variant={'link'}
-					isLoading={logoutFetching}
-				>
-					logout
-				</Button>
+				<Link href='/login'>
+					<Button
+						onClick={async () => {
+							await logout()
+							// router.reload()
+							// Router.replace('/login')
+						}}
+						variant={'link'}
+						isLoading={logoutFetching}
+					>
+						logout
+					</Button>
+				</Link>
 			</Flex>
 		)
 	}
@@ -56,4 +68,4 @@ const Navbar: React.FC<NavbarProps> = () => {
 	)
 }
 
-export default Navbar
+export default withUrqlClient(createUrqlClient)(Navbar)

@@ -1,55 +1,46 @@
-import { Box, Button, Heading } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
-import Container from '../components/Container'
 import InputField from '../components/InputField'
+import RegisterLoginContainer from '../components/RegisterLoginContainer'
 import Wrapper from '../components/Wrapper'
-import {
-	useRegisterMutation,
-	UsernamePasswordInput,
-} from '../generated/graphql'
+import { LoginInputs, useLoginMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
 
-interface registerProps {}
+interface loginProps {}
 
-const Register: React.FC<registerProps> = ({}) => {
+const Login: React.FC<{}> = ({}) => {
 	const router = useRouter()
-	const [{}, register] = useRegisterMutation()
+	const [{}, login] = useLoginMutation()
 
-	const handleRegisterUser = async (
-		values: UsernamePasswordInput,
-		{ setErrors },
-	) => {
-		const response = await register(values)
-		console.log(response)
+	const handleLogin = async (values: LoginInputs, { setErrors }) => {
+		const response = await login({ options: values })
+		console.log('login:', response.data)
 		//? returns either errors or undefined
-		if (response.data?.register.errors) {
-			setErrors(toErrorMap(response.data.register.errors))
-		} else if (response.data?.register.user) {
-			//registered successfully
-			console.log('worked')
+		if (response.data?.login.errors) {
+			setErrors(toErrorMap(response.data.login.errors))
+		} else if (response.data?.login.user) {
+			//logined successfully
+			console.log('login success')
 			Router.push('/')
 		}
 	}
 	return (
-		<Container>
-			<Heading mb={7} mt={7} ml={2} width={'450px'} color='whiteAlpha.800'>
-				Register
-			</Heading>
+		<RegisterLoginContainer heading='Log In'>
 			<Wrapper variant='small'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
-					initialValues={{ username: '', password: '' }}
-					onSubmit={handleRegisterUser}
+					initialValues={{ usernameOrEmail: '', password: '' }}
+					onSubmit={handleLogin}
 				>
 					{({ isSubmitting }) => (
 						<Form>
 							<InputField
-								name='username'
-								placeholder='username'
+								name='usernameOrEmail'
+								placeholder='username or email'
 								label='Username'
 							></InputField>
 							<InputField
@@ -69,15 +60,15 @@ const Register: React.FC<registerProps> = ({}) => {
 									isLoading={isSubmitting}
 									variant='primary'
 								>
-									Register
+									login
 								</Button>
 							</Box>
 						</Form>
 					)}
 				</Formik>
 			</Wrapper>
-		</Container>
+		</RegisterLoginContainer>
 	)
 }
 
-export default withUrqlClient(createUrqlClient)(Register)
+export default withUrqlClient(createUrqlClient)(Login)

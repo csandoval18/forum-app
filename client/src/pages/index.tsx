@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react'
-import Navbar from '../components/Navbar'
 import { withUrqlClient } from 'next-urql'
-import { createUrqlClient } from '../utils/createUrqlClient'
+import Navbar from '../components/Navbar'
 import { usePostsQuery } from '../generated/graphql'
+import { createUrqlClient } from '../utils/createUrqlClient'
 
 const Index = () => {
 	const [{ data }] = usePostsQuery()
@@ -12,7 +12,7 @@ const Index = () => {
 			h={'100vh'}
 			bgGradient='linear(to-l, heroGradientStart, heroGradientEnd)'
 		>
-			<Navbar />
+			<Navbar pageProps={null} />
 			<div>hello world</div>
 			<br />
 			{!data ? (
