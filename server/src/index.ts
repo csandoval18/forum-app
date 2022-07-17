@@ -23,7 +23,7 @@ const main = async () => {
 	await orm.getMigrator().up()
 
 	const app = express()
-	// await sendEmail('chris@chris.com', 'hello world')
+	// await sendEmail('user@user.com', 'hello world')
 
 	app.set('trust proxy', !__prod__)
 

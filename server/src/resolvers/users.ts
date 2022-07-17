@@ -31,9 +31,9 @@ class FieldError {
 //object types can be returned from mutations
 @ObjectType()
 class UserResponse {
-	//error returned if query did not work
+	//error returned if query did not work nullable allow errors field to return null
 	@Field(() => [FieldError], { nullable: true })
-	//question mark returns undefined
+	//question mark makes property optional
 	errors?: FieldError[]
 
 	//user returns if query worked properly
@@ -152,7 +152,7 @@ export class UserResolver {
 	}
 
 	@Query(() => Users, { nullable: true })
-	async me(@Ctx() { req, em }: MyContext) {
+	async me(@Ctx() { req, em }: MyContext): Promise<Users | null> {
 		//user is not logged in since no cookie is set null is returned
 		console.log('me query cookie:', req.session)
 		if (!req.session.userId) {
@@ -160,7 +160,7 @@ export class UserResolver {
 		}
 
 		//else if the session cookie is set return the user info
-		const user = em.findOne(Users, { id: req.session.userId })
+		const user = await em.findOne(Users, { id: req.session.userId })
 		return user
 	}
 
@@ -182,12 +182,68 @@ export class UserResolver {
 			FORGET_PASSWORD_PREFIX + token,
 			user.id,
 			'EX',
-			1000 * 60 * 60 * 24 * 2, //3days
+			1000 * 60 * 60 * 24 * 2, // 2 days
 		)
 		await sendEmail(
 			email,
 			`<a href="http://localhost:3000/change-password/${token}">reset password</a>`,
 		)
 		return true
+	}
+
+	@Mutation(() => UserResponse)
+	async changePassword(
+		@Arg('token') token: string,
+		@Arg('newPassword') newPassword: string,
+		@Ctx() { em, req, redisClient }: MyContext,
+	): Promise<UserResponse> {
+		if (newPassword.length <= 3) {
+			return {
+				errors: [
+					{
+						field: 'newPassword',
+						message: 'Length must be greater than 3',
+					},
+				],
+			}
+		}
+		const key = FORGET_PASSWORD_PREFIX + token
+		const userId = await redisClient.get(key)
+		if (!userId) {
+			return {
+				errors: [
+					{
+						field: 'token',
+						message: 'token expired',
+					},
+				],
+			}
+		}
+
+		//redis stores userId as string type so it needs to be converted to a number type
+		//if type shows Promise<string | null> this means await keyword is missing
+		const user = await em.findOne(Users, { id: parseInt(userId) })
+		//if the user is not found with the valid associated token then the user no longer exists
+		if (!user) {
+			return {
+				errors: [
+					{
+						field: 'token',
+						message: 'user no longer exists',
+					},
+				],
+			}
+		}
+
+		user.password = await argon2.hash(newPassword)
+		await em.persistAndFlush(user)
+
+		//delete token key from redis to disable change password
+		redisClient.del(key)
+
+		//login user after change password
+		req.session.userId = user.id
+
+		return { user }
 	}
 }

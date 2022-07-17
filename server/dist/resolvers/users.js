@@ -148,7 +148,7 @@ let UserResolver = class UserResolver {
             if (!req.session.userId) {
                 return null;
             }
-            const user = em.findOne(Users_1.Users, { id: req.session.userId });
+            const user = yield em.findOne(Users_1.Users, { id: req.session.userId });
             return user;
         });
     }
@@ -162,6 +162,48 @@ let UserResolver = class UserResolver {
             redisClient.set(constants_1.FORGET_PASSWORD_PREFIX + token, user.id, 'EX', 1000 * 60 * 60 * 24 * 2);
             yield (0, sendEmail_1.sendEmail)(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
             return true;
+        });
+    }
+    changePassword(token, newPassword, { em, req, redisClient }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (newPassword.length <= 3) {
+                return {
+                    errors: [
+                        {
+                            field: 'newPassword',
+                            message: 'Length must be greater than 3',
+                        },
+                    ],
+                };
+            }
+            const key = constants_1.FORGET_PASSWORD_PREFIX + token;
+            const userId = yield redisClient.get(key);
+            if (!userId) {
+                return {
+                    errors: [
+                        {
+                            field: 'token',
+                            message: 'token expired',
+                        },
+                    ],
+                };
+            }
+            const user = yield em.findOne(Users_1.Users, { id: parseInt(userId) });
+            if (!user) {
+                return {
+                    errors: [
+                        {
+                            field: 'token',
+                            message: 'user no longer exists',
+                        },
+                    ],
+                };
+            }
+            user.password = yield argon2_1.default.hash(newPassword);
+            yield em.persistAndFlush(user);
+            redisClient.del(key);
+            req.session.userId = user.id;
+            return { user };
         });
     }
 };
@@ -203,6 +245,15 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "forgotPassword", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => UserResponse),
+    __param(0, (0, type_graphql_1.Arg)('token')),
+    __param(1, (0, type_graphql_1.Arg)('newPassword')),
+    __param(2, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "changePassword", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);
