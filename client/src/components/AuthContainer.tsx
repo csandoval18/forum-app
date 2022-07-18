@@ -23,8 +23,9 @@ const AuthContainer = ({ children, heading }: BodyContainerProps) => {
 				h={'100%'}
 				minH={'100vh'}
 				className='login-register-container'
-				bgGradient='linear(to-l,
-			heroGradientStart, heroGradientEnd)'
+				// bgGradient='linear(to-l,
+				// heroGradientStart, heroGradientEnd)'
+				bgGradient='linear(to-t, #222231 8%, #4988db 60%, #54e4b9)'
 			>
 				<Center>
 					<Heading
