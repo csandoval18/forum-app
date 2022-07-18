@@ -2,17 +2,18 @@ import { Box } from '@chakra-ui/react'
 
 interface WrapperProps {
 	children: any
-	variant?: 'small' | 'regular'
+	h?: string
 }
 
-const Wrapper = ({ children, variant = 'regular' }: WrapperProps) => {
+const Wrapper = ({ children, h }: WrapperProps) => {
 	return (
 		<Box
 			// mt={8}
 			mx='auto'
 			maxW={'450px'}
 			// maxW={variant === 'regular' ? '800px' : '450px'}
-			h={variant === 'regular' ? '480px' : '360px'}
+			h={h}
+			// h={variant === 'regular' ? '480px' : '360px'}
 			w='100%'
 			backgroundColor={'whiteAlpha.300'}
 			padding={'20px'}

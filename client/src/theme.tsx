@@ -1,5 +1,5 @@
 import { extendTheme } from '@chakra-ui/react'
-import { createBreakpoints } from '@chakra-ui/theme-tools'
+import { createBreakpoints, lighten } from '@chakra-ui/theme-tools'
 
 const fonts = { mono: `'Menlo', monospace` }
 
@@ -16,6 +16,9 @@ const theme = extendTheme({
 			variants: {
 				primary: {
 					bg: '#98d6e6',
+					_hover: {
+						bg: '#bde1eb',
+					},
 				},
 			},
 		},

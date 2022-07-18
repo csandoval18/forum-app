@@ -12,10 +12,7 @@ interface BodyContainerProps {
 	heading: string
 }
 
-const RegisterLoginContainer = ({
-	children,
-	heading,
-}: BodyContainerProps) => {
+const AuthContainer = ({ children, heading }: BodyContainerProps) => {
 	return (
 		<Flex>
 			<Box
@@ -45,4 +42,4 @@ const RegisterLoginContainer = ({
 	)
 }
 
-export default RegisterLoginContainer
+export default AuthContainer
