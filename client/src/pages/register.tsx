@@ -1,4 +1,4 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, Link } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
@@ -13,6 +13,7 @@ import {
 } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
+import NextLink from 'next/link'
 
 interface registerProps {}
 
@@ -62,13 +63,21 @@ const Register: React.FC<registerProps> = ({}) => {
 								type='password'
 							/>
 							<Box
-								display={'flex'}
-								alignItems={'center'}
-								justifyContent={'right'}
+								display='flex'
+								alignItems='center'
+								justifyContent='space-between'
+								mt={8}
 							>
+								<Box mt={2}>
+									Already have an account?
+									<NextLink href='/login'>
+										<Link ml={2} color='white'>
+											Sign in
+										</Link>
+									</NextLink>
+								</Box>
 								<Button
 									type='submit'
-									mt={8}
 									isLoading={isSubmitting}
 									variant='primary'
 								>

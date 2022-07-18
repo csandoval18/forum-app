@@ -55,13 +55,18 @@ const Login: React.FC<{}> = ({}) => {
 								display={'flex'}
 								alignItems={'center'}
 								justifyContent={'space-between'}
+								mt={8}
 							>
-								<NextLink href={'/forgot-password'}>
-									<Link></Link>
-								</NextLink>
+								<Box mt={2}>
+									Dont have an account?
+									<NextLink href='/register'>
+										<Link ml={2} color={'white'}>
+											Register
+										</Link>
+									</NextLink>
+								</Box>
 								<Button
 									type='submit'
-									mt={8}
 									isLoading={isSubmitting}
 									variant='primary'
 								>

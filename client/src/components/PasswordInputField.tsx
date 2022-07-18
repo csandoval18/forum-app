@@ -8,6 +8,8 @@ import {
 	InputGroup,
 	InputRightElement,
 	Button,
+	Box,
+	Link,
 } from '@chakra-ui/react'
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -51,9 +53,36 @@ const InputField: React.FC<InputFieldProps> = ({
 				</InputRightElement>
 			</InputGroup>
 			{error ? (
-				<FormErrorMessage>{error}</FormErrorMessage>
+				<Box
+					display='flex'
+					alignItems='end'
+					justifyContent='space-between'
+				>
+					<FormErrorMessage fontSize='md'>{error}</FormErrorMessage>
+					<Link
+						mt={2}
+						color='white'
+						h='35px'
+						display='flex'
+						alignItems='end'
+						justifyContent='right'
+						fontSize={'md'}
+					>
+						Forgot Password?
+					</Link>
+				</Box>
 			) : (
-				<div style={{ height: '27px' }}></div>
+				<Link
+					mt={2}
+					color='white'
+					h='35px'
+					display='flex'
+					alignItems='end'
+					justifyContent='right'
+					fontSize={'md'}
+				>
+					Forgot Password?
+				</Link>
 			)}
 		</FormControl>
 	)
