@@ -10,7 +10,7 @@ const Index = () => {
 		<Box
 			bg={'red'}
 			h={'100vh'}
-			bgGradient='linear(to-l, heroGradientStart, heroGradientEnd)'
+			bgGradient='linear(to-t, #222231 8%, #4988db 60%, #54e4b9)'
 		>
 			<Navbar pageProps={null} />
 			<div>hello world</div>

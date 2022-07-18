@@ -36,25 +36,26 @@ const Navbar: React.FC<NavbarProps> = () => {
 		body = (
 			<Flex>
 				<Box mr={10}>{data.me.username} </Box>
-				<NextLink href='/login'>
-					<Button
-						onClick={async () => {
-							await logout()
-							// router.reload()
-							// Router.replace('/login')
-						}}
-						variant={'link'}
-						isLoading={logoutFetching}
-					>
-						logout
-					</Button>
-				</NextLink>
+				{/* <NextLink href='/login'> */}
+				<Button
+					onClick={async () => {
+						await logout()
+						// router.reload()
+						await router.reload()
+						// router.replace({ pathname: '/login' })
+					}}
+					variant={'link'}
+					isLoading={logoutFetching}
+				>
+					logout
+				</Button>
+				{/* </NextLink> */}
 			</Flex>
 		)
 	}
 
 	return (
-		<Flex bg='black' p={4} color={'whiteAlpha.900'}>
+		<Flex bg='black' p={2} color={'whiteAlpha.900'}>
 			<Box p={4} ml={'auto'}>
 				{body}
 			</Box>
