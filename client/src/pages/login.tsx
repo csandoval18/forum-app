@@ -3,8 +3,9 @@ import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
+import AuthContainer from '../components/AuthContainer'
 import InputField from '../components/InputField'
-import RegisterLoginContainer from '../components/RegisterLoginContainer'
+import PasswordInputField from '../components/PasswordInputField'
 import Wrapper from '../components/Wrapper'
 import { LoginInputs, useLoginMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
@@ -29,8 +30,8 @@ const Login: React.FC<{}> = ({}) => {
 		}
 	}
 	return (
-		<RegisterLoginContainer heading='Log In'>
-			<Wrapper variant='small'>
+		<AuthContainer heading='Log In'>
+			<Wrapper h='360px'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ usernameOrEmail: '', password: '' }}
@@ -42,13 +43,13 @@ const Login: React.FC<{}> = ({}) => {
 								name='usernameOrEmail'
 								placeholder='username or email'
 								label='Username'
-							></InputField>
-							<InputField
+							/>
+							<PasswordInputField
 								name='password'
 								placeholder='password'
 								label='Password'
 								type='password'
-							></InputField>
+							/>
 							<Box
 								display={'flex'}
 								alignItems={'center'}
@@ -56,7 +57,7 @@ const Login: React.FC<{}> = ({}) => {
 							>
 								<Button
 									type='submit'
-									mt={6}
+									mt={8}
 									isLoading={isSubmitting}
 									variant='primary'
 								>
@@ -67,7 +68,7 @@ const Login: React.FC<{}> = ({}) => {
 					)}
 				</Formik>
 			</Wrapper>
-		</RegisterLoginContainer>
+		</AuthContainer>
 	)
 }
 

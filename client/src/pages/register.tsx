@@ -3,8 +3,9 @@ import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
+import AuthContainer from '../components/AuthContainer'
 import InputField from '../components/InputField'
-import RegisterLoginContainer from '../components/RegisterLoginContainer'
+import PasswordInputField from '../components/PasswordInputField'
 import Wrapper from '../components/Wrapper'
 import {
 	RegisterInputs,
@@ -35,8 +36,8 @@ const Register: React.FC<registerProps> = ({}) => {
 		}
 	}
 	return (
-		<RegisterLoginContainer heading='Register'>
-			<Wrapper variant='regular'>
+		<AuthContainer heading='Register'>
+			<Wrapper h='480px'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ email: '', username: '', password: '' }}
@@ -48,18 +49,18 @@ const Register: React.FC<registerProps> = ({}) => {
 								name='username'
 								placeholder='username'
 								label='Username'
-							></InputField>
+							/>
 							<InputField
 								name='email'
 								placeholder='email'
 								label='Email'
-							></InputField>
-							<InputField
+							/>
+							<PasswordInputField
 								name='password'
 								placeholder='password'
 								label='Password'
 								type='password'
-							></InputField>
+							/>
 							<Box
 								display={'flex'}
 								alignItems={'center'}
@@ -67,7 +68,7 @@ const Register: React.FC<registerProps> = ({}) => {
 							>
 								<Button
 									type='submit'
-									mt={6}
+									mt={8}
 									isLoading={isSubmitting}
 									variant='primary'
 								>
@@ -78,7 +79,7 @@ const Register: React.FC<registerProps> = ({}) => {
 					)}
 				</Formik>
 			</Wrapper>
-		</RegisterLoginContainer>
+		</AuthContainer>
 	)
 }
 

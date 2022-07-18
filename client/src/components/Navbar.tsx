@@ -1,16 +1,10 @@
-import {
-	Box,
-	Button,
-	ColorModeScript,
-	Flex,
-	Link,
-} from '@chakra-ui/react'
-import React from 'react'
-import NextLink from 'next/link'
-import { useLogoutMutation, useMeQuery } from '../generated/graphql'
+import { Box, Button, Flex, Link } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
+import React from 'react'
+import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
-import Router, { useRouter } from 'next/router'
 
 interface NavbarProps {}
 
@@ -42,7 +36,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 		body = (
 			<Flex>
 				<Box mr={10}>{data.me.username} </Box>
-				<Link href='/login'>
+				<NextLink href='/login'>
 					<Button
 						onClick={async () => {
 							await logout()
@@ -54,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 					>
 						logout
 					</Button>
-				</Link>
+				</NextLink>
 			</Flex>
 		)
 	}
