@@ -30,10 +30,6 @@
 		"typescript": "^4.7.3"
 	},
 	"dependencies": {
-		"@mikro-orm/cli": "^5.2.3",
-		"@mikro-orm/core": "^5.2.3",
-		"@mikro-orm/migrations": "^5.2.3",
-		"@mikro-orm/postgresql": "^5.2.3",
 		"apollo-server-express": "^2.16.1",
 		"argon2": "^0.28.7",
 		"connect-redis": "^6.1.3",

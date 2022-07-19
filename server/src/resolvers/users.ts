@@ -9,7 +9,6 @@ import {
 	ObjectType,
 	Query,
 } from 'type-graphql'
-import { RequiredEntityData } from '@mikro-orm/core'
 //argon2 is for hashing password and making it secure in case the DB is compromised
 import argon2 from 'argon2'
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants'
@@ -18,6 +17,7 @@ import { LoginInputs } from './inputTypes/LoginInputs'
 import { validateRegister } from '../utils/validateRegister'
 import { sendEmail } from '../utils/sendEmail'
 import { v4 } from 'uuid'
+import dataSource from '../typeorm.config'
 // import { RedisClient } from 'redis'
 
 @ObjectType()
@@ -43,12 +43,11 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-	//register handling
 	@Mutation(() => UserResponse)
 	async register(
 		//options is an object with containing the username and password as parameter fields
 		@Arg('options') options: RegisterInputs,
-		@Ctx() { em, req }: MyContext,
+		@Ctx() { req }: MyContext,
 	): Promise<UserResponse> {
 		//validate user input
 		const errors = validateRegister(options)
@@ -56,22 +55,36 @@ export class UserResolver {
 			return { errors }
 		}
 		const hashsedPassword = await argon2.hash(options.password)
-		const user = em.fork({}).create(Users, {
-			username: options.username,
-			password: hashsedPassword,
-			email: options.email,
-		} as RequiredEntityData<Users>)
 
-		//querie to check if username already is already taken
-		const usernameTaken = await em.findOne(Users, {
-			username: options.username,
+		//querie to check if username already is already taken by seeing if user exists
+		const usernameTaken = await Users.findOne({
+			where: { username: options.username },
 		})
 		//if username does not exist in DB create the user record
 		if (!usernameTaken) {
-			await em.persistAndFlush(user)
-			//store user id session
-			//this will set a cokie on the user
-			//and keep them logged in after they register
+			// Users.create({
+			// 	username: options.username,
+			// 	password: hashsedPassword,
+			// 	email: options.email,
+			// }).save()
+
+			//equivalent to Users.create method used above
+			const result = await dataSource
+				.createQueryBuilder()
+				.insert()
+				.into(Users)
+				.values([
+					{
+						username: options.username,
+						password: hashsedPassword,
+						email: options.email,
+					},
+				])
+				.returning('*')
+				.execute()
+
+			const user = result.raw[0]
+			//set user id session cookie after succesful register
 			req.session.userId = user.id
 			console.log('cookie:', req.session)
 			return { user }
@@ -92,14 +105,13 @@ export class UserResolver {
 	@Mutation(() => UserResponse)
 	async login(
 		@Arg('options') options: LoginInputs,
-		@Ctx() { em, req }: MyContext,
+		@Ctx() { req }: MyContext,
 	): Promise<UserResponse> {
-		//querie for row containing data of user
-		const user = await em.findOne(
-			Users,
+		//querie for row containing data of user depending on username or email that is passed
+		const user = await Users.findOne(
 			options.usernameOrEmail.includes('@')
-				? { email: options.usernameOrEmail }
-				: { username: options.usernameOrEmail },
+				? { where: { email: options.usernameOrEmail } }
+				: { where: { username: options.usernameOrEmail } },
 		)
 		if (!user) {
 			return {
@@ -152,7 +164,7 @@ export class UserResolver {
 	}
 
 	@Query(() => Users, { nullable: true })
-	async me(@Ctx() { req, em }: MyContext): Promise<Users | null> {
+	me(@Ctx() { req }: MyContext) {
 		//user is not logged in since no cookie is set null is returned
 		console.log('me query cookie:', req.session)
 		if (!req.session.userId) {
@@ -160,19 +172,19 @@ export class UserResolver {
 		}
 
 		//else if the session cookie is set return the user info
-		const user = await em.findOne(Users, { id: req.session.userId })
-		return user
+		return Users.findOne({ where: { id: req.session.userId } })
 	}
 
 	@Mutation(() => Boolean)
 	async forgotPassword(
 		@Arg('email') email: string,
-		@Ctx() { em, redisClient }: MyContext,
+		@Ctx() { redisClient }: MyContext,
 	) {
-		const user = await em.findOne(Users, { email })
+		//get user row from email
+		const user = await Users.findOne({ where: { email: email } })
 		if (!user) {
 			//the email is not in the db
-			return true
+			return false
 		}
 
 		//v4 generates random token
@@ -195,7 +207,7 @@ export class UserResolver {
 	async changePassword(
 		@Arg('token') token: string,
 		@Arg('newPassword') newPassword: string,
-		@Ctx() { em, req, redisClient }: MyContext,
+		@Ctx() { req, redisClient }: MyContext,
 	): Promise<UserResponse> {
 		if (newPassword.length <= 3) {
 			return {
@@ -222,7 +234,11 @@ export class UserResolver {
 
 		//redis stores userId as string type so it needs to be converted to a number type
 		//if type shows Promise<string | null> this means await keyword is missing
-		const user = await em.findOne(Users, { id: parseInt(userId) })
+		const userIdNum = parseInt(userId)
+		const user = await Users.findOne({
+			where: { id: userIdNum },
+		})
+
 		//if the user is not found with the valid associated token then the user no longer exists
 		if (!user) {
 			return {
@@ -235,8 +251,11 @@ export class UserResolver {
 			}
 		}
 
-		user.password = await argon2.hash(newPassword)
-		await em.persistAndFlush(user)
+		//update user password
+		Users.update(
+			{ id: userIdNum },
+			{ password: await argon2.hash(newPassword) },
+		)
 
 		//delete token key from redis to disable change password
 		redisClient.del(key)

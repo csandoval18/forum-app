@@ -1,5 +1,6 @@
 import { ObjectType, Field } from 'type-graphql'
 import {
+	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -9,7 +10,7 @@ import {
 
 @ObjectType()
 @Entity()
-export class Users {
+export class Users extends BaseEntity {
 	@Field()
 	@PrimaryGeneratedColumn()
 	id!: number
@@ -20,7 +21,7 @@ export class Users {
 
 	@Field(() => String)
 	@UpdateDateColumn()
-	updatedAt = new Date()
+	updatedAt: Date
 
 	//!: means field cannot be null
 	@Field()
