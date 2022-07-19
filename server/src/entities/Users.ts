@@ -1,31 +1,38 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 import { ObjectType, Field } from 'type-graphql'
+import {
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm'
 
 @ObjectType()
 @Entity()
-export class Users {
+export class Users extends BaseEntity {
 	@Field()
-	@PrimaryKey()
+	@PrimaryGeneratedColumn()
 	id!: number
 
 	@Field(() => String)
-	@Property({ type: 'date' })
-	createdAt = new Date()
+	@CreateDateColumn()
+	createdAt: Date
 
 	@Field(() => String)
-	@Property({ type: 'date', onUpdate: () => new Date() })
-	updatedAt = new Date()
+	@UpdateDateColumn()
+	updatedAt: Date
 
 	//!: means field cannot be null
 	@Field()
-	@Property({ type: 'text', unique: true })
+	@Column({ unique: true })
 	username!: string
 
 	@Field()
-	@Property({ type: 'text', unique: true })
+	@Column({ unique: true })
 	email!: string
 
 	//No field decorator since we do not want the user password to be returned in a graphql query
-	@Property({ type: 'text' })
+	@Column()
 	password!: string
 }

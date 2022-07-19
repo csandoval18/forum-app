@@ -1,7 +1,5 @@
 import 'reflect-metadata'
-import { MikroORM } from '@mikro-orm/core'
 import { COOKIE_NAME, __prod__ } from './constants'
-import microConfig from './mikro-orm.config'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
@@ -13,23 +11,22 @@ import cors from 'cors'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
 import Redis from 'ioredis'
+import dataSource from './typeorm.config'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
 	console.log('NODE_ENV:', process.env.NODE_ENV)
-	const orm = await MikroORM.init(microConfig)
-	//delete all rows from users table
-	// await orm.em.nativeDelete(Users, {})
-	await orm.getMigrator().up()
+
+	//initialize typeorm connection
+	await dataSource.initialize()
 
 	const app = express()
 	// await sendEmail('user@user.com', 'hello world')
 
-	app.set('trust proxy', !__prod__)
-
 	const RedisStore = connectRedis(session)
 	const redisClient = new Redis()
 
+	app.set('trust proxy', !__prod__)
 	app.use(
 		//aplies to all routes
 		cors({
@@ -65,7 +62,6 @@ const main = async () => {
 		//function that returns an object for the context.
 		//context can take req and res object from express
 		context: ({ req, res }: MyContext): MyContext => ({
-			em: orm.em,
 			req,
 			res,
 			redisClient,

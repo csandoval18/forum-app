@@ -31,7 +31,7 @@ const AuthContainer = ({ children, heading }: BodyContainerProps) => {
 					<Heading
 						mb={7}
 						ml={2}
-						width={'450px'}
+						width={'500px'}
 						color='whiteAlpha.800'
 					>
 						{heading}

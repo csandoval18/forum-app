@@ -1,11 +1,12 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, Link } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
+import NextLink from 'next/link'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
 import AuthContainer from '../components/AuthContainer'
-import InputField from '../components/InputField'
-import PasswordInputField from '../components/PasswordInputField'
+import InputField from '../components/InputFields/InputField'
+import SetPasswordInputField from '../components/InputFields/SetPasswordInputField'
 import Wrapper from '../components/Wrapper'
 import {
 	RegisterInputs,
@@ -55,20 +56,28 @@ const Register: React.FC<registerProps> = ({}) => {
 								placeholder='email'
 								label='Email'
 							/>
-							<PasswordInputField
+							<SetPasswordInputField
 								name='password'
 								placeholder='password'
 								label='Password'
 								type='password'
 							/>
 							<Box
-								display={'flex'}
-								alignItems={'center'}
-								justifyContent={'right'}
+								display='flex'
+								alignItems='center'
+								justifyContent='space-between'
+								mt={8}
 							>
+								<Box mt={2}>
+									Already have an account?
+									<NextLink href='/login'>
+										<Link ml={2} color='white'>
+											Sign in
+										</Link>
+									</NextLink>
+								</Box>
 								<Button
 									type='submit'
-									mt={8}
 									isLoading={isSubmitting}
 									variant='primary'
 								>

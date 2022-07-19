@@ -5,13 +5,13 @@ import { withUrqlClient } from 'next-urql'
 import Router from 'next/router'
 import { useState } from 'react'
 import AuthContainer from '../../components/AuthContainer'
-import InputField from '../../components/InputField'
+import InputField from '../../components/InputFields/InputField'
 import Wrapper from '../../components/Wrapper'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { toErrorMap } from '../../utils/toErrorMap'
 import NextLink from 'next/link'
-import PasswordInputField from '../../components/PasswordInputField'
+import SetPasswordInputField from '../../components/InputFields/SetPasswordInputField'
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 	const [{}, changePassword] = useChangePasswordMutation()
@@ -39,9 +39,9 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 	}
 	return (
 		<>
-			<div>token: {token}</div>
+			{/* <div>token: {token}</div> */}
 			<AuthContainer heading='Change Password'>
-				<Wrapper h='400'>
+				<Wrapper h='410'>
 					{/* <DarkModeSwitch></DarkModeSwitch> */}
 					<Formik
 						initialValues={{ newPassword: '' }}
@@ -49,12 +49,12 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 					>
 						{({ isSubmitting }) => (
 							<Form>
-								<PasswordInputField
+								<SetPasswordInputField
 									name='newPassword'
 									placeholder='new password'
 									label='New Password'
 								/>
-								<PasswordInputField
+								<SetPasswordInputField
 									name='confirmPassword'
 									placeholder='confirm password'
 									label='Confirm Password'
@@ -65,7 +65,9 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 											<AlertIcon />
 											{tokenError}
 											<NextLink href='/forgot-password'>
-												<Link ml={2}>reset password</Link>
+												<Link ml={'142px'} textDecor={'underline'}>
+													reset password
+												</Link>
 											</NextLink>
 										</Alert>
 									</>
