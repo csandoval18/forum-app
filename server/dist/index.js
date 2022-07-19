@@ -13,9 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const core_1 = require("@mikro-orm/core");
 const constants_1 = require("./constants");
-const mikro_orm_config_1 = __importDefault(require("./mikro-orm.config"));
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
@@ -26,10 +24,19 @@ const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const ioredis_1 = __importDefault(require("ioredis"));
+const typeorm_1 = require("typeorm");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('NODE_ENV:', process.env.NODE_ENV);
-    const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
-    yield orm.getMigrator().up();
+    const dataSource = new typeorm_1.DataSource({
+        type: 'postgres',
+        database: 'forum',
+        username: 'Christian',
+        password: 'root',
+        logging: true,
+        synchronize: true,
+        entities: [],
+    });
+    const orm = yield dataSource.initialize();
     const app = (0, express_1.default)();
     app.set('trust proxy', !constants_1.__prod__);
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);

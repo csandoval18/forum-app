@@ -11,6 +11,7 @@ import {
 	Box,
 	Link,
 } from '@chakra-ui/react'
+import NextLink from 'next/link'
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 	label: string
@@ -58,31 +59,35 @@ const InputField: React.FC<InputFieldProps> = ({
 					alignItems='end'
 					justifyContent='space-between'
 				>
-					<FormErrorMessage fontSize='md'>{error}</FormErrorMessage>
+					<FormErrorMessage>{error}</FormErrorMessage>
+					<NextLink href='/forgot-password'>
+						<Link
+							// mt={2}
+							color='white'
+							h='27px'
+							display='flex'
+							alignItems='end'
+							justifyContent='right'
+							fontSize={'sm'}
+						>
+							Forgot Password?
+						</Link>
+					</NextLink>
+				</Box>
+			) : (
+				<NextLink href='/forgot-password'>
 					<Link
-						mt={2}
+						// mt={2}
 						color='white'
-						h='35px'
+						h='27px'
 						display='flex'
 						alignItems='end'
 						justifyContent='right'
-						fontSize={'md'}
+						fontSize='sm'
 					>
 						Forgot Password?
 					</Link>
-				</Box>
-			) : (
-				<Link
-					mt={2}
-					color='white'
-					h='35px'
-					display='flex'
-					alignItems='end'
-					justifyContent='right'
-					fontSize={'md'}
-				>
-					Forgot Password?
-				</Link>
+				</NextLink>
 			)}
 		</FormControl>
 	)

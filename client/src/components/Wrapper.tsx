@@ -10,7 +10,7 @@ const Wrapper = ({ children, h }: WrapperProps) => {
 		<Box
 			// mt={8}
 			mx='auto'
-			maxW={'450px'}
+			maxW={'500px'}
 			// maxW={variant === 'regular' ? '800px' : '450px'}
 			h={h}
 			// h={variant === 'regular' ? '480px' : '360px'}

@@ -4,8 +4,8 @@ import { withUrqlClient } from 'next-urql'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
 import AuthContainer from '../components/AuthContainer'
-import InputField from '../components/InputField'
-import PasswordInputField from '../components/PasswordInputField'
+import InputField from '../components/InputFields/InputField'
+import PasswordInputField from '../components/InputFields/PasswordInputField'
 import Wrapper from '../components/Wrapper'
 import { LoginInputs, useLoginMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
@@ -32,7 +32,7 @@ const Login: React.FC<{}> = ({}) => {
 	}
 	return (
 		<AuthContainer heading='Log In'>
-			<Wrapper h='360px'>
+			<Wrapper h='380px'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ usernameOrEmail: '', password: '' }}
@@ -55,9 +55,9 @@ const Login: React.FC<{}> = ({}) => {
 								display={'flex'}
 								alignItems={'center'}
 								justifyContent={'space-between'}
-								mt={8}
+								mt={12}
 							>
-								<Box mt={2}>
+								<Box>
 									Dont have an account?
 									<NextLink href='/register'>
 										<Link ml={2} color={'white'}>

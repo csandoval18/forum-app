@@ -13,14 +13,27 @@ import cors from 'cors'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
 import Redis from 'ioredis'
+import { DataSource } from 'typeorm'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
 	console.log('NODE_ENV:', process.env.NODE_ENV)
-	const orm = await MikroORM.init(microConfig)
+
+	const dataSource = new DataSource({
+		type: 'postgres',
+		database: 'forum',
+		username: 'Christian',
+		password: 'root',
+		logging: true,
+		synchronize: true, //creates tables automatically, no need to create migrations
+		entities: [],
+	})
+	const orm = await dataSource.initialize()
+
+	// const orm = await MikroORM.init(microConfig)
 	//delete all rows from users table
 	// await orm.em.nativeDelete(Users, {})
-	await orm.getMigrator().up()
+	// await orm.getMigrator().up()
 
 	const app = express()
 	// await sendEmail('user@user.com', 'hello world')
