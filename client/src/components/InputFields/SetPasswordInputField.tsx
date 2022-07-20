@@ -31,7 +31,7 @@ const SetPasswordInputField: React.FC<InputFieldProps> = ({
 
 	return (
 		<FormControl isInvalid={!!error}>
-			<FormLabel mt={4} htmlFor={field.name}>
+			<FormLabel mt={5} htmlFor={field.name}>
 				{label}
 			</FormLabel>
 			<InputGroup size='md'>

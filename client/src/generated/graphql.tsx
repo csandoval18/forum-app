@@ -46,7 +46,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreatePostArgs = {
-  title: Scalars['String'];
+  input: PostInput;
 };
 
 
@@ -75,10 +75,18 @@ export type MutationUpdatePostArgs = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type PostInput = {
+  text: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type Posts = {
   __typename?: 'Posts';
   createdAt: Scalars['String'];
-  id: Scalars['Int'];
+  creatorId: Scalars['Float'];
+  id: Scalars['Float'];
+  points: Scalars['Float'];
+  text: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -122,6 +130,13 @@ export type ErrorFieldsFragment = { __typename?: 'FieldError', field: string, me
 export type UserFieldsFragment = { __typename?: 'Users', id: number, username: string, email: string };
 
 export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'Users', id: number, username: string, email: string } | null };
+
+export type CreatePostMutationVariables = Exact<{
+  input: PostInput;
+}>;
+
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost?: { __typename?: 'Posts', id: number, createdAt: string, updatedAt: string, title: string, text: string, points: number, creatorId: number } | null };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -191,6 +206,23 @@ export const UserResponseFragmentDoc = gql`
 }
     ${ErrorFieldsFragmentDoc}
 ${UserFieldsFragmentDoc}`;
+export const CreatePostDocument = gql`
+    mutation CreatePost($input: PostInput!) {
+  createPost(input: $input) {
+    id
+    createdAt
+    updatedAt
+    title
+    text
+    points
+    creatorId
+  }
+}
+    `;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {

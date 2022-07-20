@@ -1,11 +1,9 @@
-import { Box, Button, Link } from '@chakra-ui/react'
-import { Formik, Form } from 'formik'
+import { Alert, AlertIcon, Box, Button } from '@chakra-ui/react'
+import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import AuthContainer from '../components/AuthContainer'
+import FormContainer from '../components/FormContainer'
 import InputField from '../components/InputFields/InputField'
-import PasswordInputField from '../components/InputFields/PasswordInputField'
 import Wrapper from '../components/Wrapper'
-import NextLink from 'next/link'
 import { useForgotPasswordMutation } from '../generated/graphql'
 
 interface ForgotPassword {}
@@ -20,8 +18,8 @@ const ForgotPassword: React.FC<{}> = () => {
 	}
 
 	return (
-		<AuthContainer heading='Forgot Password'>
-			<Wrapper h='270px'>
+		<FormContainer heading='Forgot Password'>
+			<Wrapper h='330px'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ email: '' }}
@@ -29,12 +27,26 @@ const ForgotPassword: React.FC<{}> = () => {
 				>
 					{({ isSubmitting }) =>
 						complete ? (
-							<Box>
-								If an account with that email exists, an email with a
-								link to change your password has been sent.
-							</Box>
+							<Alert status='info'>
+								<AlertIcon />
+								An email has been sent to the email address linked
+								with the account.
+							</Alert>
 						) : (
 							<Form>
+								<Box
+									display='flex'
+									alignItems='center'
+									px={4}
+									borderRadius='8px'
+									my={6}
+									fontSize='lg'
+									color='whiteAlpha.800'
+									bg='black'
+									h={12}
+								>
+									Enter the email linked to your account.
+								</Box>
 								<InputField
 									name='email'
 									placeholder='email'
@@ -45,23 +57,14 @@ const ForgotPassword: React.FC<{}> = () => {
 									display={'flex'}
 									alignItems={'center'}
 									justifyContent={'right'}
-									mt={12}
+									mt={8}
 								>
-									{/* <Box>
-										Dont have an account?
-										<NextLink href='/register'>
-											<Link ml={2} color={'white'}>
-												Register
-											</Link>
-										</NextLink>
-									</Box> */}
-
 									<Button
 										type='submit'
 										isLoading={isSubmitting}
 										variant='primary'
 									>
-										forgot password
+										send email
 									</Button>
 								</Box>
 							</Form>
@@ -69,7 +72,7 @@ const ForgotPassword: React.FC<{}> = () => {
 					}
 				</Formik>
 			</Wrapper>
-		</AuthContainer>
+		</FormContainer>
 	)
 }
 

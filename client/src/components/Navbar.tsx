@@ -15,47 +15,55 @@ const Navbar: React.FC<NavbarProps> = () => {
 		// pause: true,
 	})
 	let body = null
-	console.log(data)
+	console.log('me:', data)
 
 	//data is loading
 	if (fetching) {
 		//user not logged in
 	} else if (!data?.me) {
 		body = (
-			<>
+			<Flex gap={8}>
 				<NextLink href={'/login'}>
-					<Link mr={10}>login</Link>
+					<Link>login</Link>
 				</NextLink>
 				<NextLink href={'/register'}>
 					<Link>register</Link>
 				</NextLink>
-			</>
+			</Flex>
 		)
 		//user is logged in
 	} else {
 		body = (
-			<Flex>
-				<Box mr={10}>{data.me.username} </Box>
-				{/* <NextLink href='/login'> */}
+			<Flex gap={8}>
+				<Box>{data.me.username} </Box>
 				<Button
 					onClick={async () => {
 						await logout()
-						// router.reload()
-						await router.reload()
-						// router.replace({ pathname: '/login' })
+						//Need to use window route chaning so cookie can be destroyed with refresh of page
+						window.location.href = '/login'
 					}}
 					variant={'link'}
 					isLoading={logoutFetching}
 				>
 					logout
 				</Button>
-				{/* </NextLink> */}
 			</Flex>
 		)
 	}
 
 	return (
-		<Flex bg='black' p={2} color={'whiteAlpha.900'}>
+		<Flex
+			bg='black'
+			h={20}
+			px={6}
+			color={'whiteAlpha.900'}
+			alignItems='center'
+		>
+			<Box display='flex'>
+				<NextLink href='/'>
+					<Link>Home</Link>
+				</NextLink>
+			</Box>
 			<Box p={4} ml={'auto'}>
 				{body}
 			</Box>

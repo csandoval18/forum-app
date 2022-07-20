@@ -2,16 +2,15 @@ import { Alert, AlertIcon, Box, Button, Link } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
+import NextLink from 'next/link'
 import Router from 'next/router'
 import { useState } from 'react'
-import AuthContainer from '../../components/AuthContainer'
-import InputField from '../../components/InputFields/InputField'
+import FormContainer from '../../components/FormContainer'
+import SetPasswordInputField from '../../components/InputFields/SetPasswordInputField'
 import Wrapper from '../../components/Wrapper'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { toErrorMap } from '../../utils/toErrorMap'
-import NextLink from 'next/link'
-import SetPasswordInputField from '../../components/InputFields/SetPasswordInputField'
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 	const [{}, changePassword] = useChangePasswordMutation()
@@ -38,62 +37,59 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 		}
 	}
 	return (
-		<>
-			{/* <div>token: {token}</div> */}
-			<AuthContainer heading='Change Password'>
-				<Wrapper h='410'>
-					{/* <DarkModeSwitch></DarkModeSwitch> */}
-					<Formik
-						initialValues={{ newPassword: '' }}
-						onSubmit={handleChangePass}
-					>
-						{({ isSubmitting }) => (
-							<Form>
-								<SetPasswordInputField
-									name='newPassword'
-									placeholder='new password'
-									label='New Password'
-								/>
-								<SetPasswordInputField
-									name='confirmPassword'
-									placeholder='confirm password'
-									label='Confirm Password'
-								/>
-								{tokenError ? (
-									<>
-										<Alert status='error'>
-											<AlertIcon />
-											{tokenError}
-											<NextLink href='/forgot-password'>
-												<Link ml={'142px'} textDecor={'underline'}>
-													reset password
-												</Link>
-											</NextLink>
-										</Alert>
-									</>
-								) : (
-									<div style={{ height: '48px' }}></div>
-								)}
-								<Box
-									display={'flex'}
-									alignItems={'center'}
-									justifyContent={'right'}
+		<FormContainer heading='Change Password'>
+			<Wrapper h='420'>
+				{/* <DarkModeSwitch></DarkModeSwitch> */}
+				<Formik
+					initialValues={{ newPassword: '' }}
+					onSubmit={handleChangePass}
+				>
+					{({ isSubmitting }) => (
+						<Form>
+							<SetPasswordInputField
+								name='newPassword'
+								placeholder='new password'
+								label='New Password'
+							/>
+							<SetPasswordInputField
+								name='confirmPassword'
+								placeholder='confirm password'
+								label='Confirm Password'
+							/>
+							{tokenError ? (
+								<>
+									<Alert status='error'>
+										<AlertIcon />
+										{tokenError}
+										<NextLink href='/forgot-password'>
+											<Link ml={'142px'} textDecor={'underline'}>
+												reset password
+											</Link>
+										</NextLink>
+									</Alert>
+								</>
+							) : (
+								<div style={{ height: '48px' }}></div>
+							)}
+							<Box
+								display={'flex'}
+								alignItems={'center'}
+								justifyContent={'right'}
+							>
+								<Button
+									type='submit'
+									mt={6}
+									isLoading={isSubmitting}
+									variant='primary'
 								>
-									<Button
-										type='submit'
-										mt={6}
-										isLoading={isSubmitting}
-										variant='primary'
-									>
-										change password
-									</Button>
-								</Box>
-							</Form>
-						)}
-					</Formik>
-				</Wrapper>
-			</AuthContainer>
-		</>
+									change password
+								</Button>
+							</Box>
+						</Form>
+					)}
+				</Formik>
+			</Wrapper>
+		</FormContainer>
 	)
 }
 
