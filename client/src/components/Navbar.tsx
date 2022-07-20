@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 					onClick={async () => {
 						await logout()
 						// router.reload()
-						await router.reload()
+						router.reload()
 						// router.replace({ pathname: '/login' })
 					}}
 					variant={'link'}
@@ -55,7 +55,20 @@ const Navbar: React.FC<NavbarProps> = () => {
 	}
 
 	return (
-		<Flex bg='black' p={2} color={'whiteAlpha.900'}>
+		<Flex
+			bg='black'
+			p={2}
+			color={'whiteAlpha.900'}
+			position='sticky'
+			top={0}
+			zIndex={1}
+		>
+			<Box>
+				<NextLink href='/'>
+					<Link>Home</Link>
+				</NextLink>
+			</Box>
+			<Box></Box>
 			<Box p={4} ml={'auto'}>
 				{body}
 			</Box>
@@ -64,3 +77,4 @@ const Navbar: React.FC<NavbarProps> = () => {
 }
 
 export default withUrqlClient(createUrqlClient)(Navbar)
+// export default Navbar

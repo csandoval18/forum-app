@@ -26,13 +26,13 @@ const InputField: React.FC<InputFieldProps> = ({
 	...props
 }) => {
 	//show or hide password input
-	const [show, setShow] = useState(false)
 	const [field, { error }] = useField(props)
+	const [show, setShow] = useState(false)
 	const handleShowPass = () => setShow(!show)
 
 	return (
 		<FormControl isInvalid={!!error}>
-			<FormLabel mt={4} htmlFor={field.name}>
+			<FormLabel mt={5} htmlFor={field.name}>
 				{label}
 			</FormLabel>
 			<InputGroup size='md'>

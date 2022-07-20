@@ -4,7 +4,7 @@ import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
 import Router, { useRouter } from 'next/router'
 import React from 'react'
-import AuthContainer from '../components/AuthContainer'
+import FormContainer from '../components/FormContainer'
 import InputField from '../components/InputFields/InputField'
 import SetPasswordInputField from '../components/InputFields/SetPasswordInputField'
 import Wrapper from '../components/Wrapper'
@@ -37,8 +37,8 @@ const Register: React.FC<registerProps> = ({}) => {
 		}
 	}
 	return (
-		<AuthContainer heading='Register'>
-			<Wrapper h='480px'>
+		<FormContainer heading='Register'>
+			<Wrapper h='500px'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ email: '', username: '', password: '' }}
@@ -88,7 +88,7 @@ const Register: React.FC<registerProps> = ({}) => {
 					)}
 				</Formik>
 			</Wrapper>
-		</AuthContainer>
+		</FormContainer>
 	)
 }
 

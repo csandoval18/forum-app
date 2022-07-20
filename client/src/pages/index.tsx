@@ -3,6 +3,7 @@ import { withUrqlClient } from 'next-urql'
 import Navbar from '../components/Navbar'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
+import NextLink from 'next/link'
 
 const Index = () => {
 	const [{ data }] = usePostsQuery()
@@ -10,9 +11,9 @@ const Index = () => {
 		<Box
 			bg={'red'}
 			h={'100vh'}
-			bgGradient='linear(to-t, #222231 8%, #4988db 60%, #54e4b9)'
+			bgGradient='linear(to-t, #222231 8%, #233349 30%, #7bcae9)'
 		>
-			<Navbar pageProps={null} />
+			<Navbar pageProps={undefined} />
 			<div>hello world</div>
 			<br />
 			{!data ? (
