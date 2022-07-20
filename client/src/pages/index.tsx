@@ -1,20 +1,27 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import Navbar from '../components/Navbar'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
-import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 
 const Index = () => {
+	const router = useRouter()
 	const [{ data }] = usePostsQuery()
 	return (
 		<Box
-			bg={'red'}
 			h={'100vh'}
 			bgGradient='linear(to-t, #222231 8%, #233349 30%, #7bcae9)'
 		>
 			<Navbar pageProps={undefined} />
-			<div>hello world</div>
+			<Box>hello world</Box>
+			<Button
+				onClick={() => {
+					router.replace('/create-post')
+				}}
+			>
+				Create Post
+			</Button>
 			<br />
 			{!data ? (
 				<div>loading...</div>

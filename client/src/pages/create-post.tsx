@@ -1,34 +1,31 @@
-import { Box, Button, Link, Textarea } from '@chakra-ui/react'
-import { Formik, Form } from 'formik'
-import React, { useEffect } from 'react'
-import InputField from '../components/InputFields/InputField'
-import Wrapper from '../components/Wrapper'
-import NextLink from 'next/link'
-import TextInputField from '../components/InputFields/TextInputField'
-import {
-	useCreatePostMutation,
-	useMeQuery,
-} from '../generated/graphql'
-import { useRouter } from 'next/router'
-import { createUrqlClient } from '../utils/createUrqlClient'
+import { Box, Button } from '@chakra-ui/react'
+import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
+import { useRouter } from 'next/router'
+import React from 'react'
 import FormContainer from '../components/FormContainer'
+import InputField from '../components/InputFields/InputField'
+import TextInputField from '../components/InputFields/TextInputField'
+import Wrapper from '../components/Wrapper'
+import { useCreatePostMutation } from '../generated/graphql'
+import { createUrqlClient } from '../utils/createUrqlClient'
+import { useIsAuth } from '../utils/useIsAuth'
 
 const CreatePost: React.FC<{}> = () => {
-	const [{ data, fetching }] = useMeQuery()
 	const router = useRouter()
 	const [{}, createPost] = useCreatePostMutation()
-	useEffect(() => {
-		//Not loading and there is no user signed in
-		if (!fetching && !data?.me) {
-			router.replace('/login')
-		}
-	}, [fetching, data, router])
+	useIsAuth()
 
-	const handleCreatePost = async (values) => {
+	const handleCreatePost = async (values: {
+		title: string
+		text: string
+	}) => {
+		console.log('flag')
 		const { error } = await createPost({ input: values })
 		if (!error) {
 			router.push('/')
+		} else {
+			console.log(error)
 		}
 	}
 
