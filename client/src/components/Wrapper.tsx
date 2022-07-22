@@ -15,7 +15,8 @@ const Wrapper = ({ children, h }: WrapperProps) => {
 			h={h}
 			// h={variant === 'regular' ? '480px' : '360px'}
 			w='100%'
-			backgroundColor={'whiteAlpha.300'}
+			backgroundColor={'whiteAlpha.500'}
+			shadow='xl'
 			padding={'20px'}
 			borderRadius={15}
 		>

@@ -11,6 +11,7 @@ import {
 	Box,
 	Link,
 } from '@chakra-ui/react'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 	label: string
@@ -47,8 +48,16 @@ const SetPasswordInputField: React.FC<InputFieldProps> = ({
 					type={show ? 'text' : 'password'}
 				/>
 				<InputRightElement mr={3}>
-					<Button h='1.75rem' size='sm' onClick={handleShowPass}>
-						{show ? 'Hide' : 'Show'}
+					<Button
+						h='1.75rem'
+						size='sm'
+						onClick={handleShowPass}
+						bg='gray.300'
+						_hover={{
+							background: 'primary',
+						}}
+					>
+						{show ? <ViewOffIcon /> : <ViewIcon />}
 					</Button>
 				</InputRightElement>
 			</InputGroup>

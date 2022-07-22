@@ -1,4 +1,14 @@
-import { Box, Button } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	ColorModeContext,
+	ColorModeScript,
+	Flex,
+	Heading,
+	Stack,
+	Text,
+	theme,
+} from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import Navbar from '../components/Navbar'
 import { usePostsQuery } from '../generated/graphql'
@@ -7,27 +17,66 @@ import { useRouter } from 'next/router'
 
 const Index = () => {
 	const router = useRouter()
-	const [{ data }] = usePostsQuery()
+	const [{ data, fetching }] = usePostsQuery({
+		variables: {
+			limit: 10,
+		},
+	})
+
+	if (!fetching && !data) {
+		return <div>Cannot fetch posts from server</div>
+	}
+
 	return (
 		<Box
-			h={'100vh'}
-			bgGradient='linear(to-t, #222231 8%, #233349 30%, #7bcae9)'
+			h={'100%'}
+			bgGradient='linear(to-t, #1d1d29 30%, #1e2230 70%, #cdfff3)'
+			// bg='#cdfff3'
 		>
+			<ColorModeScript
+				initialColorMode={theme.config.initialColorMode}
+			/>
 			<Navbar pageProps={undefined} />
-			<Box>hello world</Box>
-			<Button
-				onClick={() => {
-					router.replace('/create-post')
-				}}
-			>
-				Create Post
-			</Button>
-			<br />
-			{!data ? (
-				<div>loading...</div>
-			) : (
-				data.posts.map((p) => <div key={p.id}>{p.title}</div>)
-			)}
+			<Box className='posts-container' px={40}>
+				<Flex align={'center'} py={8}>
+					<Heading>Forum App</Heading>
+					<Button
+						variant='primary'
+						ml={'auto'}
+						onClick={() => {
+							router.replace('/create-post')
+						}}
+					>
+						Create Post
+					</Button>
+				</Flex>
+				{fetching && !data ? (
+					<div>loading...</div>
+				) : (
+					<Stack spacing={8}>
+						{data.posts.map((p) => (
+							<Box
+								key={p.id}
+								p={6}
+								borderRadius={12}
+								shadow='lg'
+								// borderWidth={1}
+								bg='whiteAlpha.500'
+							>
+								<Heading fontSize='xl'>{p.title}</Heading>
+								<Text mt={4}>{p.textSnippet + '...'}</Text>
+							</Box>
+						))}
+					</Stack>
+				)}
+				{data ? (
+					<Flex>
+						<Button m='auto' variant='primary' my={8}>
+							load more
+						</Button>
+					</Flex>
+				) : null}
+			</Box>
 		</Box>
 	)
 }
