@@ -15,7 +15,6 @@ const Navbar: React.FC<NavbarProps> = () => {
 		// pause: true,
 	})
 	let body = null
-	console.log('me:', data)
 
 	//data is loading
 	if (fetching) {

@@ -12,6 +12,7 @@ import session from 'express-session'
 import connectRedis from 'connect-redis'
 import Redis from 'ioredis'
 import dataSource from './typeorm.config'
+import { Posts } from './entities/Posts'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -20,6 +21,7 @@ const main = async () => {
 	//initialize typeorm connection
 	const conn = await dataSource.initialize()
 	// await conn.runMigrations()
+	// await Posts.delete({})
 
 	const app = express()
 	// await sendEmail('user@user.com', 'hello world')
@@ -31,10 +33,7 @@ const main = async () => {
 	app.use(
 		//aplies to all routes
 		cors({
-			origin: [
-				'https://studio.apollographql.com',
-				'http://localhost:3000',
-			],
+			origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
 			credentials: true,
 		}),
 	)

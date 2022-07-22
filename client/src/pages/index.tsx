@@ -1,27 +1,26 @@
-import {
-	Box,
-	Button,
-	ColorModeContext,
-	ColorModeScript,
-	Flex,
-	Heading,
-	Stack,
-	Text,
-	theme,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
-import { useRouter } from 'next/router'
 
 const Index = () => {
 	const router = useRouter()
+	const [variables, setVariables] = useState({
+		limit: 10,
+		cursor: null as string | null,
+	})
+
+	console.log('vars:', variables)
 	const [{ data, fetching }] = usePostsQuery({
 		variables: {
 			limit: 10,
 		},
 	})
+
+	console.log('postsData:', data)
 
 	if (!fetching && !data) {
 		return <div>Cannot fetch posts from server</div>
@@ -30,12 +29,9 @@ const Index = () => {
 	return (
 		<Box
 			h={'100%'}
-			bgGradient='linear(to-t, #1d1d29 30%, #1e2230 70%, #cdfff3)'
+			// bgGradient='linear(to-t, #1d1d29 30%, #1e2230 70%, #cdfff3)'
 			// bg='#cdfff3'
 		>
-			<ColorModeScript
-				initialColorMode={theme.config.initialColorMode}
-			/>
 			<Navbar pageProps={undefined} />
 			<Box className='posts-container' px={40}>
 				<Flex align={'center'} py={8}>
@@ -71,7 +67,17 @@ const Index = () => {
 				)}
 				{data ? (
 					<Flex>
-						<Button m='auto' variant='primary' my={8}>
+						<Button
+							m='auto'
+							variant='primary'
+							my={8}
+							onClick={() => {
+								setVariables({
+									limit: variables.limit,
+									cursor: data.posts[data.posts.length - 1].createdAt,
+								})
+							}}
+						>
 							load more
 						</Button>
 					</Flex>
