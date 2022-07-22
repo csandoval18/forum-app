@@ -1,7 +1,8 @@
 import { Box, Button, Link } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
-import Router, { useRouter } from 'next/router'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import FormContainer from '../components/FormContainer'
 import InputField from '../components/InputFields/InputField'
@@ -10,7 +11,6 @@ import Wrapper from '../components/Wrapper'
 import { LoginInputs, useLoginMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
-import NextLink from 'next/link'
 
 interface loginProps {}
 
@@ -20,14 +20,16 @@ const Login: React.FC<{}> = ({}) => {
 
 	const handleLogin = async (values: LoginInputs, { setErrors }) => {
 		const response = await login({ options: values })
-		console.log('login:', response.data)
 		//? returns either errors or undefined
 		if (response.data?.login.errors) {
 			setErrors(toErrorMap(response.data.login.errors))
 		} else if (response.data?.login.user) {
-			//logined successfully
-			console.log('login success')
-			Router.push('/')
+			if (typeof router.query.next === 'string') {
+				router.push(router.query.next)
+			} else {
+				//Logined successfully
+				router.push('/')
+			}
 		}
 	}
 	return (
@@ -70,7 +72,7 @@ const Login: React.FC<{}> = ({}) => {
 									isLoading={isSubmitting}
 									variant='primary'
 								>
-									login
+									Login
 								</Button>
 							</Box>
 						</Form>

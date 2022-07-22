@@ -4,9 +4,11 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import { Posts } from './Posts'
 
 @ObjectType()
 @Entity()
@@ -14,14 +16,6 @@ export class Users extends BaseEntity {
 	@Field()
 	@PrimaryGeneratedColumn()
 	id!: number
-
-	@Field(() => String)
-	@CreateDateColumn()
-	createdAt: Date
-
-	@Field(() => String)
-	@UpdateDateColumn()
-	updatedAt: Date
 
 	//!: means field cannot be null
 	@Field()
@@ -35,4 +29,15 @@ export class Users extends BaseEntity {
 	//No field decorator since we do not want the user password to be returned in a graphql query
 	@Column()
 	password!: string
+
+	@OneToMany(() => Posts, (post) => post.creator)
+	posts: Posts[]
+
+	@Field(() => String)
+	@CreateDateColumn()
+	createdAt: Date
+
+	@Field(() => String)
+	@UpdateDateColumn()
+	updatedAt: Date
 }

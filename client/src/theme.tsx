@@ -3,6 +3,11 @@ import { createBreakpoints, lighten } from '@chakra-ui/theme-tools'
 
 const fonts = { mono: `'Menlo', monospace` }
 
+const config = {
+	initialColorMode: 'light',
+	useSystemColorMode: false,
+}
+
 const breakpoints = createBreakpoints({
 	sm: '40em',
 	md: '52em',
@@ -11,13 +16,22 @@ const breakpoints = createBreakpoints({
 })
 
 const theme = extendTheme({
+	config,
 	components: {
 		Button: {
 			variants: {
 				primary: {
-					bg: '#98d6e6',
+					borderRadius: '15px',
+					bg: '#6ee7bf',
 					_hover: {
-						bg: '#bde1eb',
+						bg: '#9ff1d6',
+					},
+				},
+				secondary: {
+					borderRadius: '15px',
+					bg: '#ffffff',
+					_hover: {
+						bg: '#eeeeee',
 					},
 				},
 			},
@@ -25,6 +39,10 @@ const theme = extendTheme({
 	},
 	semanticTokens: {
 		colors: {
+			primary: {
+				default: '#6ee7bf',
+				_dark: '#6ee7bf',
+			},
 			text: {
 				default: '#16161D',
 				_dark: '#ade3b8',

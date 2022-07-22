@@ -20,22 +20,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
+const typeorm_config_1 = __importDefault(require("../typeorm.config"));
 const type_graphql_1 = require("type-graphql");
 const Posts_1 = require("../entities/Posts");
+const isAuth_1 = require("../middleware/isAuth");
+let PostInput = class PostInput {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], PostInput.prototype, "title", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], PostInput.prototype, "text", void 0);
+PostInput = __decorate([
+    (0, type_graphql_1.InputType)()
+], PostInput);
 let PostResolver = class PostResolver {
-    posts() {
+    textSnippet(root) {
+        return root.text.slice(0, 50);
+    }
+    posts(limit, cursor) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Posts_1.Posts.find();
+            const realLimit = Math.min(50, limit);
+            const qb = typeorm_config_1.default
+                .getRepository(Posts_1.Posts)
+                .createQueryBuilder('p')
+                .orderBy('"createdAt"', 'DESC')
+                .take(realLimit);
+            if (cursor) {
+                qb.where('"createdAt" < :cursor ', {
+                    cursor: new Date(parseInt(cursor)),
+                });
+            }
+            return qb.getMany();
         });
     }
     post(id) {
         return Posts_1.Posts.findOne({ where: { id: id } });
     }
-    createPost(title) {
+    createPost(input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Posts_1.Posts.create({ title: title }).save();
+            return Posts_1.Posts.create(Object.assign(Object.assign({}, input), { creatorId: req.session.userId })).save();
         });
     }
     updatePost(id, title) {
@@ -58,9 +90,18 @@ let PostResolver = class PostResolver {
     }
 };
 __decorate([
-    (0, type_graphql_1.Query)(() => [Posts_1.Posts]),
+    (0, type_graphql_1.FieldResolver)(() => String),
+    __param(0, (0, type_graphql_1.Root)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Posts_1.Posts]),
+    __metadata("design:returntype", void 0)
+], PostResolver.prototype, "textSnippet", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => [Posts_1.Posts]),
+    __param(0, (0, type_graphql_1.Arg)('limit', () => type_graphql_1.Int)),
+    __param(1, (0, type_graphql_1.Arg)('cursor', () => String, { nullable: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "posts", null);
 __decorate([
@@ -72,9 +113,11 @@ __decorate([
 ], PostResolver.prototype, "post", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Posts_1.Posts, { nullable: true }),
-    __param(0, (0, type_graphql_1.Arg)('title')),
+    (0, type_graphql_1.UseMiddleware)(isAuth_1.isAuth),
+    __param(0, (0, type_graphql_1.Arg)('input')),
+    __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [PostInput, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "createPost", null);
 __decorate([
@@ -93,7 +136,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "deletePost", null);
 PostResolver = __decorate([
-    (0, type_graphql_1.Resolver)()
+    (0, type_graphql_1.Resolver)(Posts_1.Posts)
 ], PostResolver);
 exports.PostResolver = PostResolver;
 //# sourceMappingURL=posts.js.map

@@ -22,7 +22,8 @@ const FormContainer = ({ children, heading }: BodyContainerProps) => {
 				w={'100%'}
 				h={'100vh'}
 				// bgGradient='linear(to-l,heroGradientStart, heroGradientEnd)'
-				bgGradient='linear(to-t, #222231 8%, #233349 30%, #7bcae9)'
+				// bgGradient='linear(to-t, #222231 8%, #233349 30%, #7bcae9)'
+				bgGradient='linear(to-t, #222231 8%, #233349 30%, primary)'
 			>
 				<Box>
 					<Heading

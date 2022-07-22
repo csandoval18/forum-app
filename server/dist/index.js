@@ -27,7 +27,7 @@ const ioredis_1 = __importDefault(require("ioredis"));
 const typeorm_config_1 = __importDefault(require("./typeorm.config"));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('NODE_ENV:', process.env.NODE_ENV);
-    yield typeorm_config_1.default.initialize();
+    const conn = yield typeorm_config_1.default.initialize();
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
     const redisClient = new ioredis_1.default();

@@ -58,6 +58,9 @@ const Navbar: React.FC<NavbarProps> = () => {
 			px={6}
 			color={'whiteAlpha.900'}
 			alignItems='center'
+			position={'sticky'}
+			top={0}
+			zIndex={5}
 		>
 			<Box display='flex'>
 				<NextLink href='/'>

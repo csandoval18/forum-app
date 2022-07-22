@@ -18,7 +18,8 @@ const main = async () => {
 	console.log('NODE_ENV:', process.env.NODE_ENV)
 
 	//initialize typeorm connection
-	await dataSource.initialize()
+	const conn = await dataSource.initialize()
+	// await conn.runMigrations()
 
 	const app = express()
 	// await sendEmail('user@user.com', 'hello world')

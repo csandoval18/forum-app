@@ -1,9 +1,16 @@
-import { Alert, AlertIcon, Box, Button, Link } from '@chakra-ui/react'
+import {
+	Alert,
+	AlertIcon,
+	Box,
+	Button,
+	Flex,
+	Link,
+} from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import FormContainer from '../../components/FormContainer'
 import SetPasswordInputField from '../../components/InputFields/SetPasswordInputField'
@@ -12,7 +19,9 @@ import { useChangePasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { toErrorMap } from '../../utils/toErrorMap'
 
-const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+const ChangePassword: NextPage<{ token: string }> = () => {
+	const router = useRouter()
+	console.log(router.query)
 	const [{}, changePassword] = useChangePasswordMutation()
 	const [tokenError, setTokenError] = useState('')
 
@@ -22,7 +31,10 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 	) => {
 		const response = await changePassword({
 			newPassword: values.newPassword,
-			token,
+			token:
+				typeof router.query.token === 'string'
+					? router.query.token
+					: '',
 		})
 		if (response.data?.changePassword.errors) {
 			const errorMap = toErrorMap(response.data.changePassword.errors)
@@ -33,7 +45,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 			setErrors(errorMap)
 		} else if (response.data?.changePassword.user) {
 			//change password sucessful
-			Router.push('/')
+			router.push('/')
 		}
 	}
 	return (
@@ -59,13 +71,17 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 							{tokenError ? (
 								<>
 									<Alert status='error'>
-										<AlertIcon />
-										{tokenError}
-										<NextLink href='/forgot-password'>
-											<Link ml={'142px'} textDecor={'underline'}>
-												reset password
-											</Link>
-										</NextLink>
+										<Flex w={'50%'}>
+											<AlertIcon />
+											{tokenError}
+										</Flex>
+										<Flex w={'50%'} justifyContent='right'>
+											<NextLink href='/forgot-password'>
+												<Link textDecor={'underline'}>
+													reset password
+												</Link>
+											</NextLink>
+										</Flex>
 									</Alert>
 								</>
 							) : (
@@ -91,13 +107,6 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 			</Wrapper>
 		</FormContainer>
 	)
-}
-
-//can use getserverprops function but there is no reason this component has to solely run on the server
-ChangePassword.getInitialProps = ({ query }) => {
-	return {
-		token: query.token as string,
-	}
 }
 
 export default withUrqlClient(createUrqlClient)(ChangePassword)
