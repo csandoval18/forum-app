@@ -8,6 +8,7 @@ import {
 	InputType,
 	Int,
 	Mutation,
+	ObjectType,
 	Query,
 	Resolver,
 	Root,
@@ -24,36 +25,53 @@ class PostInput {
 	text: string
 }
 
+@ObjectType()
+class PaginatedPosts {
+	@Field(() => [Posts])
+	posts: Posts[]
+	@Field()
+	hasMore: boolean
+}
+
 // Post queries to pg
 @Resolver(Posts)
 export class PostResolver {
+	// Returns a slice of text field from Posts entity
 	@FieldResolver(() => String)
-	textSnippet(@Root() root: Posts) {
-		return root.text.slice(0, 50)
+	textSnippet(@Root() post: Posts) {
+		return post.text.slice(0, 50)
 	}
 
-	@Query(() => [Posts])
+	/* 
+    When we set an argument to nullable we have explicitely set the return type
+	  cursor has to be nullable because the first time it is fetched it will be null 
+  */
+	@Query(() => PaginatedPosts)
 	async posts(
 		@Arg('limit', () => Int) limit: number,
-		//When we set an argument to nullable we have explicitely set the return type
-		//cursor has to be nullable because the first time it is fetched it will be null
 		@Arg('cursor', () => String, { nullable: true })
 		cursor: string | null,
-	): Promise<Posts[]> {
+	): Promise<PaginatedPosts> {
+		// The +1 checks if there is more posts after the given range to display in the next page
 		const realLimit = Math.min(50, limit)
+		const realLimitPlusOne = realLimit + 1
 
 		const qb = dataSource
 			.getRepository(Posts)
 			.createQueryBuilder('p') //alias
 			.orderBy('"createdAt"', 'DESC')
-			.take(realLimit)
+			.take(realLimitPlusOne)
 		if (cursor) {
 			qb.where('"createdAt" < :cursor ', {
 				cursor: new Date(parseInt(cursor)),
 			})
 		}
 
-		return qb.getMany()
+		const posts = await qb.getMany()
+		return {
+			posts: posts.slice(0, realLimit),
+			hasMore: posts.length === realLimitPlusOne,
+		}
 	}
 
 	@Query(() => Posts, { nullable: true })
@@ -61,15 +79,15 @@ export class PostResolver {
 		return Posts.findOne({ where: { id: id } })
 	}
 
-	//Create a post
+	// Create a post
 	@Mutation(() => Posts, { nullable: true })
-	//Checks if user is authenticated since we don't want user's that are not signed in to make posts
+	// Checks if user is authenticated since we don't want user's that are not signed in to make posts
 	@UseMiddleware(isAuth)
 	async createPost(
 		@Arg('input') input: PostInput,
 		@Ctx() { req }: MyContext,
 	): Promise<Posts> {
-		//adds record to postgres post table in forum DB
+		// Adds record to postgres post table in forum DB
 		return Posts.create({
 			...input,
 			creatorId: req.session.userId,

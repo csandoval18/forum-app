@@ -28,10 +28,10 @@ const errorExchange: Exchange =
 		)
 	}
 
-const cursorPagination = (): Resolver => {
+export const cursorPagination = (): Resolver => {
 	return (_parent, fieldArgs, cache, info) => {
 		const { parentKey: entityKey, fieldName } = info
-		console.log(entityKey, fieldName)
+		// console.log(entityKey, fieldName)
 		//inspectFields gets all the fields in the cache under the query basically all the queries
 		const allFields = cache.inspectFields(entityKey)
 		console.log('allfields:', allFields)
@@ -51,11 +51,9 @@ const cursorPagination = (): Resolver => {
 		const results: string[] = []
 		fieldInfos.forEach((fieldInfo) => {
 			const data = cache.resolve(entityKey, fieldInfo.fieldKey) as string[]
-
 			console.log('data:', data)
 			results.push(...data)
 		})
-		console.log('results: ', results)
 		return results
 	}
 }

@@ -9,7 +9,7 @@ export interface PaginationParams {
 	mergeMode?: MergeMode
 }
 
-export const cursorPagination = (): Resolver => {
+export const cursorPagination2 = (): Resolver => {
 	return (_parent, fieldArgs, cache, info) => {
 		const { parentKey: entityKey, fieldName } = info
 		// console.log(entityKey, fieldName)
