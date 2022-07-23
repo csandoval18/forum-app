@@ -28,33 +28,39 @@ const errorExchange: Exchange =
 		)
 	}
 
-export const cursorPagination = (): Resolver => {
+const cursorPagination = (): Resolver => {
 	return (_parent, fieldArgs, cache, info) => {
 		const { parentKey: entityKey, fieldName } = info
-		// console.log(entityKey, fieldName)
-		//inspectFields gets all the fields in the cache under the query basically all the queries
 		const allFields = cache.inspectFields(entityKey)
-		console.log('allfields:', allFields)
 		const fieldInfos = allFields.filter((info) => info.fieldName === fieldName)
 		const size = fieldInfos.length
 		if (size === 0) {
 			return undefined
 		}
 
-		// Reading data from the cache and returning it
-		console.log('fieldArgs:', fieldArgs)
 		const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`
-		console.log('key we created:', fieldKey)
-		const isInCache = cache.resolve(entityKey, fieldKey)
-		console.log('isInCache:', isInCache)
-		info.partial = !isInCache
+		const isItInTheCache = cache.resolve(
+			cache.resolve(entityKey, fieldKey) as string,
+			'posts',
+		)
+		info.partial = !isItInTheCache
+		let hasMore = true
 		const results: string[] = []
-		fieldInfos.forEach((fieldInfo) => {
-			const data = cache.resolve(entityKey, fieldInfo.fieldKey) as string[]
-			console.log('data:', data)
+		fieldInfos.forEach((fi) => {
+			const key = cache.resolve(entityKey, fi.fieldKey) as string
+			const data = cache.resolve(key, 'posts') as string[]
+			const _hasMore = cache.resolve(key, 'hasMore')
+			if (!_hasMore) {
+				hasMore = _hasMore as boolean
+			}
 			results.push(...data)
 		})
-		return results
+
+		return {
+			__typename: 'PaginatedPosts',
+			hasMore,
+			posts: results,
+		}
 	}
 }
 
@@ -68,6 +74,9 @@ export const createUrqlClient = (ssrExchange: any) => ({
 		dedupExchange,
 		//URQL graphcache cache updates
 		cacheExchange({
+			keys: {
+				PaginatedPosts: () => null,
+			},
 			resolvers: {
 				Query: {
 					posts: cursorPagination(),
