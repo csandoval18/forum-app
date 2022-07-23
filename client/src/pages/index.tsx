@@ -1,41 +1,30 @@
-import {
-	Box,
-	Button,
-	ColorModeContext,
-	ColorModeScript,
-	Flex,
-	Heading,
-	Stack,
-	Text,
-	theme,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
-import { useRouter } from 'next/router'
 
 const Index = () => {
 	const router = useRouter()
-	const [{ data, fetching }] = usePostsQuery({
-		variables: {
-			limit: 10,
-		},
+	const [variables, setVariables] = useState({
+		limit: 10,
+		cursor: null as string | null,
 	})
 
+	console.log('variables', variables)
+	const [{ data, fetching }] = usePostsQuery({
+		variables,
+	})
+
+	console.log(data)
 	if (!fetching && !data) {
 		return <div>Cannot fetch posts from server</div>
 	}
 
 	return (
-		<Box
-			h={'100%'}
-			bgGradient='linear(to-t, #1d1d29 30%, #1e2230 70%, #cdfff3)'
-			// bg='#cdfff3'
-		>
-			<ColorModeScript
-				initialColorMode={theme.config.initialColorMode}
-			/>
+		<Box h={'100%'}>
 			<Navbar pageProps={undefined} />
 			<Box className='posts-container' px={40}>
 				<Flex align={'center'} py={8}>
@@ -50,11 +39,13 @@ const Index = () => {
 						Create Post
 					</Button>
 				</Flex>
-				{fetching && !data ? (
+
+				{/* Diplay posts */}
+				{!data && fetching ? (
 					<div>loading...</div>
 				) : (
 					<Stack spacing={8}>
-						{data.posts.map((p) => (
+						{data!.posts.posts.map((p) => (
 							<Box
 								key={p.id}
 								p={6}
@@ -64,14 +55,27 @@ const Index = () => {
 								bg='whiteAlpha.500'
 							>
 								<Heading fontSize='xl'>{p.title}</Heading>
-								<Text mt={4}>{p.textSnippet + '...'}</Text>
+								<Text mt={4}>{p.textSnippet}</Text>
 							</Box>
 						))}
 					</Stack>
 				)}
-				{data ? (
+
+				{data && data.posts.hasMore ? (
 					<Flex>
-						<Button m='auto' variant='primary' my={8}>
+						<Button
+							m='auto'
+							variant='primary'
+							my={8}
+							isLoading={fetching}
+							onClick={() => {
+								setVariables({
+									limit: variables?.limit,
+									cursor:
+										data.posts.posts[data.posts.posts.length - 1].createdAt,
+								})
+							}}
+						>
 							load more
 						</Button>
 					</Flex>

@@ -9,6 +9,7 @@ import {
 	RegisterMutation,
 } from '../generated/graphql'
 import { betterUpdateQuery } from './betterUpdateQuery'
+import { cursorPagination } from './urqlCursorPagination'
 
 const errorExchange: Exchange =
 	({ forward }) =>
@@ -33,6 +34,14 @@ export const createUrqlClient = (ssrExchange: any) => ({
 		dedupExchange,
 		//URQL graphcache cache updates
 		cacheExchange({
+			keys: {
+				PaginatedPosts: () => null,
+			},
+			resolvers: {
+				Query: {
+					posts: cursorPagination(),
+				},
+			},
 			updates: {
 				Mutation: {
 					login: (_result, args, cache, info) => {

@@ -1,17 +1,17 @@
-import 'reflect-metadata'
-import { COOKIE_NAME, __prod__ } from './constants'
-import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
+import connectRedis from 'connect-redis'
+import cors from 'cors'
+import express from 'express'
+import session from 'express-session'
+import Redis from 'ioredis'
+import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
+import { COOKIE_NAME, __prod__ } from './constants'
 import { HelloResolver } from './resolvers/hello'
 import { PostResolver } from './resolvers/posts'
 import { UserResolver } from './resolvers/users'
-import { MyContext } from './types'
-import cors from 'cors'
-import session from 'express-session'
-import connectRedis from 'connect-redis'
-import Redis from 'ioredis'
 import dataSource from './typeorm.config'
+import { MyContext } from './types'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -19,7 +19,8 @@ const main = async () => {
 
 	//initialize typeorm connection
 	const conn = await dataSource.initialize()
-	// await conn.runMigrations()
+	await conn.runMigrations()
+	// await Posts.delete({})
 
 	const app = express()
 	// await sendEmail('user@user.com', 'hello world')
@@ -31,10 +32,7 @@ const main = async () => {
 	app.use(
 		//aplies to all routes
 		cors({
-			origin: [
-				'https://studio.apollographql.com',
-				'http://localhost:3000',
-			],
+			origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
 			credentials: true,
 		}),
 	)
