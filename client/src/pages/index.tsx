@@ -55,7 +55,7 @@ const Index = () => {
 								bg='whiteAlpha.500'
 							>
 								<Heading fontSize='xl'>{p.title}</Heading>
-								<Text mt={4}>{p.textSnippet + '...'}</Text>
+								<Text mt={4}>{p.textSnippet}</Text>
 							</Box>
 						))}
 					</Stack>
