@@ -65,8 +65,12 @@ export class PostResolver {
 
 		const posts = await dataSource.query(
 			`
-      SELECT p.*, u.*,
-      json_build_object('username', u.username) creator
+      SELECT p.*,
+      json_build_object(
+        'id', u.id,
+        'username', u.username,
+        'email', u.email
+      ) creator
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $2` : ''}

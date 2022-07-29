@@ -68,8 +68,12 @@ let PostResolver = class PostResolver {
                 replacements.push(new Date(parseInt(cursor)));
             }
             const posts = yield typeorm_config_1.default.query(`
-      SELECT p.*, u.*,
-      json_build_object('username', u.username) creator
+      SELECT p.*,
+      json_build_object(
+        'id', u.id,
+        'username', u.username,
+        'email', u.email
+      ) creator
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $2` : ''}
