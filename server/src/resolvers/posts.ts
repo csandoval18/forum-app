@@ -56,18 +56,40 @@ export class PostResolver {
 		const realLimit = Math.min(50, limit)
 		const realLimitPlusOne = realLimit + 1
 
-		const qb = dataSource
-			.getRepository(Posts)
-			.createQueryBuilder('p') //alias
-			.orderBy('"createdAt"', 'DESC')
-			.take(realLimitPlusOne)
+		const replacements: any[] = [realLimitPlusOne]
+
+		// Adding cursor field to conditional posts query
 		if (cursor) {
-			qb.where('"createdAt" < :cursor ', {
-				cursor: new Date(parseInt(cursor)),
-			})
+			replacements.push(new Date(parseInt(cursor)))
 		}
 
-		const posts = await qb.getMany()
+		const posts = await dataSource.query(
+			`
+      SELECT p.*, u.*,
+      json_build_object('username', u.username) creator
+      FROM posts p 
+      INNER JOIN users u ON u.id = p."creatorId"
+      ${cursor ? `WHERE p."createdAt" < $2` : ''}
+      ORDER BY p."createdAt" DESC
+      LIMIT $1
+      `,
+			replacements,
+		)
+
+		// const qb = dataSource
+		// 	.getRepository(Posts)
+		// 	.createQueryBuilder('p') //alias
+		// 	.innerJoinAndSelect('p.creator', 'u', 'u.id = p."creatorId"')
+		// 	.orderBy('p."createdAt"', 'DESC')
+		// 	.take(realLimitPlusOne)
+		// if (cursor) {
+		// 	qb.where('p."createdAt" < :cursor ', {
+		// 		cursor: new Date(parseInt(cursor)),
+		// 	})
+		// }
+
+		// const posts = await qb.getMany()
+		console.log('posts', posts)
 		return {
 			posts: posts.slice(0, realLimit),
 			hasMore: posts.length === realLimitPlusOne,

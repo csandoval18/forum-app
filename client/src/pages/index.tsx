@@ -14,7 +14,7 @@ const Index = () => {
 	})
 
 	console.log('variables', variables)
-	const [{ data, fetching }] = usePostsQuery({
+	const [{ data, fetching, ...other }] = usePostsQuery({
 		variables,
 	})
 
