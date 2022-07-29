@@ -41,6 +41,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Posts.prototype, "creatorId", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => Users_1.Users),
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (user) => user.posts),
     __metadata("design:type", Users_1.Users)
 ], Posts.prototype, "creator", void 0);
