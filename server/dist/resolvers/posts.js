@@ -72,7 +72,9 @@ let PostResolver = class PostResolver {
       json_build_object(
         'id', u.id,
         'username', u.username,
-        'email', u.email
+        'email', u.email,
+        'createdAt', u."createdAt",
+        'updatedAt', u."updatedAt"
       ) creator
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
