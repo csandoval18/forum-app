@@ -6,7 +6,7 @@ import { Users } from './Users'
 @ObjectType()
 @Entity()
 //base entity allows us to use posts.find() or posts.insert()
-export class Upvote extends BaseEntity {
+export class Upvotes extends BaseEntity {
 	@Column({ type: 'int' })
 	value: number
 

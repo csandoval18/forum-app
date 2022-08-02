@@ -16,7 +16,7 @@ import {
 } from 'type-graphql'
 import { Posts } from '../entities/Posts'
 import { isAuth } from '../middleware/isAuth'
-import { Upvote } from '../entities/Upvote'
+import { Upvotes } from '../entities/Upvotes'
 
 @InputType()
 class PostInput {
@@ -96,7 +96,6 @@ export class PostResolver {
 		// }
 
 		// const posts = await qb.getMany()
-		console.log('posts', posts)
 		return {
 			posts: posts.slice(0, realLimit),
 			hasMore: posts.length === realLimitPlusOne,
@@ -153,20 +152,29 @@ export class PostResolver {
 		const isUpvote = value !== -1
 		const realValue = isUpvote ? 1 : -1
 		const { userId } = req.session
-		Upvote.insert({
-			userId,
-			postId,
-			value: realValue,
-		})
+		// Upvotes.insert({
+		// 	userId,
+		// 	postId,
+		// 	value: realValue,
+		// })
 
-		dataSource.query(
+		//check if post is already liked
+
+		const upvote = dataSource.query(
 			`
+        START TRANSACTION;
+        
+        INSERT INTO upvotes ("userId", "postId", value)
+        VALUES (${userId}, ${postId}, ${realValue});
+        
         UPDATE posts
-        SET points = points + $1
-        WHERE id = $2
+        SET points = points + ${realValue}
+        WHERE id = ${postId};
+        
+        COMMIT;
       `,
-			[realValue, postId],
 		)
-		return true
+
+		return upvote
 	}
 }

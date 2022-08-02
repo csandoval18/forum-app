@@ -29,7 +29,6 @@ const typeorm_config_1 = __importDefault(require("../typeorm.config"));
 const type_graphql_1 = require("type-graphql");
 const Posts_1 = require("../entities/Posts");
 const isAuth_1 = require("../middleware/isAuth");
-const Upvote_1 = require("../entities/Upvote");
 let PostInput = class PostInput {
 };
 __decorate([
@@ -83,7 +82,6 @@ let PostResolver = class PostResolver {
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `, replacements);
-            console.log('posts', posts);
             return {
                 posts: posts.slice(0, realLimit),
                 hasMore: posts.length === realLimitPlusOne,
@@ -121,17 +119,19 @@ let PostResolver = class PostResolver {
             const isUpvote = value !== -1;
             const realValue = isUpvote ? 1 : -1;
             const { userId } = req.session;
-            Upvote_1.Upvote.insert({
-                userId,
-                postId,
-                value: realValue,
-            });
-            typeorm_config_1.default.query(`
+            const upvote = typeorm_config_1.default.query(`
+        START TRANSACTION;
+        
+        INSERT INTO upvotes ("userId", "postId", value)
+        VALUES (${userId}, ${postId}, ${realValue});
+        
         UPDATE posts
-        SET points = points + $1
-        WHERE id = $2
-      `, [realValue, postId]);
-            return true;
+        SET points = points + ${realValue}
+        WHERE id = ${postId};
+        
+        COMMIT;
+      `);
+            return upvote;
         });
     }
 };
