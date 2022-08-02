@@ -16,6 +16,7 @@ import {
 } from 'type-graphql'
 import { Posts } from '../entities/Posts'
 import { isAuth } from '../middleware/isAuth'
+import { Upvote } from '../entities/Upvote'
 
 @InputType()
 class PostInput {
@@ -140,6 +141,32 @@ export class PostResolver {
 	@Mutation(() => Boolean)
 	async deletePost(@Arg('id') id: number): Promise<boolean> {
 		await Posts.delete(id)
+		return true
+	}
+
+	@Mutation(() => Boolean)
+	async vote(
+		@Arg('postId', () => Int) postId: number,
+		@Arg('value', () => Int) value: number,
+		@Ctx() { req }: MyContext,
+	) {
+		const isUpvote = value !== -1
+		const realValue = isUpvote ? 1 : -1
+		const { userId } = req.session
+		Upvote.insert({
+			userId,
+			postId,
+			value: realValue,
+		})
+
+		dataSource.query(
+			`
+        UPDATE posts
+        SET points = points + $1
+        WHERE id = $2
+      `,
+			[realValue, postId],
+		)
 		return true
 	}
 }
