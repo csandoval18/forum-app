@@ -9,36 +9,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Upvote = void 0;
+exports.Upvotes = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Posts_1 = require("./Posts");
 const Users_1 = require("./Users");
-let Upvote = class Upvote extends typeorm_1.BaseEntity {
+let Upvotes = class Upvotes extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.Column)({ type: 'int' }),
     __metadata("design:type", Number)
-], Upvote.prototype, "value", void 0);
+], Upvotes.prototype, "value", void 0);
 __decorate([
     (0, typeorm_1.PrimaryColumn)(),
     __metadata("design:type", Number)
-], Upvote.prototype, "userId", void 0);
+], Upvotes.prototype, "userId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (user) => user.upvotes),
     __metadata("design:type", Users_1.Users)
-], Upvote.prototype, "user", void 0);
+], Upvotes.prototype, "user", void 0);
 __decorate([
     (0, typeorm_1.PrimaryColumn)(),
     __metadata("design:type", Number)
-], Upvote.prototype, "postId", void 0);
+], Upvotes.prototype, "postId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Posts_1.Posts, (post) => post.upvotes),
     __metadata("design:type", Posts_1.Posts)
-], Upvote.prototype, "post", void 0);
-Upvote = __decorate([
+], Upvotes.prototype, "post", void 0);
+Upvotes = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()
-], Upvote);
-exports.Upvote = Upvote;
+], Upvotes);
+exports.Upvotes = Upvotes;
 //# sourceMappingURL=Upvotes.js.map

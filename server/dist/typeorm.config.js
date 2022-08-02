@@ -7,7 +7,7 @@ const typeorm_1 = require("typeorm");
 const Users_1 = require("./entities/Users");
 const Posts_1 = require("./entities/Posts");
 const path_1 = __importDefault(require("path"));
-const Upvote_1 = require("./entities/Upvote");
+const Upvotes_1 = require("./entities/Upvotes");
 const dataSource = new typeorm_1.DataSource({
     type: 'postgres',
     database: 'forum',
@@ -16,7 +16,7 @@ const dataSource = new typeorm_1.DataSource({
     logging: true,
     synchronize: true,
     migrations: [path_1.default.join(__dirname, './migrations/*')],
-    entities: [Posts_1.Posts, Users_1.Users, Upvote_1.Upvote],
+    entities: [Posts_1.Posts, Users_1.Users, Upvotes_1.Upvotes],
 });
 exports.default = dataSource;
 //# sourceMappingURL=typeorm.config.js.map

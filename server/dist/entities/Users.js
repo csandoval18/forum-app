@@ -13,7 +13,7 @@ exports.Users = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Posts_1 = require("./Posts");
-const Upvote_1 = require("./Upvote");
+const Upvotes_1 = require("./Upvotes");
 let Users = class Users extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -40,7 +40,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Users.prototype, "posts", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Upvote_1.Upvote, (upvote) => upvote.user),
+    (0, typeorm_1.OneToMany)(() => Upvotes_1.Upvotes, (upvote) => upvote.user),
     __metadata("design:type", Array)
 ], Users.prototype, "upvotes", void 0);
 __decorate([
