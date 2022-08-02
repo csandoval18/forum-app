@@ -9,7 +9,7 @@ import { createUrqlClient } from '../utils/createUrqlClient'
 const Index = () => {
 	const router = useRouter()
 	const [variables, setVariables] = useState({
-		limit: 10,
+		limit: 15,
 		cursor: null as string | null,
 	})
 
@@ -55,6 +55,7 @@ const Index = () => {
 								bg='whiteAlpha.500'
 							>
 								<Heading fontSize='xl'>{p.title}</Heading>
+								<Text>Posted by {p.creator.username}</Text>
 								<Text mt={4}>{p.textSnippet}</Text>
 							</Box>
 						))}

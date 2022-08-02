@@ -44,6 +44,14 @@ export const createUrqlClient = (ssrExchange: any) => ({
 			},
 			updates: {
 				Mutation: {
+					/*This query is creating a post in the db, and it is also telling the client that the posts query
+					needs to be refetched from the server by invalidating the query thus updating the cache with the
+					newly created post */
+					createPost: (_result, args, cache, info) => {
+						cache.invalidate('Query', 'posts', {
+							limit: 15,
+						})
+					},
 					login: (_result, args, cache, info) => {
 						betterUpdateQuery<LoginMutation, MeQuery>(
 							cache,
