@@ -8,6 +8,8 @@ import {
 	Ctx,
 	ObjectType,
 	Query,
+	FieldResolver,
+	Root,
 } from 'type-graphql'
 //argon2 is for hashing password and making it secure in case the DB is compromised
 import argon2 from 'argon2'
@@ -41,8 +43,19 @@ class UserResponse {
 	user?: Users
 }
 
-@Resolver()
+@Resolver(Users)
 export class UserResolver {
+	// Prevents people from seeing emails of other users
+	@FieldResolver(() => String)
+	email(@Root() user: Users, @Ctx() { req }: MyContext) {
+		// If current user is trying to see his own email
+		if (req.session.userId === user.id) {
+			return user.email
+		}
+		// If the current user is trying to see the email of another user
+		return ''
+	}
+
 	@Mutation(() => UserResponse)
 	async register(
 		//options is an object with containing the username and password as parameter fields

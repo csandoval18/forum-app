@@ -5,9 +5,11 @@ import {
 	CreateDateColumn,
 	Entity,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import { Upvote } from './Upvote'
 import { Users } from './Users'
 
 @ObjectType()
@@ -34,9 +36,12 @@ export class Posts extends BaseEntity {
 	@Column()
 	creatorId: number
 
-	@Field(() => Users)
+	@Field(() => Posts)
 	@ManyToOne(() => Users, (user) => user.posts)
 	creator: Users
+
+	@OneToMany(() => Upvote, (upvote) => upvote.post)
+	upvotes: Upvote[]
 
 	@Field(() => String)
 	@CreateDateColumn()

@@ -8,12 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var Posts_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Posts = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const Upvote_1 = require("./Upvote");
 const Users_1 = require("./Users");
-let Posts = class Posts extends typeorm_1.BaseEntity {
+let Posts = Posts_1 = class Posts extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, type_graphql_1.Field)(),
@@ -41,10 +43,14 @@ __decorate([
     __metadata("design:type", Number)
 ], Posts.prototype, "creatorId", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => Users_1.Users),
+    (0, type_graphql_1.Field)(() => Posts_1),
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (user) => user.posts),
     __metadata("design:type", Users_1.Users)
 ], Posts.prototype, "creator", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Upvote_1.Upvote, (upvote) => upvote.post),
+    __metadata("design:type", Array)
+], Posts.prototype, "upvotes", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => String),
     (0, typeorm_1.CreateDateColumn)(),
@@ -55,7 +61,7 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
 ], Posts.prototype, "updatedAt", void 0);
-Posts = __decorate([
+Posts = Posts_1 = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()
 ], Posts);
