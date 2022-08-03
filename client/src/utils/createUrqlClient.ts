@@ -48,8 +48,12 @@ export const createUrqlClient = (ssrExchange: any) => ({
 					needs to be refetched from the server by invalidating the query thus updating the cache with the
 					newly created post */
 					createPost: (_result, args, cache, info) => {
-						cache.invalidate('Query', 'posts', {
-							limit: 15,
+						const allFields = cache.inspectFields('Query')
+						const fieldInfos = allFields.filter(
+							(info) => info.fieldName === 'posts',
+						)
+						fieldInfos.forEach((fi) => {
+							cache.invalidate('Query', 'posts', fi.arguments || {})
 						})
 					},
 					login: (_result, args, cache, info) => {

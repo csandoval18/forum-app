@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -54,8 +54,10 @@ const Index = () => {
 								// borderWidth={1}
 								bg='whiteAlpha.500'
 							>
+								<Icon name='chevron-up' size='24px' />
+								<Icon name='chevron-down' size='24px' />
 								<Heading fontSize='xl'>{p.title}</Heading>
-								<Text>Posted by {p.creator.username}</Text>
+								<Text mt={4}>Posted by {p.creator.username}</Text>
 								<Text mt={4}>{p.textSnippet}</Text>
 							</Box>
 						))}
