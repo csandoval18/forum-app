@@ -12,7 +12,7 @@ import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import Navbar from '../components/Navbar'
-import PostCard from '../components/PostCard'
+import PostCard from '../components/PostCard/PostCard'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 
@@ -55,14 +55,9 @@ const Index = () => {
 					<div>loading...</div>
 				) : (
 					<Stack spacing={8}>
-						{data!.posts.posts.map((p) => (
-							<PostCard
-								id={p.id}
-								points={p.points}
-								title={p.title}
-								username={p.creator.username}
-								textSnippet={p.textSnippet}
-							></PostCard>
+						{data!.posts.posts.map((postFields) => (
+							// Passing post fields to postcard component through props
+							<PostCard post={postFields}></PostCard>
 						))}
 					</Stack>
 				)}
