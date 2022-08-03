@@ -1,8 +1,18 @@
-import { Box, Button, Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import {
+	Box,
+	Button,
+	Flex,
+	Heading,
+	IconButton,
+	Stack,
+	Text,
+} from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import Navbar from '../components/Navbar'
+import PostCard from '../components/PostCard'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 
@@ -46,20 +56,13 @@ const Index = () => {
 				) : (
 					<Stack spacing={8}>
 						{data!.posts.posts.map((p) => (
-							<Box
-								key={p.id}
-								p={6}
-								borderRadius={12}
-								shadow='lg'
-								// borderWidth={1}
-								bg='whiteAlpha.500'
-							>
-								<Icon name='chevron-up' size='24px' />
-								<Icon name='chevron-down' size='24px' />
-								<Heading fontSize='xl'>{p.title}</Heading>
-								<Text mt={4}>Posted by {p.creator.username}</Text>
-								<Text mt={4}>{p.textSnippet}</Text>
-							</Box>
+							<PostCard
+								id={p.id}
+								points={p.points}
+								title={p.title}
+								username={p.creator.username}
+								textSnippet={p.textSnippet}
+							></PostCard>
 						))}
 					</Stack>
 				)}
