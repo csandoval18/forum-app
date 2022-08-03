@@ -1,5 +1,3 @@
-import dataSource from '../typeorm.config'
-import { MyContext } from '../types'
 import {
 	Arg,
 	Ctx,
@@ -16,7 +14,8 @@ import {
 } from 'type-graphql'
 import { Posts } from '../entities/Posts'
 import { isAuth } from '../middleware/isAuth'
-import { Upvotes } from '../entities/Upvotes'
+import dataSource from '../typeorm.config'
+import { MyContext } from '../types'
 
 @InputType()
 class PostInput {
