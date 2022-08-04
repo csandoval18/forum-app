@@ -19,7 +19,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 			bg='whiteAlpha.500'
 			alignItems={'center'}
 		>
-			<UpvoteSection points={post.points}></UpvoteSection>
+			<UpvoteSection post={post}></UpvoteSection>
 			<Box>
 				<Heading fontSize='xl'>{post.title}</Heading>
 				<Text mt={4}>Posted by {post.creator.username}</Text>

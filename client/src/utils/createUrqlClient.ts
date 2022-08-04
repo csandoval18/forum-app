@@ -7,9 +7,11 @@ import {
 	MeDocument,
 	MeQuery,
 	RegisterMutation,
+	VoteMutationVariables,
 } from '../generated/graphql'
 import { betterUpdateQuery } from './betterUpdateQuery'
 import { cursorPagination } from './urqlCursorPagination'
+import { gql } from '@urql/core'
 
 const errorExchange: Exchange =
 	({ forward }) =>
@@ -44,6 +46,37 @@ export const createUrqlClient = (ssrExchange: any) => ({
 			},
 			updates: {
 				Mutation: {
+					vote: (_result, args, cache, info) => {
+						const { postId, value } = args as VoteMutationVariables
+						const data = cache.readFragment(
+							gql`
+								fragment _ on Posts {
+									id
+									points
+									voteStatus
+								}
+							`,
+							// Lookup
+							{ id: postId },
+						)
+
+						if (data) {
+							if (data.voteStatus === value) {
+								return
+							}
+							const newPoints = data.points + (!data.voteStatus ? 1 : 2) * value
+							cache.writeFragment(
+								gql`
+									fragment __ on Posts {
+										points
+										voteStatus
+									}
+								`,
+								{ id: postId, points: newPoints, voteStatus: value },
+							)
+						}
+					},
+
 					/*This query is creating a post in the db, and it is also telling the client that the posts query
 					needs to be refetched from the server by invalidating the query thus updating the cache with the
 					newly created post */
@@ -62,10 +95,10 @@ export const createUrqlClient = (ssrExchange: any) => ({
 							{ query: MeDocument },
 							_result,
 							(result, query) => {
-								//If result of login query is an error then return the current query
+								// If result of login query is an error then return the current query
 								if (result.login.errors) {
 									return query
-									//Else return user data {id, username} when logged in successfully
+									// Else return user data {id, username} when logged in successfully
 								} else {
 									return {
 										me: result.login.user,
@@ -80,10 +113,10 @@ export const createUrqlClient = (ssrExchange: any) => ({
 							{ query: MeDocument },
 							_result,
 							(result, query) => {
-								//If result of login query is an error then return the current query
+								// If result of login query is an error then return the current query
 								if (result.register.errors) {
 									return query
-									//Else return user data {id, username} when logged in successfully
+									// Else return user data {id, username} when logged in successfully
 								} else {
 									return {
 										me: result.register.user,

@@ -94,7 +94,6 @@ let UserResolver = class UserResolver {
                     .execute();
                 const user = result.raw[0];
                 req.session.userId = user.id;
-                console.log('cookie:', req.session);
                 return { user };
             }
             else {
@@ -136,8 +135,6 @@ let UserResolver = class UserResolver {
                 };
             }
             req.session.userId = user.id;
-            console.log('cookie:', req.session);
-            console.log('sessionID', req.sessionID);
             return {
                 user,
             };
@@ -151,14 +148,10 @@ let UserResolver = class UserResolver {
                 resolve(false);
                 return;
             }
-            console.log('removed cookie');
-            console.log('cookie:', req.session);
-            console.log('sessionID:', req.session);
             resolve(true);
         }));
     }
     me({ req }) {
-        console.log('me query cookie:', req.session);
         if (!req.session.userId) {
             return null;
         }

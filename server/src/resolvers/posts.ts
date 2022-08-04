@@ -1,3 +1,4 @@
+import { Upvotes } from '../entities/Upvotes'
 import {
 	Arg,
 	Ctx,
@@ -51,12 +52,19 @@ export class PostResolver {
 		@Arg('limit', () => Int) limit: number,
 		@Arg('cursor', () => String, { nullable: true })
 		cursor: string | null,
+		@Ctx() { req }: MyContext,
 	): Promise<PaginatedPosts> {
 		// The +1 checks if there is more posts after the given range to display in the next page
 		const realLimit = Math.min(50, limit)
 		const realLimitPlusOne = realLimit + 1
 
 		const replacements: any[] = [realLimitPlusOne]
+		console.log('cookie:', req.session)
+		console.log('userId:', req.session.sessionID)
+
+		if (req.session?.userId) {
+			replacements.push(req.session.sessionID)
+		}
 
 		// Adding cursor field to conditional posts query
 		if (cursor) {
@@ -72,10 +80,15 @@ export class PostResolver {
         'email', u.email,
         'createdAt', u."createdAt",
         'updatedAt', u."updatedAt"
-      ) creator
+      ) creator, 
+      ${
+				req.session.userId
+					? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
+					: 'null as "voteStatus"'
+			}
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
-      ${cursor ? `WHERE p."createdAt" < $2` : ''}
+      ${cursor ? `WHERE p."createdAt" < $3` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `,
@@ -148,6 +161,7 @@ export class PostResolver {
 		@Arg('value', () => Int) value: number,
 		@Ctx() { req }: MyContext,
 	) {
+		// Determine if value is an upvote or downvote
 		const isUpvote = value !== -1
 		const realValue = isUpvote ? 1 : -1
 		const { userId } = req.session
@@ -157,23 +171,50 @@ export class PostResolver {
 		// 	value: realValue,
 		// })
 
-		//check if post is already liked
+		const upvote = await Upvotes.findOne({ where: { postId, userId } })
 
-		const upvote = dataSource.query(
-			`
-        START TRANSACTION;
-        
-        INSERT INTO upvotes ("userId", "postId", value)
-        VALUES (${userId}, ${postId}, ${realValue});
-        
-        UPDATE posts
-        SET points = points + ${realValue}
-        WHERE id = ${postId};
-        
-        COMMIT;
-      `,
-		)
+		// The user has voted on the post before and they are changing their vote
+		if (upvote && upvote.value !== realValue) {
+			dataSource.transaction(async (tm) => {
+				await tm.query(
+					`
+          UPDATE upvotes
+          SET value = $1
+          WHERE "postId" = $2 AND "userId" = $3
+        `,
+					[realValue, postId, userId],
+				)
 
-		return upvote
+				await tm.query(
+					`
+          UPDATE posts
+          SET points = points + $1
+          WHERE id = $2
+        `,
+					[2 * realValue, postId],
+				)
+			})
+		} else if (!upvote) {
+			// User has not voted before and the entry will be inserted in the db
+			dataSource.transaction(async (tm) => {
+				await tm.query(
+					`
+          INSERT INTO upvotes ("userId", "postId", value)
+          VALUES ($1, $2, $3)
+        `,
+					[userId, postId, realValue],
+				)
+
+				await tm.query(
+					`
+          UPDATE posts
+          SET points = points + $1
+          WHERE id = $2
+        `,
+					[realValue, postId],
+				)
+			})
+		}
+		return true
 	}
 }

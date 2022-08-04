@@ -25,6 +25,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
+const Upvotes_1 = require("../entities/Upvotes");
 const type_graphql_1 = require("type-graphql");
 const Posts_1 = require("../entities/Posts");
 const isAuth_1 = require("../middleware/isAuth");
@@ -59,11 +60,17 @@ let PostResolver = class PostResolver {
     textSnippet(post) {
         return post.text.slice(0, 50);
     }
-    posts(limit, cursor) {
+    posts(limit, cursor, { req }) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
             const realLimitPlusOne = realLimit + 1;
             const replacements = [realLimitPlusOne];
+            console.log('cookie:', req.session);
+            console.log('userId:', req.session.sessionID);
+            if ((_a = req.session) === null || _a === void 0 ? void 0 : _a.userId) {
+                replacements.push(req.session.sessionID);
+            }
             if (cursor) {
                 replacements.push(new Date(parseInt(cursor)));
             }
@@ -75,10 +82,13 @@ let PostResolver = class PostResolver {
         'email', u.email,
         'createdAt', u."createdAt",
         'updatedAt', u."updatedAt"
-      ) creator
+      ) creator, 
+      ${req.session.userId
+                ? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
+                : 'null as "voteStatus"'}
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
-      ${cursor ? `WHERE p."createdAt" < $2` : ''}
+      ${cursor ? `WHERE p."createdAt" < $3` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `, replacements);
@@ -119,19 +129,35 @@ let PostResolver = class PostResolver {
             const isUpvote = value !== -1;
             const realValue = isUpvote ? 1 : -1;
             const { userId } = req.session;
-            const upvote = typeorm_config_1.default.query(`
-        START TRANSACTION;
-        
-        INSERT INTO upvotes ("userId", "postId", value)
-        VALUES (${userId}, ${postId}, ${realValue});
-        
-        UPDATE posts
-        SET points = points + ${realValue}
-        WHERE id = ${postId};
-        
-        COMMIT;
-      `);
-            return upvote;
+            const upvote = yield Upvotes_1.Upvotes.findOne({ where: { postId, userId } });
+            if (upvote && upvote.value !== realValue) {
+                typeorm_config_1.default.transaction((tm) => __awaiter(this, void 0, void 0, function* () {
+                    yield tm.query(`
+          UPDATE upvotes
+          SET value = $1
+          WHERE "postId" = $2 AND "userId" = $3
+        `, [realValue, postId, userId]);
+                    yield tm.query(`
+          UPDATE posts
+          SET points = points + $1
+          WHERE id = $2
+        `, [2 * realValue, postId]);
+                }));
+            }
+            else if (!upvote) {
+                typeorm_config_1.default.transaction((tm) => __awaiter(this, void 0, void 0, function* () {
+                    yield tm.query(`
+          INSERT INTO upvotes ("userId", "postId", value)
+          VALUES ($1, $2, $3)
+        `, [userId, postId, realValue]);
+                    yield tm.query(`
+          UPDATE posts
+          SET points = points + $1
+          WHERE id = $2
+        `, [realValue, postId]);
+                }));
+            }
+            return true;
         });
     }
 };
@@ -146,8 +172,9 @@ __decorate([
     (0, type_graphql_1.Query)(() => PaginatedPosts),
     __param(0, (0, type_graphql_1.Arg)('limit', () => type_graphql_1.Int)),
     __param(1, (0, type_graphql_1.Arg)('cursor', () => String, { nullable: true })),
+    __param(2, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, Object, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "posts", null);
 __decorate([
