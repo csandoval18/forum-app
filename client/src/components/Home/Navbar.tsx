@@ -3,8 +3,8 @@ import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useLogoutMutation, useMeQuery } from '../generated/graphql'
-import { createUrqlClient } from '../utils/createUrqlClient'
+import { useLogoutMutation, useMeQuery } from '../../generated/graphql'
+import { createUrqlClient } from '../../utils/createUrqlClient'
 
 interface NavbarProps {}
 

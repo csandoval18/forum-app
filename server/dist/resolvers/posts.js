@@ -61,18 +61,17 @@ let PostResolver = class PostResolver {
         return post.text.slice(0, 50);
     }
     posts(limit, cursor, { req }) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
             const realLimitPlusOne = realLimit + 1;
             const replacements = [realLimitPlusOne];
-            console.log('cookie:', req.session);
-            console.log('userId:', req.session.sessionID);
-            if ((_a = req.session) === null || _a === void 0 ? void 0 : _a.userId) {
-                replacements.push(req.session.sessionID);
-            }
+            const { userId } = req.session;
+            if (userId)
+                replacements.push(userId);
+            let cursorIdx = 3;
             if (cursor) {
                 replacements.push(new Date(parseInt(cursor)));
+                cursorIdx = replacements.length;
             }
             const posts = yield typeorm_config_1.default.query(`
       SELECT p.*,
@@ -88,7 +87,7 @@ let PostResolver = class PostResolver {
                 : 'null as "voteStatus"'}
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
-      ${cursor ? `WHERE p."createdAt" < $3` : ''}
+      ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `, replacements);

@@ -1,6 +1,5 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { Box, Flex, Heading, IconButton, Stack, Text } from '@chakra-ui/react'
-import { PostSnippetFragment, Users } from '../../generated/graphql'
+import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { PostSnippetFragment } from '../../../../generated/graphql'
 import UpvoteSection from './UpvoteSection'
 
 interface PostCardProps {
@@ -10,8 +9,8 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	return (
 		<Flex
+			className='post-card'
 			w='100%'
-			key={post.id}
 			p={6}
 			borderRadius={12}
 			shadow='lg'

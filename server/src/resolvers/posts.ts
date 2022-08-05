@@ -59,18 +59,17 @@ export class PostResolver {
 		const realLimitPlusOne = realLimit + 1
 
 		const replacements: any[] = [realLimitPlusOne]
-		console.log('cookie:', req.session)
-		console.log('userId:', req.session.sessionID)
 
-		if (req.session?.userId) {
-			replacements.push(req.session.sessionID)
-		}
+		// If user is signed in add userId to replacements for conditional query
+		const { userId } = req.session
+		if (userId) replacements.push(userId)
 
 		// Adding cursor field to conditional posts query
+		let cursorIdx = 3
 		if (cursor) {
 			replacements.push(new Date(parseInt(cursor)))
+			cursorIdx = replacements.length
 		}
-
 		const posts = await dataSource.query(
 			`
       SELECT p.*,
@@ -88,7 +87,7 @@ export class PostResolver {
 			}
       FROM posts p 
       INNER JOIN users u ON u.id = p."creatorId"
-      ${cursor ? `WHERE p."createdAt" < $3` : ''}
+      ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `,

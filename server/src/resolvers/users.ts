@@ -99,6 +99,7 @@ export class UserResolver {
 			const user = result.raw[0]
 			//set user id session cookie after succesful register
 			req.session.userId = user.id
+			console.log('cookie:', req.session)
 			return { user }
 		} else {
 			//if username is taken return an error array object
@@ -149,6 +150,9 @@ export class UserResolver {
 		//sets cookie session to maintain user logged in after login
 		//also stores user.id into redis
 		req.session.userId = user.id
+		console.log('cookie:', req.session)
+		console.log('sessionID', req.sessionID)
+
 		return {
 			user,
 		}
@@ -164,6 +168,9 @@ export class UserResolver {
 					resolve(false)
 					return
 				}
+				console.log('removed cookie')
+				console.log('cookie:', req.session)
+				console.log('sessionID:', req.session)
 				resolve(true)
 			}),
 		)
@@ -172,6 +179,7 @@ export class UserResolver {
 	@Query(() => Users, { nullable: true })
 	me(@Ctx() { req }: MyContext) {
 		//user is not logged in since no cookie is set null is returned
+		console.log('me query cookie:', req.session)
 		if (!req.session.userId) {
 			return null
 		}

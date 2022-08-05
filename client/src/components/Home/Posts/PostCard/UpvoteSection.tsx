@@ -1,7 +1,10 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { Box, Flex, IconButton } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { PostSnippetFragment, useVoteMutation } from '../../generated/graphql'
+import {
+	PostSnippetFragment,
+	useVoteMutation,
+} from '../../../../generated/graphql'
 
 interface UpvoteSectionProps {
 	post: PostSnippetFragment
@@ -15,7 +18,8 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
 
 	const handleUpvote = async () => {
 		// Checks if vote has been set
-		if (post.voteStatus === -1) return
+		console.log('voteStatus:', post.voteStatus)
+		if (post.voteStatus === 1) return
 
 		setLoadingState('upvote-loading')
 		await vote({
@@ -27,7 +31,8 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
 
 	const handleDownvote = async () => {
 		// Checks if vote has been set
-		if (post.voteStatus === 1) return
+		console.log('voteStatus:', post.voteStatus)
+		if (post.voteStatus === -1) return
 
 		setLoadingState('downvote-loading')
 		await vote({
@@ -42,7 +47,7 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
 			<IconButton
 				aria-label='Upvote'
 				icon={<ChevronUpIcon fontSize={20} />}
-				backgroundColor={post.voteStatus === 1 ? 'green' : 'transparent'}
+				backgroundColor={post.voteStatus === 1 ? 'primary' : 'transparent'}
 				isLoading={loadingState === 'upvote-loading'}
 				onClick={handleUpvote}
 			/>
