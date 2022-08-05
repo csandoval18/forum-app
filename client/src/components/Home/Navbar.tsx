@@ -9,7 +9,7 @@ import { isServer } from '../../utils/isServer'
 
 interface NavbarProps {}
 
-export const Navbar: React.FC<NavbarProps> = () => {
+const Navbar: React.FC<NavbarProps> = () => {
 	const router = useRouter()
 	const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
 	const [{ data, fetching }] = useMeQuery({})
@@ -71,3 +71,5 @@ export const Navbar: React.FC<NavbarProps> = () => {
 		</Flex>
 	)
 }
+
+export default Navbar

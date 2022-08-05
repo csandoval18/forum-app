@@ -28,10 +28,12 @@ const theme = extendTheme({
 					},
 				},
 				secondary: {
+					color: 'white',
 					borderRadius: '15px',
-					bg: '#ffffff',
+					bg: '#233349',
 					_hover: {
 						bg: '#eeeeee',
+						color: '#1e2329',
 					},
 				},
 			},
@@ -64,7 +66,9 @@ const theme = extendTheme({
 	},
 	colors: {
 		black: '#1e2329',
-		primary: '#98d6e6',
+		primary: '#6ee7bf',
+		secondary: '#233349',
+		complimentary: '#98d6e6',
 	},
 	fonts,
 	breakpoints,

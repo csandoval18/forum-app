@@ -16,17 +16,17 @@ interface BodyContainerProps {
 const FormContainer = ({ children, heading }: BodyContainerProps) => {
 	return (
 		<>
-			<Navbar pageProps={undefined} />
+			<Navbar />
 			<Center
 				p={0}
 				w={'100%'}
 				h={'100vh'}
 				// bgGradient='linear(to-l,heroGradientStart, heroGradientEnd)'
 				// bgGradient='linear(to-t, #222231 8%, #233349 30%, #7bcae9)'
-				bgGradient='linear(to-t, #222231 8%, #233349 30%, primary)'
+				bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 			>
 				<Box>
-					<Heading mb={7} ml={2} width={'500px'} color='whiteAlpha.800'>
+					<Heading mb={7} ml={2} width={'500px'} color='white'>
 						{heading}
 					</Heading>
 					{children}
