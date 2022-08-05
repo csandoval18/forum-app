@@ -28,21 +28,21 @@ const errorExchange: Exchange =
 	}
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
-	let cookie = ''
-	if (isServer()) {
-		cookie = ctx?.req?.headers?.cookie
-	}
+	// let cookie = ''
+	// if (isServer()) {
+	// 	cookie = ctx?.req?.headers?.cookie
+	// }
 
 	return {
 		url: 'http://localhost:4000/graphql',
 		//Sends a cookie. Used to set a cookie when user register or fetching cookie when loggin in
 		fetchOptions: {
 			credentials: 'include' as const,
-			headers: cookie
-				? {
-						cookie,
-				  }
-				: undefined,
+			// headers: cookie
+			// 	? {
+			// 			cookie,
+			// 	  }
+			// 	: undefined,
 		},
 		exchanges: [
 			dedupExchange,

@@ -56,7 +56,7 @@ export const Posts: React.FC<PostsProps> = () => {
 				<Flex>
 					<Button
 						m='auto'
-						variant='primary'
+						variant='secondary'
 						my={8}
 						isLoading={fetching}
 						onClick={() => {

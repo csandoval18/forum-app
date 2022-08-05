@@ -2,7 +2,7 @@ import { Box, Flex, Heading } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Navbar } from '../../components/Home/Navbar'
+import Navbar from '../../components/Home/Navbar'
 import { usePostQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 
@@ -35,7 +35,7 @@ const Post = ({}) => {
 				backgroundColor='red'
 				alignItems='center'
 				py={8}
-				px={8}
+				px={10}
 				mx={8}
 				my={8}
 				borderRadius='12px'
