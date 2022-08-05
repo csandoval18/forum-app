@@ -5,15 +5,14 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useLogoutMutation, useMeQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
+import { isServer } from '../../utils/isServer'
 
 interface NavbarProps {}
 
-const Navbar: React.FC<NavbarProps> = () => {
+export const Navbar: React.FC<NavbarProps> = () => {
 	const router = useRouter()
 	const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
-	const [{ data, fetching }] = useMeQuery({
-		// pause: true,
-	})
+	const [{ data, fetching }] = useMeQuery({})
 	let body = null
 
 	//data is loading
@@ -72,5 +71,3 @@ const Navbar: React.FC<NavbarProps> = () => {
 		</Flex>
 	)
 }
-
-export default withUrqlClient(createUrqlClient)(Navbar)

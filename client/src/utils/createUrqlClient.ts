@@ -28,8 +28,9 @@ const errorExchange: Exchange =
 	}
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
+	let cookie = ''
 	if (isServer()) {
-		console.log(ctx.req.headers.cookie)
+		cookie = ctx?.req?.headers?.cookie
 	}
 
 	return {
@@ -37,6 +38,11 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 		//Sends a cookie. Used to set a cookie when user register or fetching cookie when loggin in
 		fetchOptions: {
 			credentials: 'include' as const,
+			headers: cookie
+				? {
+						cookie,
+				  }
+				: undefined,
 		},
 		exchanges: [
 			dedupExchange,

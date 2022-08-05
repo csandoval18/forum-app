@@ -1,5 +1,6 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react'
 import { PostSnippetFragment } from '../../../../generated/graphql'
+import NextLink from 'next/link'
 import UpvoteSection from './UpvoteSection'
 
 interface PostCardProps {
@@ -13,14 +14,18 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 			w='100%'
 			p={6}
 			borderRadius={12}
-			shadow='lg'
+			shadow='dark-lg'
 			// borderWidth={1}
-			bg='whiteAlpha.500'
+			bg='white'
 			alignItems={'center'}
 		>
 			<UpvoteSection post={post}></UpvoteSection>
 			<Box>
-				<Heading fontSize='xl'>{post.title}</Heading>
+				<NextLink href='/post/[id]' as={`/post/${post.id}`}>
+					<Link>
+						<Heading fontSize='xl'>{post.title}</Heading>
+					</Link>
+				</NextLink>
 				<Text mt={4}>Posted by {post.creator.username}</Text>
 				<Text mt={4}>{post.textSnippet}</Text>
 			</Box>

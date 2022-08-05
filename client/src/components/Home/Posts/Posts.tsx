@@ -8,7 +8,7 @@ import PostCard from './PostCard/PostCard'
 
 interface PostsProps {}
 
-const Posts: React.FC<PostsProps> = () => {
+export const Posts: React.FC<PostsProps> = () => {
 	const router = useRouter()
 	const [variables, setVariables] = useState({
 		limit: 15,
@@ -74,4 +74,4 @@ const Posts: React.FC<PostsProps> = () => {
 	)
 }
 
-export default withUrqlClient(createUrqlClient)(Posts)
+// export default withUrqlClient(createUrqlClient)(Posts)
