@@ -12,9 +12,9 @@ import { LoginInputs, useLoginMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
 
-interface loginProps {}
+interface LoginProps {}
 
-const Login: React.FC<{}> = ({}) => {
+const Login: React.FC<LoginProps> = ({}) => {
 	const router = useRouter()
 	const [{}, login] = useLoginMutation()
 
@@ -83,4 +83,4 @@ const Login: React.FC<{}> = ({}) => {
 	)
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Login)
+export default withUrqlClient(createUrqlClient)(Login)

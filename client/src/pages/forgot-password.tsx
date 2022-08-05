@@ -6,7 +6,7 @@ import InputField from '../components/InputFields/InputField'
 import Wrapper from '../components/Wrapper'
 import { useForgotPasswordMutation } from '../generated/graphql'
 
-interface ForgotPassword {}
+interface ForgotPasswordProps {}
 
 const ForgotPassword: React.FC<{}> = () => {
 	const [complete, setComplete] = useState(false)
@@ -21,16 +21,13 @@ const ForgotPassword: React.FC<{}> = () => {
 		<FormContainer heading='Forgot Password'>
 			<Wrapper h='330px'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
-				<Formik
-					initialValues={{ email: '' }}
-					onSubmit={handleForgotPassword}
-				>
+				<Formik initialValues={{ email: '' }} onSubmit={handleForgotPassword}>
 					{({ isSubmitting }) =>
 						complete ? (
 							<Alert status='info'>
 								<AlertIcon />
-								An email has been sent to the email address linked
-								with the account.
+								An email has been sent to the email address linked with the
+								account.
 							</Alert>
 						) : (
 							<Form>

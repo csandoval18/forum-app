@@ -8,23 +8,17 @@ import FormContainer from '../components/FormContainer'
 import InputField from '../components/InputFields/InputField'
 import SetPasswordInputField from '../components/InputFields/SetPasswordInputField'
 import Wrapper from '../components/Wrapper'
-import {
-	RegisterInputs,
-	useRegisterMutation,
-} from '../generated/graphql'
+import { RegisterInputs, useRegisterMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { toErrorMap } from '../utils/toErrorMap'
 
-interface registerProps {}
+interface RegisterProps {}
 
-const Register: React.FC<registerProps> = ({}) => {
+const Register: React.FC<RegisterProps> = ({}) => {
 	const router = useRouter()
 	const [{}, register] = useRegisterMutation()
 
-	const handleRegister = async (
-		values: RegisterInputs,
-		{ setErrors },
-	) => {
+	const handleRegister = async (values: RegisterInputs, { setErrors }) => {
 		const response = await register({ options: values })
 		console.log(response)
 		//? returns either errors or undefined
@@ -51,11 +45,7 @@ const Register: React.FC<registerProps> = ({}) => {
 								placeholder='username'
 								label='Username'
 							/>
-							<InputField
-								name='email'
-								placeholder='email'
-								label='Email'
-							/>
+							<InputField name='email' placeholder='email' label='Email' />
 							<SetPasswordInputField
 								name='password'
 								placeholder='password'
