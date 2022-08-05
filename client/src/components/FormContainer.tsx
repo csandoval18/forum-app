@@ -6,7 +6,7 @@ import {
 	flexbox,
 	Heading,
 } from '@chakra-ui/react'
-import Navbar from './Navbar'
+import Navbar from './Home/Navbar'
 
 interface BodyContainerProps {
 	children: any
@@ -26,12 +26,7 @@ const FormContainer = ({ children, heading }: BodyContainerProps) => {
 				bgGradient='linear(to-t, #222231 8%, #233349 30%, primary)'
 			>
 				<Box>
-					<Heading
-						mb={7}
-						ml={2}
-						width={'500px'}
-						color='whiteAlpha.800'
-					>
+					<Heading mb={7} ml={2} width={'500px'} color='whiteAlpha.800'>
 						{heading}
 					</Heading>
 					{children}
