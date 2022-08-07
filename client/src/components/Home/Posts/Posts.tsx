@@ -1,4 +1,11 @@
-import { Box, Button, Flex, Heading, Stack } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	Flex,
+	Heading,
+	Stack,
+	useColorMode,
+} from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -8,7 +15,7 @@ import PostCard from './PostCard/PostCard'
 
 interface PostsProps {}
 
-export const Posts: React.FC<PostsProps> = () => {
+const Posts: React.FC = () => {
 	const router = useRouter()
 	const [variables, setVariables] = useState({
 		limit: 15,
@@ -28,7 +35,7 @@ export const Posts: React.FC<PostsProps> = () => {
 	return (
 		<Box className='posts-container' px={40}>
 			<Flex align={'center'} py={8}>
-				<Heading>Forum App</Heading>
+				<Heading textColor={'white'}>Main Forum</Heading>
 				<Button
 					variant='primary'
 					ml={'auto'}
@@ -44,7 +51,7 @@ export const Posts: React.FC<PostsProps> = () => {
 			{!data && fetching ? (
 				<div>loading...</div>
 			) : (
-				<Stack spacing={8}>
+				<Stack spacing={8} my={8}>
 					{data!.posts.posts.map((postFields) => (
 						// Passing post fields to postcard component through props
 						<PostCard key={postFields.id} post={postFields}></PostCard>
@@ -74,4 +81,4 @@ export const Posts: React.FC<PostsProps> = () => {
 	)
 }
 
-// export default withUrqlClient(createUrqlClient)(Posts)
+export default Posts
