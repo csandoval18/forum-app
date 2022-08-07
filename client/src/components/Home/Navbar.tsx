@@ -1,16 +1,14 @@
-import { Box, Button, Flex, Link } from '@chakra-ui/react'
-import { withUrqlClient } from 'next-urql'
+import { Box, Button, Flex, Link, useColorMode } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useLogoutMutation, useMeQuery } from '../../generated/graphql'
-import { createUrqlClient } from '../../utils/createUrqlClient'
-import { isServer } from '../../utils/isServer'
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
 	const router = useRouter()
+	const { colorMode, toggleColorMode } = useColorMode()
 	const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
 	const [{ data, fetching }] = useMeQuery({})
 	let body = null
@@ -62,10 +60,13 @@ const Navbar: React.FC<NavbarProps> = () => {
 		>
 			<Box display='flex'>
 				<NextLink href='/'>
-					<Link>Home</Link>
+					<Link>CAS</Link>
 				</NextLink>
 			</Box>
 			<Box p={4} ml={'auto'}>
+				{/* <Button onClick={toggleColorMode}>
+					Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
+				</Button> */}
 				{body}
 			</Box>
 		</Flex>
