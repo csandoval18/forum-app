@@ -137,6 +137,7 @@ export class PostResolver {
 	async updatePost(
 		@Arg('id') id: number,
 		@Arg('title', () => String, { nullable: true }) title: string,
+		@Arg('text', () => String, { nullable: true }) text: string,
 	): Promise<Posts | null> {
 		const post = await Posts.findOne({ where: { id: id } })
 		if (!post) {
@@ -155,6 +156,15 @@ export class PostResolver {
 		@Arg('id', () => Int) id: number,
 		@Ctx() { req }: MyContext,
 	): Promise<boolean> {
+		// Not cascade way to delete post
+
+		// const post = await Posts.findOne({ where: { id: id } })
+		// if (!post) return false
+		// if (post.creatorId !== req.session.userId) throw new Error('not authorized')
+
+		// await Upvotes.delete({ postId: id })
+		// await Posts.delete({ id, creatorId: req.session.userId })
+
 		await Posts.delete({ id, creatorId: req.session.userId })
 		return true
 	}

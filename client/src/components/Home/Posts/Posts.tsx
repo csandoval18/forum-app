@@ -52,10 +52,12 @@ const Posts: React.FC = () => {
 				<div>loading...</div>
 			) : (
 				<Stack spacing={8} my={8}>
-					{data!.posts.posts.map((postFields) => (
-						// Passing post fields to postcard component through props
-						<PostCard key={postFields.id} post={postFields}></PostCard>
-					))}
+					{data!.posts.posts.map((post) =>
+						!post ? null : (
+							// Passing post fields to postcard component through props
+							<PostCard key={post.id} post={post}></PostCard>
+						),
+					)}
 				</Stack>
 			)}
 

@@ -105,7 +105,7 @@ let PostResolver = class PostResolver {
             return Posts_1.Posts.create(Object.assign(Object.assign({}, input), { creatorId: req.session.userId })).save();
         });
     }
-    updatePost(id, title) {
+    updatePost(id, title, text) {
         return __awaiter(this, void 0, void 0, function* () {
             const post = yield Posts_1.Posts.findOne({ where: { id: id } });
             if (!post) {
@@ -196,8 +196,9 @@ __decorate([
     (0, type_graphql_1.Mutation)(() => Posts_1.Posts, { nullable: true }),
     __param(0, (0, type_graphql_1.Arg)('id')),
     __param(1, (0, type_graphql_1.Arg)('title', () => String, { nullable: true })),
+    __param(2, (0, type_graphql_1.Arg)('text', () => String, { nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:paramtypes", [Number, String, String]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "updatePost", null);
 __decorate([
