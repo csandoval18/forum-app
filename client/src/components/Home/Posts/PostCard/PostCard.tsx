@@ -5,7 +5,8 @@ import {
 } from '../../../../generated/graphql'
 import NextLink from 'next/link'
 import UpvoteSection from './UpvoteSection'
-import { DeleteIcon } from '@chakra-ui/icons'
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
+import Router from 'next/router'
 
 interface PostCardProps {
 	post: PostSnippetFragment
@@ -15,9 +16,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	const [, deletePost] = useDeletePostMutation()
 
 	const handleDeletePost = () => {
-		console.log('postId:', post.id)
 		deletePost({ id: post.id })
 	}
+
 	return (
 		<Flex
 			className='post-card'
@@ -39,11 +40,18 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 				<Text mt={4}>Posted by {post.creator.username}</Text>
 				<Text mt={4}>{post.textSnippet}</Text>
 			</Box>
-			<Flex justifyContent='right'>
+			<Flex justifyContent='right' gap={4}>
+				<NextLink href='/post/edit/[id]' as={`/post/edit/${post.id}`}>
+					<IconButton
+						icon={<EditIcon fontSize={20} />}
+						aria-label='Edit post'
+						onClick={() => {}}
+					></IconButton>
+				</NextLink>
 				<IconButton
 					icon={<DeleteIcon fontSize={20} />}
 					aria-label='Delete post'
-					backgroundColor='red.400'
+					// backgroundColor='red.400'
 					onClick={handleDeletePost}
 				></IconButton>
 			</Flex>

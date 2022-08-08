@@ -134,20 +134,27 @@ export class PostResolver {
 	}
 
 	@Mutation(() => Posts, { nullable: true })
+	@UseMiddleware(isAuth)
 	async updatePost(
-		@Arg('id') id: number,
-		@Arg('title', () => String, { nullable: true }) title: string,
-		@Arg('text', () => String, { nullable: true }) text: string,
+		@Arg('id', () => Int) id: number,
+		@Arg('title', () => String) title: string,
+		@Arg('text', () => String) text: string,
+		@Ctx() { req }: MyContext,
 	): Promise<Posts | null> {
-		const post = await Posts.findOne({ where: { id: id } })
-		if (!post) {
-			return null
-		}
-		if (typeof title !== 'undefined') {
-			await Posts.update({ id }, { title })
-		}
-		return post
+		const result = await dataSource
+			.createQueryBuilder()
+			.update(Posts)
+			.set({ title, text })
+			.where('id = :id AND "creatorId" = :creatorId', {
+				id,
+				creatorId: req.session.userId,
+			})
+			.returning('*')
+			.execute()
+
+		return result.raw[0]
 	}
+	// return Posts.update({ id, creatorId: req.session.userId }, { title, text })
 
 	@Mutation(() => Boolean)
 	// Check if user is logged in

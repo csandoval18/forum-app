@@ -105,16 +105,19 @@ let PostResolver = class PostResolver {
             return Posts_1.Posts.create(Object.assign(Object.assign({}, input), { creatorId: req.session.userId })).save();
         });
     }
-    updatePost(id, title, text) {
+    updatePost(id, title, text, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield Posts_1.Posts.findOne({ where: { id: id } });
-            if (!post) {
-                return null;
-            }
-            if (typeof title !== 'undefined') {
-                yield Posts_1.Posts.update({ id }, { title });
-            }
-            return post;
+            const result = yield typeorm_config_1.default
+                .createQueryBuilder()
+                .update(Posts_1.Posts)
+                .set({ title, text })
+                .where('id = :id AND "creatorId" = :creatorId', {
+                id,
+                creatorId: req.session.userId,
+            })
+                .returning('*')
+                .execute();
+            return result.raw[0];
         });
     }
     deletePost(id, { req }) {
@@ -194,11 +197,13 @@ __decorate([
 ], PostResolver.prototype, "createPost", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Posts_1.Posts, { nullable: true }),
-    __param(0, (0, type_graphql_1.Arg)('id')),
-    __param(1, (0, type_graphql_1.Arg)('title', () => String, { nullable: true })),
-    __param(2, (0, type_graphql_1.Arg)('text', () => String, { nullable: true })),
+    (0, type_graphql_1.UseMiddleware)(isAuth_1.isAuth),
+    __param(0, (0, type_graphql_1.Arg)('id', () => type_graphql_1.Int)),
+    __param(1, (0, type_graphql_1.Arg)('title', () => String)),
+    __param(2, (0, type_graphql_1.Arg)('text', () => String)),
+    __param(3, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, String]),
+    __metadata("design:paramtypes", [Number, String, String, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "updatePost", null);
 __decorate([
