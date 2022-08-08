@@ -34,19 +34,6 @@ const Posts: React.FC = () => {
 
 	return (
 		<Box className='posts-container' px={40}>
-			{/* <Flex align={'center'} py={8}>
-				<Heading textColor={'white'}>Main Forum</Heading>
-				<Button
-					variant='primary'
-					ml={'auto'}
-					onClick={() => {
-						router.replace('/create-post')
-					}}
-				>
-					Create Post
-				</Button>
-			</Flex> */}
-
 			{/* Diplay posts */}
 			{!data && fetching ? (
 				<div>loading...</div>
