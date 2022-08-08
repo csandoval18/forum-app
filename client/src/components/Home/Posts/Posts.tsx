@@ -9,7 +9,7 @@ import {
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { usePostsQuery } from '../../../generated/graphql'
+import { useMeQuery, usePostsQuery } from '../../../generated/graphql'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import PostCard from './PostCard/PostCard'
 
@@ -21,13 +21,9 @@ const Posts: React.FC = () => {
 		limit: 15,
 		cursor: null as string | null,
 	})
-
-	// console.log('variables', variables)
 	const [{ data, fetching, ...other }] = usePostsQuery({
 		variables,
 	})
-
-	// console.log(data)
 	if (!fetching && !data) {
 		return <div>Cannot fetch posts from server</div>
 	}
@@ -42,7 +38,11 @@ const Posts: React.FC = () => {
 					{data!.posts.posts.map((post) =>
 						!post ? null : (
 							// Passing post fields to postcard component through props
-							<PostCard key={post.id} post={post}></PostCard>
+							<PostCard
+								key={post.id}
+								post={post}
+								pageProps={undefined}
+							></PostCard>
 						),
 					)}
 				</Stack>

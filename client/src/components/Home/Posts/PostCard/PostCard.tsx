@@ -2,11 +2,14 @@ import { Box, Flex, Heading, IconButton, Link, Text } from '@chakra-ui/react'
 import {
 	PostSnippetFragment,
 	useDeletePostMutation,
+	useMeQuery,
 } from '../../../../generated/graphql'
 import NextLink from 'next/link'
 import UpvoteSection from './UpvoteSection'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import Router from 'next/router'
+import { withUrqlClient } from 'next-urql'
+import { createUrqlClient } from '../../../../utils/createUrqlClient'
 
 interface PostCardProps {
 	post: PostSnippetFragment
@@ -14,6 +17,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	const [, deletePost] = useDeletePostMutation()
+	const [{ data }] = useMeQuery()
 
 	const handleDeletePost = () => {
 		deletePost({ id: post.id })
@@ -40,23 +44,25 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 				<Text mt={4}>Posted by {post.creator.username}</Text>
 				<Text mt={4}>{post.textSnippet}</Text>
 			</Box>
-			<Flex justifyContent='right' gap={4}>
-				<NextLink href='/post/edit/[id]' as={`/post/edit/${post.id}`}>
+			{data?.me?.id !== post.creator.id ? null : (
+				<Flex justifyContent='right' gap={4}>
+					<NextLink href='/post/edit/[id]' as={`/post/edit/${post.id}`}>
+						<IconButton
+							icon={<EditIcon fontSize={20} />}
+							aria-label='Edit post'
+							onClick={() => {}}
+						></IconButton>
+					</NextLink>
 					<IconButton
-						icon={<EditIcon fontSize={20} />}
-						aria-label='Edit post'
-						onClick={() => {}}
+						icon={<DeleteIcon fontSize={20} />}
+						aria-label='Delete post'
+						// backgroundColor='red.400'
+						onClick={handleDeletePost}
 					></IconButton>
-				</NextLink>
-				<IconButton
-					icon={<DeleteIcon fontSize={20} />}
-					aria-label='Delete post'
-					// backgroundColor='red.400'
-					onClick={handleDeletePost}
-				></IconButton>
-			</Flex>
+				</Flex>
+			)}
 		</Flex>
 	)
 }
 
-export default PostCard
+export default withUrqlClient(createUrqlClient)(PostCard)
