@@ -33,8 +33,8 @@ const Login: React.FC<LoginProps> = ({}) => {
 		}
 	}
 	return (
-		<FormContainer heading='Log In'>
-			<Wrapper h='400px'>
+		<FormContainer center={true}>
+			<Wrapper h='400px' heading='Login'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ usernameOrEmail: '', password: '' }}

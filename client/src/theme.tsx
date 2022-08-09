@@ -23,7 +23,7 @@ const theme = extendTheme({
 				primary: {
 					borderRadius: '15px',
 					bg: '#6ee7bf',
-					// color: '#1e2329',
+					color: '#1e2329',
 					_hover: {
 						bg: '#9ff1d6',
 					},
