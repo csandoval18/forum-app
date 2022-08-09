@@ -17,6 +17,7 @@ import { Posts } from '../entities/Posts'
 import { isAuth } from '../middleware/isAuth'
 import dataSource from '../typeorm.config'
 import { MyContext } from '../types'
+import { Users } from '../entities/Users'
 
 @InputType()
 class PostInput {
@@ -41,6 +42,13 @@ export class PostResolver {
 	@FieldResolver(() => String)
 	textSnippet(@Root() post: Posts) {
 		return post.text.slice(0, 50)
+	}
+
+	@FieldResolver(() => Users)
+	creator(@Root() post: Posts
+  @Ctx() {userLoader}: MyContext) {
+    return userLoader.load(post.id)
+		// return Users.findOne({ where: { id: post.creatorId } })
 	}
 
 	/* 
@@ -71,15 +79,16 @@ export class PostResolver {
 			cursorIdx = replacements.length
 		}
 		const posts = await dataSource.query(
+			//
+			// json_build_object(
+			//   'id', u.id,
+			//   'username', u.username,
+			//   'email', u.email,
+			//   'createdAt', u."createdAt",
+			//   'updatedAt', u."updatedAt"
+			// ) creator,
 			`
       SELECT p.*,
-      json_build_object(
-        'id', u.id,
-        'username', u.username,
-        'email', u.email,
-        'createdAt', u."createdAt",
-        'updatedAt', u."updatedAt"
-      ) creator, 
       ${
 				req.session.userId
 					? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
@@ -115,7 +124,10 @@ export class PostResolver {
 
 	@Query(() => Posts, { nullable: true })
 	post(@Arg('id', () => Int) id: number): Promise<Posts | null> {
-		return Posts.findOne({ where: { id: id }, relations: ['creator'] })
+		return Posts.findOne({ where: { id } })
+
+		// Creates relationship between post from Posts and creator Users which allows to fetch the User fields of the creator of the post
+		// return Posts.findOne({ where: { id: id }, relations: ['creator'] })
 	}
 
 	// Create a post

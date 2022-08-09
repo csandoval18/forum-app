@@ -12,6 +12,7 @@ import { PostResolver } from './resolvers/posts'
 import { UserResolver } from './resolvers/users'
 import dataSource from './typeorm.config'
 import { MyContext } from './types'
+import { createUserLoader } from './utils/createUserLoader'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -64,6 +65,7 @@ const main = async () => {
 			req,
 			res,
 			redisClient,
+			userLoader: createUserLoader(),
 		}),
 	})
 
