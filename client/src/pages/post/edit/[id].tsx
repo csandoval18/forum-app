@@ -1,7 +1,6 @@
 import { Box, Button } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { withUrqlClient } from 'next-urql'
-import { useRouter } from 'next/router'
 import React from 'react'
 import FormContainer from '../../../components/FormContainer'
 import InputField from '../../../components/InputFields/InputField'
@@ -9,30 +8,25 @@ import TextInputField from '../../../components/InputFields/TextInputField'
 import Wrapper from '../../../components/Wrapper'
 import { useUpdatePostMutation } from '../../../generated/graphql'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
+import { useGetPostFromUrl } from '../../../utils/useGetPostFromUrl'
 
 interface EditPostProps {}
 
-const EditPost: React.FC<EditPostProps> = () => {
-	const router = useRouter()
-	const [{}, updatePost] = useUpdatePostMutation()
+const EditPost: React.FC<EditPostProps> = ({}) => {
+	const [{ data, fetching }] = useGetPostFromUrl()
+	const [, updatePost] = useUpdatePostMutation()
 
-	const handleUpdatePost = async (values: { title: string; text: string }) => {
-		console.log('flag')
-		const { error } = await updatePost()
-		if (!error) {
-			router.push('/')
-		} else {
-			console.log(error)
-		}
+	if (fetching) {
+		return <div>loading...</div>
 	}
+	if (!data?.post) return <div>Could not find post</div>
 
 	return (
-		<FormContainer heading='Create Post'>
-			<Wrapper h='430px'>
-				{/* <DarkModeSwitch></DarkModeSwitch> */}
+		<FormContainer>
+			<Wrapper h='430px' heading='Edit Post'>
 				<Formik
-					initialValues={{ title: '', text: '' }}
-					onSubmit={handleUpdatePost}
+					initialValues={{ title: data.post.title, text: data.post.text }}
+					onSubmit={() => {}}
 				>
 					{({ isSubmitting }) => (
 						<Form>
@@ -49,7 +43,7 @@ const EditPost: React.FC<EditPostProps> = () => {
 									isLoading={isSubmitting}
 									variant='primary'
 								>
-									create post
+									Update Post
 								</Button>
 							</Box>
 						</Form>

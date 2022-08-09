@@ -31,8 +31,8 @@ const Register: React.FC<RegisterProps> = ({}) => {
 		}
 	}
 	return (
-		<FormContainer heading='Register'>
-			<Wrapper h='500px'>
+		<FormContainer center={true}>
+			<Wrapper h='500px' heading='Register'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ email: '', username: '', password: '' }}

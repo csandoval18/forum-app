@@ -16,10 +16,7 @@ const CreatePost: React.FC<{}> = () => {
 	const [{}, createPost] = useCreatePostMutation()
 	useIsAuth()
 
-	const handleCreatePost = async (values: {
-		title: string
-		text: string
-	}) => {
+	const handleCreatePost = async (values: { title: string; text: string }) => {
 		console.log('flag')
 		const { error } = await createPost({ input: values })
 		if (!error) {
@@ -30,8 +27,8 @@ const CreatePost: React.FC<{}> = () => {
 	}
 
 	return (
-		<FormContainer heading='Create Post'>
-			<Wrapper h='430px'>
+		<FormContainer>
+			<Wrapper h='430px' heading='Create Post'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ title: '', text: '' }}
@@ -39,16 +36,8 @@ const CreatePost: React.FC<{}> = () => {
 				>
 					{({ isSubmitting }) => (
 						<Form>
-							<InputField
-								name='title'
-								placeholder='title'
-								label='Title'
-							/>
-							<TextInputField
-								name='text'
-								placeholder='text'
-								label='Text'
-							/>
+							<InputField name='title' placeholder='title' label='Title' />
+							<TextInputField name='text' placeholder='text' label='Text' />
 							<Box
 								display='flex'
 								alignItems='center'
