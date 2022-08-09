@@ -6,7 +6,7 @@ import Navbar from '../../components/Home/Navbar'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl'
 
-const Post = ({}) => {
+const Post: React.FC = ({}) => {
 	const [{ data, error, fetching }] = useGetPostFromUrl()
 
 	if (fetching) {

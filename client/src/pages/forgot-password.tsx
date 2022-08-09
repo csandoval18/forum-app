@@ -20,7 +20,6 @@ const ForgotPassword: React.FC<{}> = () => {
 	return (
 		<FormContainer center={true}>
 			<Wrapper h='330px' heading='Forgot Password'>
-				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik initialValues={{ email: '' }} onSubmit={handleForgotPassword}>
 					{({ isSubmitting }) =>
 						complete ? (
