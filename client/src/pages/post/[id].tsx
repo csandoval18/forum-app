@@ -2,6 +2,7 @@ import { Box, Flex, Heading } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React from 'react'
+import EditDeletePostButtons from '../../components/EditDeletePostButtons'
 import Navbar from '../../components/Home/Navbar'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl'
@@ -23,9 +24,9 @@ const Post: React.FC = ({}) => {
 		<>
 			<Navbar pageProps={undefined}></Navbar>
 			<Flex
-				flexDir='column'
 				width={'95%'}
-				backgroundColor='red'
+				justifyContent='space-between'
+				backgroundColor='primary'
 				alignItems='center'
 				py={8}
 				px={10}
@@ -37,9 +38,15 @@ const Post: React.FC = ({}) => {
 					<Heading>{data?.post?.title}</Heading>
 					{data?.post?.text}
 				</Box>
+				<Flex gap={4}>
+					<EditDeletePostButtons
+						id={data.post.id}
+						creatorId={data.post.creator.id}
+					/>
+				</Flex>
 			</Flex>
 		</>
 	)
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Post)
+export default withUrqlClient(createUrqlClient)(Post)

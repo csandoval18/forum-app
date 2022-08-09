@@ -1,11 +1,4 @@
-import {
-	Alert,
-	AlertIcon,
-	Box,
-	Button,
-	Flex,
-	Link,
-} from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, Button, Flex, Link } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
@@ -31,10 +24,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
 	) => {
 		const response = await changePassword({
 			newPassword: values.newPassword,
-			token:
-				typeof router.query.token === 'string'
-					? router.query.token
-					: '',
+			token: typeof router.query.token === 'string' ? router.query.token : '',
 		})
 		if (response.data?.changePassword.errors) {
 			const errorMap = toErrorMap(response.data.changePassword.errors)
@@ -49,13 +39,10 @@ const ChangePassword: NextPage<{ token: string }> = () => {
 		}
 	}
 	return (
-		<FormContainer heading='Change Password'>
-			<Wrapper h='420'>
+		<FormContainer>
+			<Wrapper h='420' heading='Change Password'>
 				{/* <DarkModeSwitch></DarkModeSwitch> */}
-				<Formik
-					initialValues={{ newPassword: '' }}
-					onSubmit={handleChangePass}
-				>
+				<Formik initialValues={{ newPassword: '' }} onSubmit={handleChangePass}>
 					{({ isSubmitting }) => (
 						<Form>
 							<SetPasswordInputField
@@ -77,9 +64,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
 										</Flex>
 										<Flex w={'50%'} justifyContent='right'>
 											<NextLink href='/forgot-password'>
-												<Link textDecor={'underline'}>
-													reset password
-												</Link>
+												<Link textDecor={'underline'}>reset password</Link>
 											</NextLink>
 										</Flex>
 									</Alert>
