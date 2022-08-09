@@ -17,7 +17,6 @@ const CreatePost: React.FC<{}> = () => {
 	useIsAuth()
 
 	const handleCreatePost = async (values: { title: string; text: string }) => {
-		console.log('flag')
 		const { error } = await createPost({ input: values })
 		if (!error) {
 			router.push('/')
@@ -29,7 +28,6 @@ const CreatePost: React.FC<{}> = () => {
 	return (
 		<FormContainer>
 			<Wrapper h='430px' heading='Create Post'>
-				{/* <DarkModeSwitch></DarkModeSwitch> */}
 				<Formik
 					initialValues={{ title: '', text: '' }}
 					onSubmit={handleCreatePost}

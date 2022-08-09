@@ -29,7 +29,8 @@ const EditPost: React.FC = ({}) => {
 
 	const handleEditPost = async (values) => {
 		await updatePost({ id: intId, ...values })
-		router.push('/')
+		router.back()
+		// router.push('/')
 	}
 
 	return (

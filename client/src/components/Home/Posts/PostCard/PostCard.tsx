@@ -1,27 +1,17 @@
-import { Box, Flex, Heading, IconButton, Link, Text } from '@chakra-ui/react'
-import {
-	PostSnippetFragment,
-	useDeletePostMutation,
-	useMeQuery,
-} from '../../../../generated/graphql'
-import NextLink from 'next/link'
-import UpvoteSection from './UpvoteSection'
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
-import Router from 'next/router'
+import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
+import NextLink from 'next/link'
+import { PostSnippetFragment, useMeQuery } from '../../../../generated/graphql'
 import { createUrqlClient } from '../../../../utils/createUrqlClient'
+import EditDeletePostButtons from '../../../EditDeletePostButtons'
+import UpvoteSection from './UpvoteSection'
 
 interface PostCardProps {
 	post: PostSnippetFragment
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-	const [, deletePost] = useDeletePostMutation()
 	const [{ data }] = useMeQuery()
-
-	const handleDeletePost = () => {
-		deletePost({ id: post.id })
-	}
 
 	return (
 		<Flex
@@ -44,23 +34,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 				<Text mt={4}>Posted by {post.creator.username}</Text>
 				<Text mt={4}>{post.textSnippet}</Text>
 			</Box>
-			{data?.me?.id !== post.creator.id ? null : (
-				<Flex justifyContent='right' gap={4}>
-					<NextLink href='/post/edit/[id]' as={`/post/edit/${post.id}`}>
-						<IconButton
-							icon={<EditIcon fontSize={20} />}
-							aria-label='Edit post'
-							onClick={() => {}}
-						></IconButton>
-					</NextLink>
-					<IconButton
-						icon={<DeleteIcon fontSize={20} />}
-						aria-label='Delete post'
-						// backgroundColor='red.400'
-						onClick={handleDeletePost}
-					></IconButton>
-				</Flex>
-			)}
+			<Flex justifyContent='right' gap={4}>
+				{/* Component can be null for users that do not own the post */}
+				<EditDeletePostButtons
+					id={post.id}
+					creatorId={post.creator.id}
+				></EditDeletePostButtons>
+			</Flex>
 		</Flex>
 	)
 }
