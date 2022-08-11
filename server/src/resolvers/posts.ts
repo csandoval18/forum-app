@@ -17,6 +17,7 @@ import { Posts } from '../entities/Posts'
 import { isAuth } from '../middleware/isAuth'
 import dataSource from '../typeorm.config'
 import { MyContext } from '../types'
+import { Users } from '../entities/Users'
 
 @InputType()
 class PostInput {
@@ -42,6 +43,14 @@ export class PostResolver {
 	textSnippet(@Root() post: Posts) {
 		return post.text.slice(0, 50)
 	}
+
+	@FieldResolver(() => Users)
+	creator(@Root() post: Posts, @Ctx() { userLoader }: MyContext) {
+		return userLoader.load(post.creatorId)
+		// return Users.findOne({ where: { id: post.creatorId } })
+	}
+
+	@FieldResolver(() => Int, { nullable: true })
 
 	/* 
     When we set an argument to nullable we have explicitely set the return type
@@ -73,38 +82,18 @@ export class PostResolver {
 		const posts = await dataSource.query(
 			`
       SELECT p.*,
-      json_build_object(
-        'id', u.id,
-        'username', u.username,
-        'email', u.email,
-        'createdAt', u."createdAt",
-        'updatedAt', u."updatedAt"
-      ) creator, 
       ${
 				req.session.userId
 					? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
 					: 'null as "voteStatus"'
 			}
       FROM posts p 
-      INNER JOIN users u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `,
 			replacements,
 		)
-
-		// const qb = dataSource
-		// 	.getRepository(Posts)
-		// 	.createQueryBuilder('p') //alias
-		// 	.innerJoinAndSelect('p.creator', 'u', 'u.id = p."creatorId"')
-		// 	.orderBy('p."createdAt"', 'DESC')
-		// 	.take(realLimitPlusOne)
-		// if (cursor) {
-		// 	qb.where('p."createdAt" < :cursor ', {
-		// 		cursor: new Date(parseInt(cursor)),
-		// 	})
-		// }
 
 		// const posts = await qb.getMany()
 		return {
@@ -115,7 +104,10 @@ export class PostResolver {
 
 	@Query(() => Posts, { nullable: true })
 	post(@Arg('id', () => Int) id: number): Promise<Posts | null> {
-		return Posts.findOne({ where: { id: id }, relations: ['creator'] })
+		return Posts.findOne({ where: { id } })
+
+		// Creates relationship between post from Posts and creator Users which allows to fetch the User fields of the creator of the post
+		// return Posts.findOne({ where: { id: id }, relations: ['creator'] })
 	}
 
 	// Create a post
