@@ -45,11 +45,12 @@ export class PostResolver {
 	}
 
 	@FieldResolver(() => Users)
-	creator(@Root() post: Posts
-  @Ctx() {userLoader}: MyContext) {
-    return userLoader.load(post.id)
+	creator(@Root() post: Posts, @Ctx() { userLoader }: MyContext) {
+		return userLoader.load(post.creatorId)
 		// return Users.findOne({ where: { id: post.creatorId } })
 	}
+
+	@FieldResolver(() => Int, { nullable: true })
 
 	/* 
     When we set an argument to nullable we have explicitely set the return type
@@ -79,14 +80,6 @@ export class PostResolver {
 			cursorIdx = replacements.length
 		}
 		const posts = await dataSource.query(
-			//
-			// json_build_object(
-			//   'id', u.id,
-			//   'username', u.username,
-			//   'email', u.email,
-			//   'createdAt', u."createdAt",
-			//   'updatedAt', u."updatedAt"
-			// ) creator,
 			`
       SELECT p.*,
       ${
@@ -95,25 +88,12 @@ export class PostResolver {
 					: 'null as "voteStatus"'
 			}
       FROM posts p 
-      INNER JOIN users u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `,
 			replacements,
 		)
-
-		// const qb = dataSource
-		// 	.getRepository(Posts)
-		// 	.createQueryBuilder('p') //alias
-		// 	.innerJoinAndSelect('p.creator', 'u', 'u.id = p."creatorId"')
-		// 	.orderBy('p."createdAt"', 'DESC')
-		// 	.take(realLimitPlusOne)
-		// if (cursor) {
-		// 	qb.where('p."createdAt" < :cursor ', {
-		// 		cursor: new Date(parseInt(cursor)),
-		// 	})
-		// }
 
 		// const posts = await qb.getMany()
 		return {

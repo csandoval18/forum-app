@@ -1,0 +1,59 @@
+
+		const qb = dataSource
+			.getRepository(Posts)
+			.createQueryBuilder('p') //alias
+			.innerJoinAndSelect('p.creator', 'u', 'u.id = p."creatorId"')
+			.orderBy('p."createdAt"', 'DESC')
+			.take(realLimitPlusOne)
+		if (cursor) {
+			qb.where('p."createdAt" < :cursor ', {
+				cursor: new Date(parseInt(cursor)),
+			})
+		}
+    
+    
+   const posts = await qb.getMany() 
+   
+   ////////////////////////////////////////////////////////////////////////////////////
+   
+   Posts query using json_build_object to make relationship between posts and creator user
+   
+   		// The +1 checks if there is more posts after the given range to display in the next page
+		const realLimit = Math.min(50, limit)
+		const realLimitPlusOne = realLimit + 1
+
+		const replacements: any[] = [realLimitPlusOne]
+
+		// If user is signed in add userId to replacements for conditional query
+		const { userId } = req.session
+		if (userId) replacements.push(userId)
+
+		// Adding cursor field to conditional posts query
+		let cursorIdx = 3
+		if (cursor) {
+			replacements.push(new Date(parseInt(cursor)))
+			cursorIdx = replacements.length
+		}
+		const posts = await dataSource.query(
+			`
+      SELECT p.*,
+      json_build_object(
+      'id', u.id,
+      'username', u.username,
+      'email', u.email,
+      'createdAt', u."createdAt",
+      'updatedAt', u."updatedAt"
+			) creator,
+      ${
+				req.session.userId
+					? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
+					: 'null as "voteStatus"'
+			}
+      FROM posts p 
+      INNER JOIN users u ON u.id = p."creatorId"
+      ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
+      ORDER BY p."createdAt" DESC
+      LIMIT $1
+      `,
+			replacements,
+		)
