@@ -51,6 +51,9 @@ export class PostResolver {
 	}
 
 	@FieldResolver(() => Int, { nullable: true })
+	voteStatus(@Root() post: Posts, @Ctx() { userLoader }: MyContext) {
+		return
+	}
 
 	/* 
     When we set an argument to nullable we have explicitely set the return type
@@ -69,26 +72,15 @@ export class PostResolver {
 
 		const replacements: any[] = [realLimitPlusOne]
 
-		// If user is signed in add userId to replacements for conditional query
-		const { userId } = req.session
-		if (userId) replacements.push(userId)
-
 		// Adding cursor field to conditional posts query
-		let cursorIdx = 3
 		if (cursor) {
 			replacements.push(new Date(parseInt(cursor)))
-			cursorIdx = replacements.length
 		}
 		const posts = await dataSource.query(
 			`
-      SELECT p.*,
-      ${
-				req.session.userId
-					? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
-					: 'null as "voteStatus"'
-			}
+      SELECT p.*
       FROM posts p 
-      ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
+      ${cursor ? `WHERE p."createdAt" < $2` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `,
