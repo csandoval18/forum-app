@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { Session, SessionData } from 'express-session'
 import Redis from 'ioredis'
-import { createUpvoteLoader } from './utils/createUpvoteLoader'
+// import { createUpvoteLoader } from './utils/createUpvoteLoader'
 import { createUserLoader } from './utils/createUserLoader'
 
 interface ExtendedRequest extends Request {
@@ -14,5 +14,5 @@ export type MyContext = {
 	res: Response
 	redisClient: Redis
 	userLoader: ReturnType<typeof createUserLoader>
-	upvoteLoader: ReturnType<typeof createUpvoteLoader>
+	// upvoteLoader: ReturnType<typeof createUpvoteLoader>
 }

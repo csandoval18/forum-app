@@ -25,7 +25,6 @@ const hello_1 = require("./resolvers/hello");
 const posts_1 = require("./resolvers/posts");
 const users_1 = require("./resolvers/users");
 const typeorm_config_1 = __importDefault(require("./typeorm.config"));
-const createUpvoteLoader_1 = require("./utils/createUpvoteLoader");
 const createUserLoader_1 = require("./utils/createUserLoader");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('NODE_ENV:', process.env.NODE_ENV);
@@ -62,7 +61,6 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             res,
             redisClient,
             userLoader: (0, createUserLoader_1.createUserLoader)(),
-            upvoteLoader: (0, createUpvoteLoader_1.createUpvoteLoader)(),
         }),
     });
     yield apolloServer.start();

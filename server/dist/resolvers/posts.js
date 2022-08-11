@@ -64,21 +64,27 @@ let PostResolver = class PostResolver {
     creator(post, { userLoader }) {
         return userLoader.load(post.creatorId);
     }
-    voteStatus(post, { userLoader }) {
-        return;
-    }
     posts(limit, cursor, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
             const realLimitPlusOne = realLimit + 1;
             const replacements = [realLimitPlusOne];
+            const { userId } = req.session;
+            if (userId)
+                replacements.push(userId);
+            let cursorIdx = 3;
             if (cursor) {
                 replacements.push(new Date(parseInt(cursor)));
+                cursorIdx = replacements.length;
             }
             const posts = yield typeorm_config_1.default.query(`
-      SELECT p.*
+      SELECT p.*,
+      ${req.session.userId
+                ? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
+                : 'null as "voteStatus"'}
       FROM posts p 
-      ${cursor ? `WHERE p."createdAt" < $2` : ''}
+      INNER JOIN users u ON u.id = p."creatorId"
+      ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `, replacements);
@@ -169,14 +175,6 @@ __decorate([
     __metadata("design:paramtypes", [Posts_1.Posts, Object]),
     __metadata("design:returntype", void 0)
 ], PostResolver.prototype, "creator", null);
-__decorate([
-    (0, type_graphql_1.FieldResolver)(() => type_graphql_1.Int, { nullable: true }),
-    __param(0, (0, type_graphql_1.Root)()),
-    __param(1, (0, type_graphql_1.Ctx)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Posts_1.Posts, Object]),
-    __metadata("design:returntype", void 0)
-], PostResolver.prototype, "voteStatus", null);
 __decorate([
     (0, type_graphql_1.Query)(() => PaginatedPosts),
     __param(0, (0, type_graphql_1.Arg)('limit', () => type_graphql_1.Int)),

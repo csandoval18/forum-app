@@ -50,10 +50,22 @@ export class PostResolver {
 		// return Users.findOne({ where: { id: post.creatorId } })
 	}
 
-	@FieldResolver(() => Int, { nullable: true })
-	voteStatus(@Root() post: Posts, @Ctx() { userLoader }: MyContext) {
-		return
-	}
+	// @FieldResolver(() => String, { nullable: true })
+	// async voteStatus(
+	// 	@Root() post: Posts,
+	// 	@Ctx() { upvoteLoader, req }: MyContext,
+	// ) {
+	// 	if (!req.session.userId) return null
+
+	// 	console.log('upvote1: ')
+	// 	const upvote = await upvoteLoader.load({
+	// 		postId: post.id,
+	// 		userId: req.session.userId,
+	// 	})
+	// 	console.log('upvote: ', upvote)
+
+	// 	return upvote ? upvote.value : null
+	// }
 
 	/* 
     When we set an argument to nullable we have explicitely set the return type
@@ -71,16 +83,26 @@ export class PostResolver {
 		const realLimitPlusOne = realLimit + 1
 
 		const replacements: any[] = [realLimitPlusOne]
+		const { userId } = req.session
+		if (userId) replacements.push(userId)
 
 		// Adding cursor field to conditional posts query
+		let cursorIdx = 3
 		if (cursor) {
 			replacements.push(new Date(parseInt(cursor)))
+			cursorIdx = replacements.length
 		}
 		const posts = await dataSource.query(
 			`
-      SELECT p.*
+      SELECT p.*,
+      ${
+				req.session.userId
+					? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
+					: 'null as "voteStatus"'
+			}
       FROM posts p 
-      ${cursor ? `WHERE p."createdAt" < $2` : ''}
+      INNER JOIN users u ON u.id = p."creatorId"
+      ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
       `,
