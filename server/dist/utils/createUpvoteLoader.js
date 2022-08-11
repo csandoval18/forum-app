@@ -14,15 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUpvoteLoader = void 0;
 const dataloader_1 = __importDefault(require("dataloader"));
+const Upvotes_1 = require("src/entities/Upvotes");
 const typeorm_1 = require("typeorm");
-const Users_1 = require("../entities/Users");
-const createUpvoteLoader = () => new dataloader_1.default((userIds) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield Users_1.Users.findBy({ id: (0, typeorm_1.In)(userIds) });
-    const userIdToUser = {};
-    users.forEach((u) => {
-        userIdToUser[u.id] = u;
+const createUpvoteLoader = () => new dataloader_1.default((keys) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield Upvotes_1.Upvotes.findBy({ userId: (0, typeorm_1.In)(keys) });
+    const upvoteIdsToUpvote = {};
+    users.forEach((upvote) => {
+        upvoteIdsToUpvote[`${upvote.userId} | ${upvote.postId}`] = upvote;
     });
-    return userIds.map((userId) => userIdToUser[userId]);
+    return keys.map((key) => upvoteIdsToUpvote[`${key.userId} | ${key.postId}`]);
 }));
 exports.createUpvoteLoader = createUpvoteLoader;
 //# sourceMappingURL=createUpvoteLoader.js.map

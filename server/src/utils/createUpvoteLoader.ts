@@ -1,16 +1,21 @@
 import DataLoader from 'dataloader'
+import { Upvotes } from 'src/entities/Upvotes'
 import { In } from 'typeorm'
-import { Users } from '../entities/Users'
+
+// [{postId: 5, userId: 10}]
+// [{postId: 5, userId: 10, value: 1}]
 
 export const createUpvoteLoader = () =>
-	new DataLoader<{ postId: number; userId: number }, number | null>(
-		async (userIds) => {
-			const users = await Users.findBy({ id: In(userIds as number[]) })
-			const userIdToUser: Record<number, Users> = {}
-			users.forEach((u) => {
-				userIdToUser[u.id] = u
+	new DataLoader<{ postId: number; userId: number }, Upvotes | null>(
+		async (keys) => {
+			const users = await Upvotes.findBy({ userId: In(keys as any) })
+			const upvoteIdsToUpvote: Record<string, Upvotes> = {}
+			users.forEach((upvote) => {
+				upvoteIdsToUpvote[`${upvote.userId} | ${upvote.postId}`] = upvote
 			})
 
-			return userIds.map((userId) => userIdToUser[userId])
+			return keys.map(
+				(key) => upvoteIdsToUpvote[`${key.userId} | ${key.postId}`],
+			)
 		},
 	)

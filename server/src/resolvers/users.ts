@@ -179,7 +179,7 @@ export class UserResolver {
 	@Query(() => Users, { nullable: true })
 	me(@Ctx() { req }: MyContext) {
 		//user is not logged in since no cookie is set null is returned
-		console.log('me query cookie:', req.session)
+		// console.log('me query cookie:', req.session)
 		if (!req.session.userId) {
 			return null
 		}

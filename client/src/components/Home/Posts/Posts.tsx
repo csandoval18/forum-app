@@ -1,16 +1,7 @@
-import {
-	Box,
-	Button,
-	Flex,
-	Heading,
-	Stack,
-	useColorMode,
-} from '@chakra-ui/react'
-import { withUrqlClient } from 'next-urql'
+import { Box, Button, Flex, Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useMeQuery, usePostsQuery } from '../../../generated/graphql'
-import { createUrqlClient } from '../../../utils/createUrqlClient'
+import { usePostsQuery } from '../../../generated/graphql'
 import PostCard from './PostCard/PostCard'
 
 interface PostsProps {}

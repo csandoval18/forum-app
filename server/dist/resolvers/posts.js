@@ -83,6 +83,7 @@ let PostResolver = class PostResolver {
                 ? '(SELECT value FROM upvotes WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
                 : 'null as "voteStatus"'}
       FROM posts p 
+      INNER JOIN users u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1
@@ -175,7 +176,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PostResolver.prototype, "creator", null);
 __decorate([
-    (0, type_graphql_1.FieldResolver)(() => type_graphql_1.Int, { nullable: true }),
     (0, type_graphql_1.Query)(() => PaginatedPosts),
     __param(0, (0, type_graphql_1.Arg)('limit', () => type_graphql_1.Int)),
     __param(1, (0, type_graphql_1.Arg)('cursor', () => String, { nullable: true })),

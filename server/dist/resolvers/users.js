@@ -158,7 +158,6 @@ let UserResolver = class UserResolver {
         }));
     }
     me({ req }) {
-        console.log('me query cookie:', req.session);
         if (!req.session.userId) {
             return null;
         }

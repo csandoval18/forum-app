@@ -50,7 +50,22 @@ export class PostResolver {
 		// return Users.findOne({ where: { id: post.creatorId } })
 	}
 
-	@FieldResolver(() => Int, { nullable: true })
+	// @FieldResolver(() => String, { nullable: true })
+	// async voteStatus(
+	// 	@Root() post: Posts,
+	// 	@Ctx() { upvoteLoader, req }: MyContext,
+	// ) {
+	// 	if (!req.session.userId) return null
+
+	// 	console.log('upvote1: ')
+	// 	const upvote = await upvoteLoader.load({
+	// 		postId: post.id,
+	// 		userId: req.session.userId,
+	// 	})
+	// 	console.log('upvote: ', upvote)
+
+	// 	return upvote ? upvote.value : null
+	// }
 
 	/* 
     When we set an argument to nullable we have explicitely set the return type
@@ -68,8 +83,6 @@ export class PostResolver {
 		const realLimitPlusOne = realLimit + 1
 
 		const replacements: any[] = [realLimitPlusOne]
-
-		// If user is signed in add userId to replacements for conditional query
 		const { userId } = req.session
 		if (userId) replacements.push(userId)
 
@@ -88,6 +101,7 @@ export class PostResolver {
 					: 'null as "voteStatus"'
 			}
       FROM posts p 
+      INNER JOIN users u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
       ORDER BY p."createdAt" DESC
       LIMIT $1

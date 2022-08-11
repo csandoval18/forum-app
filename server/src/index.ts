@@ -12,6 +12,7 @@ import { PostResolver } from './resolvers/posts'
 import { UserResolver } from './resolvers/users'
 import dataSource from './typeorm.config'
 import { MyContext } from './types'
+import { createUpvoteLoader } from './utils/createUpvoteLoader'
 import { createUserLoader } from './utils/createUserLoader'
 // import { sendEmail } from './utils/sendEmail'
 
@@ -66,6 +67,7 @@ const main = async () => {
 			res,
 			redisClient,
 			userLoader: createUserLoader(),
+			// upvoteLoader: createUpvoteLoader(),
 		}),
 	})
 
