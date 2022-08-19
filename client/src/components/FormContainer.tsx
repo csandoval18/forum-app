@@ -11,14 +11,16 @@ const FormContainer = ({ children, center }: BodyContainerProps) => {
 
 	if (center) {
 		body = (
-			<Center
+			<Flex
 				p={0}
 				w={'100%'}
 				minH='100vh'
 				bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
+				justifyContent={'center'}
+				paddingTop={'20%'}
 			>
 				<Box>{children}</Box>
-			</Center>
+			</Flex>
 		)
 	} else {
 		body = (
