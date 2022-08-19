@@ -48,7 +48,8 @@ const Navbar: React.FC<NavbarProps> = () => {
 					onClick={async () => {
 						await logout()
 						//Need to use window route chaning so cookie can be destroyed with refresh of page
-						window.location.href = '/login'
+						// window.location.href = '/login'
+						router.reload()
 					}}
 					variant={'link'}
 					isLoading={logoutFetching}

@@ -1,4 +1,4 @@
-import { cacheExchange } from '@urql/exchange-graphcache'
+import { cacheExchange, Cache } from '@urql/exchange-graphcache'
 import Router from 'next/router'
 import { dedupExchange, Exchange, fetchExchange } from 'urql'
 import { pipe, tap } from 'wonka'
@@ -27,6 +27,14 @@ const errorExchange: Exchange =
 			}),
 		)
 	}
+
+const invalidateAllPosts = (cache: Cache) => {
+	const allFields = cache.inspectFields('Query')
+	const fieldInfos = allFields.filter((info) => info.fieldName === 'posts')
+	fieldInfos.forEach((fi) => {
+		cache.invalidate('Query', 'posts', fi.arguments || {})
+	})
+}
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 	let cookie = ''
@@ -100,13 +108,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 					needs to be refetched from the server by invalidating the query thus updating the cache with the
 					newly created post */
 						createPost: (_result, args, cache, info) => {
-							const allFields = cache.inspectFields('Query')
-							const fieldInfos = allFields.filter(
-								(info) => info.fieldName === 'posts',
-							)
-							fieldInfos.forEach((fi) => {
-								cache.invalidate('Query', 'posts', fi.arguments || {})
-							})
+							invalidateAllPosts(cache)
 						},
 						login: (_result, args, cache, info) => {
 							betterUpdateQuery<LoginMutation, MeQuery>(
@@ -125,6 +127,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 									}
 								},
 							)
+							invalidateAllPosts(cache)
 						},
 						register: (_result, args, cache, info) => {
 							betterUpdateQuery<RegisterMutation, MeQuery>(
