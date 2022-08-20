@@ -13,6 +13,7 @@ import { UserResolver } from './resolvers/users'
 import dataSource from './typeorm.config'
 import { MyContext } from './types'
 import { createUserLoader } from './utils/createUserLoader'
+import 'dotenv-safe/config'
 // import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -27,13 +28,14 @@ const main = async () => {
 	// await sendEmail('user@user.com', 'hello world')
 
 	const RedisStore = connectRedis(session)
-	const redisClient = new Redis()
+	const redisClient = new Redis(process.env.REDIS_URL)
+	app.set('proxy', 1)
 
 	app.set('trust proxy', !__prod__)
 	app.use(
 		//aplies to all routes
 		cors({
-			origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+			origin: ['https://studio.apollographql.com', process.env.CORS_ORIGIN],
 			credentials: true,
 		}),
 	)
@@ -47,8 +49,9 @@ const main = async () => {
 				httpOnly: true,
 				sameSite: 'lax',
 				secure: __prod__,
+				domain: __prod__ ? '.cas-forum' : undefined,
 			},
-			secret: 'keyboard cat',
+			secret: process.env.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
 		}),
@@ -76,7 +79,7 @@ const main = async () => {
 		cors: false,
 	})
 
-	app.listen(4000, () => {
+	app.listen(parseInt(process.env.PORT), () => {
 		console.log('server started on localhost:4000')
 	})
 }

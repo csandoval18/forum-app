@@ -9,15 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.migrations1658534141136 = void 0;
-class migrations1658534141136 {
-    up(_) {
+exports.migrations1660977460220 = void 0;
+class migrations1660977460220 {
+    up(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
-    down(_) {
-        return __awaiter(this, void 0, void 0, function* () { });
+    down(queryRunner) {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
     }
 }
-exports.migrations1658534141136 = migrations1658534141136;
-//# sourceMappingURL=1658534141136-migrations.js.map
+exports.migrations1660977460220 = migrations1660977460220;
+//# sourceMappingURL=1660977460220-migrations.js.map

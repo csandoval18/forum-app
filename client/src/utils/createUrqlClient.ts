@@ -42,8 +42,9 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 		cookie = ctx?.req?.headers?.cookie
 	}
 
+	console.log('API_URL:', process.env.NEXT_PUBLIC_API_URL)
 	return {
-		url: 'http://localhost:4000/graphql',
+		url: process.env.NEXT_PUBLIC_API_URL,
 		//Sends a cookie. Used to set a cookie when user register or fetching cookie when loggin in
 		fetchOptions: {
 			credentials: 'include' as const,

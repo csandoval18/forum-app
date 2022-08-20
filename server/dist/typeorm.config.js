@@ -8,13 +8,11 @@ const Users_1 = require("./entities/Users");
 const Posts_1 = require("./entities/Posts");
 const path_1 = __importDefault(require("path"));
 const Upvotes_1 = require("./entities/Upvotes");
+require("dotenv-safe/config");
 const dataSource = new typeorm_1.DataSource({
     type: 'postgres',
-    database: 'forum',
-    username: 'Christian',
-    password: 'root',
+    url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
     migrations: [path_1.default.join(__dirname, './migrations/*')],
     entities: [Posts_1.Posts, Users_1.Users, Upvotes_1.Upvotes],
 });

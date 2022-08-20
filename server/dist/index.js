@@ -26,16 +26,18 @@ const posts_1 = require("./resolvers/posts");
 const users_1 = require("./resolvers/users");
 const typeorm_config_1 = __importDefault(require("./typeorm.config"));
 const createUserLoader_1 = require("./utils/createUserLoader");
+require("dotenv-safe/config");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('NODE_ENV:', process.env.NODE_ENV);
     const conn = yield typeorm_config_1.default.initialize();
     yield conn.runMigrations();
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
-    const redisClient = new ioredis_1.default();
+    const redisClient = new ioredis_1.default(process.env.REDIS_URL);
+    app.set('proxy', 1);
     app.set('trust proxy', !constants_1.__prod__);
     app.use((0, cors_1.default)({
-        origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
+        origin: ['https://studio.apollographql.com', process.env.CORS_ORIGIN],
         credentials: true,
     }));
     app.use((0, express_session_1.default)({
@@ -46,8 +48,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             sameSite: 'lax',
             secure: constants_1.__prod__,
+            domain: constants_1.__prod__ ? '.cas-forum' : undefined,
         },
-        secret: 'keyboard cat',
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
     }));
@@ -68,7 +71,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         app,
         cors: false,
     });
-    app.listen(4000, () => {
+    app.listen(parseInt(process.env.PORT), () => {
         console.log('server started on localhost:4000');
     });
 });
