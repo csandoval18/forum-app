@@ -1,5 +1,16 @@
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { Box, Button, Flex, Link, useColorMode } from '@chakra-ui/react'
+import {
+	Avatar,
+	Box,
+	Button,
+	Flex,
+	Link,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	useColorMode,
+} from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
@@ -26,21 +37,9 @@ const Navbar: React.FC<NavbarProps> = () => {
 					<Button variant='primary'>Login</Button>
 				</NextLink>
 				<NextLink href={'/register'}>
-					<Button
-						variant='outline'
-						borderColor='gray.600'
-						_hover={{ bg: '#333e4e' }}
-					>
-						Register
-					</Button>
+					<Button variant='secondary'>Register</Button>
 				</NextLink>
-				<Button
-					onClick={toggleColorMode}
-					variant='outline'
-					borderColor='gray.600'
-					_hover={{ bg: '#333e4e' }}
-					// color='primary'
-				>
+				<Button onClick={toggleColorMode} variant='secondary'>
 					{colorMode === 'light' ? (
 						<MoonIcon fontSize={20} />
 					) : (
@@ -62,33 +61,31 @@ const Navbar: React.FC<NavbarProps> = () => {
 				>
 					Create Post
 				</Button>
-
-				<Box>{data.me.username} </Box>
-				<Button
-					onClick={async () => {
-						await logout()
-						//Need to use window route chaning so cookie can be destroyed with refresh of page
-						// window.location.href = '/login'
-						router.reload()
-					}}
-					variant={'link'}
-					isLoading={logoutFetching}
-				>
-					Logout
-				</Button>
-				<Button
-					onClick={toggleColorMode}
-					variant='outline'
-					color='primary'
-					borderColor='gray.600'
-					_hover={{ bg: '#333e4e' }}
-				>
+				<Button onClick={toggleColorMode} variant='secondary'>
 					{colorMode === 'light' ? (
 						<MoonIcon fontSize={20} />
 					) : (
 						<SunIcon fontSize={20} />
 					)}
 				</Button>
+				<Menu>
+					<Avatar as={MenuButton}></Avatar>
+
+					<MenuList bg='secondary'>
+						<Flex px={3}>{data.me.username} </Flex>
+						<MenuItem>Logout</MenuItem>
+						<MenuItem
+							onClick={async () => {
+								await logout()
+								// Window route or refresh needs to used so cookie can be destroyed with the refresh of the page
+								window.location.href = '/'
+								// router.reload()
+							}}
+						>
+							Logout
+						</MenuItem>
+					</MenuList>
+				</Menu>
 			</Flex>
 		)
 	}
@@ -96,7 +93,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 	return (
 		<Flex
 			h='4.2rem'
-			bg='#222935'
+			bg='secondary'
 			px={40}
 			color={'whiteAlpha.900'}
 			alignItems='center'

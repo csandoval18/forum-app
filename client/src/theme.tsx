@@ -28,12 +28,9 @@ const theme = extendTheme({
 					},
 				},
 				secondary: {
-					color: 'black',
-					bg: '#eeeeee',
-					_hover: {
-						bg: '#c7c7c7',
-						color: '#1e2329',
-					},
+					border: '1px',
+					borderColor: 'gray.600',
+					_hover: { bg: '#333e4e' },
 				},
 				dark: {
 					color: 'white',
@@ -43,6 +40,12 @@ const theme = extendTheme({
 						color: '#1e2329',
 					},
 				},
+			},
+		},
+		MenuItem: {
+			baseStyle: {
+				h: '80px',
+				color: 'red',
 			},
 		},
 	},
@@ -56,10 +59,9 @@ const theme = extendTheme({
 				default: '#16161D',
 				_dark: '#ade3b8',
 			},
-			heroGradientStart: {
-				default: '#1e2329',
-				// _dark: '#e3a7f9',
-				_dark: '#1e2329',
+			secondary: {
+				default: '#222935',
+				_dark: '#222935',
 			},
 			heroGradientEnd: {
 				default: '#98d6e6',

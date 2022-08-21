@@ -16,12 +16,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	return (
 		<Flex
 			className='post-card'
-			w='100%'
+			maxW={'60rem'}
 			p={6}
 			borderRadius={12}
 			shadow='dark-lg'
-			// borderWidth={1}
-			bg='white'
 			alignItems={'center'}
 		>
 			<UpvoteSection post={post}></UpvoteSection>
