@@ -42,7 +42,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 		cookie = ctx?.req?.headers?.cookie
 	}
 
-	console.log('API_URL:', process.env.NEXT_PUBLIC_API_URL)
 	return {
 		url: process.env.NEXT_PUBLIC_API_URL,
 		//Sends a cookie. Used to set a cookie when user register or fetching cookie when loggin in
@@ -68,13 +67,13 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 				},
 				updates: {
 					Mutation: {
-						deletePost: (_result, args, cache, info) => {
+						deletePost: (_result, args, cache, _info) => {
 							cache.invalidate({
 								__typename: 'Posts',
 								id: (args as DeletePostMutationVariables).id,
 							})
 						},
-						vote: (_result, args, cache, info) => {
+						vote: (_result, args, cache, _info) => {
 							const { postId, value } = args as VoteMutationVariables
 							const data = cache.readFragment(
 								gql`
@@ -108,10 +107,10 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 						/*This query is creating a post in the db, and it is also telling the client that the posts query
 					needs to be refetched from the server by invalidating the query thus updating the cache with the
 					newly created post */
-						createPost: (_result, args, cache, info) => {
+						createPost: (_result, _args, cache, _info) => {
 							invalidateAllPosts(cache)
 						},
-						login: (_result, args, cache, info) => {
+						login: (_result, _args, cache, _info) => {
 							betterUpdateQuery<LoginMutation, MeQuery>(
 								cache,
 								{ query: MeDocument },
@@ -130,7 +129,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
 							)
 							invalidateAllPosts(cache)
 						},
-						register: (_result, args, cache, info) => {
+						register: (_result, _args, cache, _info) => {
 							betterUpdateQuery<RegisterMutation, MeQuery>(
 								cache,
 								{ query: MeDocument },

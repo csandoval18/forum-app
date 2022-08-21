@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Heading } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import Navbar from './Home/Navbar'
 
 interface BodyContainerProps {
@@ -17,7 +17,7 @@ const FormContainer = ({ children, center }: BodyContainerProps) => {
 				minH='100vh'
 				bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 				justifyContent={'center'}
-				paddingTop={'20%'}
+				paddingTop={'10%'}
 			>
 				<Box>{children}</Box>
 			</Flex>

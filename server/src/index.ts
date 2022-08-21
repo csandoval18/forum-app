@@ -29,8 +29,6 @@ const main = async () => {
 
 	const RedisStore = connectRedis(session)
 	const redisClient = new Redis(process.env.REDIS_URL)
-	app.set('proxy', 1)
-
 	app.set('trust proxy', !__prod__)
 	app.use(
 		//aplies to all routes
@@ -80,7 +78,7 @@ const main = async () => {
 	})
 
 	app.listen(parseInt(process.env.PORT), () => {
-		console.log('server started on localhost:4000')
+		console.log(`Server started on ${process.env.PORT}`)
 	})
 }
 

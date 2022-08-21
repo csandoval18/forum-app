@@ -12,7 +12,7 @@ const ForgotPassword: React.FC<{}> = () => {
 	const [complete, setComplete] = useState(false)
 	const [{}, forgotPassword] = useForgotPasswordMutation()
 
-	const handleForgotPassword = async (values, { setErrors }) => {
+	const handleForgotPassword = async (values) => {
 		await forgotPassword(values)
 		setComplete(true)
 	}

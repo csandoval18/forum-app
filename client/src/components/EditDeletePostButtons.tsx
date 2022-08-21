@@ -1,5 +1,5 @@
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
-import { Flex, IconButton } from '@chakra-ui/react'
+import { IconButton } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import React from 'react'
 import { useDeletePostMutation, useMeQuery } from '../generated/graphql'

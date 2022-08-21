@@ -9,7 +9,6 @@ import {
 	InputRightElement,
 	Button,
 	Box,
-	Link,
 } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
@@ -62,11 +61,7 @@ const SetPasswordInputField: React.FC<InputFieldProps> = ({
 				</InputRightElement>
 			</InputGroup>
 			{error ? (
-				<Box
-					display='flex'
-					alignItems='end'
-					justifyContent='space-between'
-				>
+				<Box display='flex' alignItems='end' justifyContent='space-between'>
 					<FormErrorMessage fontSize='md'>{error}</FormErrorMessage>
 				</Box>
 			) : (

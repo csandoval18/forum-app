@@ -34,7 +34,6 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
     const redisClient = new ioredis_1.default(process.env.REDIS_URL);
-    app.set('proxy', 1);
     app.set('trust proxy', !constants_1.__prod__);
     app.use((0, cors_1.default)({
         origin: ['https://studio.apollographql.com', process.env.CORS_ORIGIN],
@@ -72,7 +71,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         cors: false,
     });
     app.listen(parseInt(process.env.PORT), () => {
-        console.log('server started on localhost:4000');
+        console.log(`Server started on ${process.env.PORT}`);
     });
 });
 main().catch((err) => {

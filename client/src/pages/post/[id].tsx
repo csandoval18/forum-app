@@ -1,6 +1,5 @@
 import { Box, Flex, Heading } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
-import { useRouter } from 'next/router'
 import React from 'react'
 import EditDeletePostButtons from '../../components/EditDeletePostButtons'
 import Navbar from '../../components/Home/Navbar'
