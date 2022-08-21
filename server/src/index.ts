@@ -29,7 +29,7 @@ const main = async () => {
 
 	const RedisStore = connectRedis(session)
 	const redisClient = new Redis(process.env.REDIS_URL)
-	app.set('trust proxy', !__prod__)
+	app.set('trust proxy', 1)
 	app.use(
 		//aplies to all routes
 		cors({
@@ -47,7 +47,7 @@ const main = async () => {
 				httpOnly: true,
 				sameSite: 'lax',
 				secure: __prod__,
-				domain: __prod__ ? '.cas-forum' : undefined,
+				domain: __prod__ ? '.cas-forum.com' : undefined,
 			},
 			secret: process.env.SESSION_SECRET,
 			resave: false,

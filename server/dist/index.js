@@ -34,7 +34,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
     const redisClient = new ioredis_1.default(process.env.REDIS_URL);
-    app.set('trust proxy', !constants_1.__prod__);
+    app.set('trust proxy', 1);
     app.use((0, cors_1.default)({
         origin: ['https://studio.apollographql.com', process.env.CORS_ORIGIN],
         credentials: true,
@@ -47,7 +47,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             sameSite: 'lax',
             secure: constants_1.__prod__,
-            domain: constants_1.__prod__ ? '.cas-forum' : undefined,
+            domain: constants_1.__prod__ ? '.cas-forum.com' : undefined,
         },
         secret: process.env.SESSION_SECRET,
         resave: false,
