@@ -50,6 +50,23 @@ export class PostResolver {
 		// return Users.findOne({ where: { id: post.creatorId } })
 	}
 
+	// @FieldResolver(() => String, { nullable: true })
+	// async voteStatus(
+	// 	@Root() post: Posts,
+	// 	@Ctx() { upvoteLoader, req }: MyContext,
+	// ) {
+	// 	if (!req.session.userId) return null
+
+	// 	console.log('upvote1: ')
+	// 	const upvote = await upvoteLoader.load({
+	// 		postId: post.id,
+	// 		userId: req.session.userId,
+	// 	})
+	// 	console.log('upvote: ', upvote)
+
+	// 	return upvote ? upvote.value : null
+	// }
+
 	/* 
     When we set an argument to nullable we have explicitely set the return type
 	  cursor has to be nullable because the first time it is fetched it will be null 
@@ -102,6 +119,9 @@ export class PostResolver {
 	@Query(() => Posts, { nullable: true })
 	post(@Arg('id', () => Int) id: number): Promise<Posts | null> {
 		return Posts.findOne({ where: { id } })
+
+		// Creates relationship between post from Posts and creator Users which allows to fetch the User fields of the creator of the post
+		// return Posts.findOne({ where: { id: id }, relations: ['creator'] })
 	}
 
 	// Create a post
@@ -140,6 +160,7 @@ export class PostResolver {
 
 		return result.raw[0]
 	}
+	// return Posts.update({ id, creatorId: req.session.userId }, { title, text })
 
 	@Mutation(() => Boolean)
 	// Check if user is logged in
@@ -148,12 +169,20 @@ export class PostResolver {
 		@Arg('id', () => Int) id: number,
 		@Ctx() { req }: MyContext,
 	): Promise<boolean> {
+		// Not cascade way to delete post
+
+		// const post = await Posts.findOne({ where: { id: id } })
+		// if (!post) return false
+		// if (post.creatorId !== req.session.userId) throw new Error('not authorized')
+
+		// await Upvotes.delete({ postId: id })
+		// await Posts.delete({ id, creatorId: req.session.userId })
+
 		await Posts.delete({ id, creatorId: req.session.userId })
 		return true
 	}
 
 	@Mutation(() => Boolean)
-	@UseMiddleware(isAuth)
 	async vote(
 		@Arg('postId', () => Int) postId: number,
 		@Arg('value', () => Int) value: number,
@@ -163,6 +192,11 @@ export class PostResolver {
 		const isUpvote = value !== -1
 		const realValue = isUpvote ? 1 : -1
 		const { userId } = req.session
+		// Upvotes.insert({
+		// 	userId,
+		// 	postId,
+		// 	value: realValue,
+		// })
 
 		const upvote = await Upvotes.findOne({ where: { postId, userId } })
 

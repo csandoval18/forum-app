@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Link } from '@chakra-ui/react'
+import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { Box, Button, Flex, Link, useColorMode } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
@@ -10,7 +11,7 @@ interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
 	const router = useRouter()
-	// const { colorMode, toggleColorMode } = useColorMode()
+	const { colorMode, toggleColorMode } = useColorMode()
 	const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
 	const [{ data, fetching }] = useMeQuery({})
 	let body = null
@@ -22,11 +23,30 @@ const Navbar: React.FC<NavbarProps> = () => {
 		body = (
 			<Flex gap={8}>
 				<NextLink href={'/login'}>
-					<Link>login</Link>
+					<Button variant='primary'>Login</Button>
 				</NextLink>
 				<NextLink href={'/register'}>
-					<Link>register</Link>
+					<Button
+						variant='outline'
+						borderColor='gray.600'
+						_hover={{ bg: '#333e4e' }}
+					>
+						Register
+					</Button>
 				</NextLink>
+				<Button
+					onClick={toggleColorMode}
+					variant='outline'
+					borderColor='gray.600'
+					_hover={{ bg: '#333e4e' }}
+					// color='primary'
+				>
+					{colorMode === 'light' ? (
+						<MoonIcon fontSize={20} />
+					) : (
+						<SunIcon fontSize={20} />
+					)}
+				</Button>
 			</Flex>
 		)
 		//user is logged in
@@ -54,7 +74,20 @@ const Navbar: React.FC<NavbarProps> = () => {
 					variant={'link'}
 					isLoading={logoutFetching}
 				>
-					logout
+					Logout
+				</Button>
+				<Button
+					onClick={toggleColorMode}
+					variant='outline'
+					color='primary'
+					borderColor='gray.600'
+					_hover={{ bg: '#333e4e' }}
+				>
+					{colorMode === 'light' ? (
+						<MoonIcon fontSize={20} />
+					) : (
+						<SunIcon fontSize={20} />
+					)}
 				</Button>
 			</Flex>
 		)
@@ -62,8 +95,8 @@ const Navbar: React.FC<NavbarProps> = () => {
 
 	return (
 		<Flex
-			bg='black'
-			h={20}
+			h='4.2rem'
+			bg='#222935'
 			px={40}
 			color={'whiteAlpha.900'}
 			alignItems='center'
@@ -72,25 +105,21 @@ const Navbar: React.FC<NavbarProps> = () => {
 			zIndex={5}
 		>
 			<Flex flex='1'>
-				<Box display='flex'>
+				<Box display='flex' alignItems='center' justifyContent='center'>
 					<NextLink href='/'>
-						<Link
+						<Button
+							h={12}
+							variant='ghost'
 							fontSize={36}
 							fontWeight='extrabold'
 							letterSpacing={2}
-							_hover={{ textDecor: 'none' }}
-							display='flex'
-							alignItems='center'
-							justifyContent='center'
+							_hover={{ bg: '#333e4e' }}
 						>
 							CAS
-						</Link>
+						</Button>
 					</NextLink>
 				</Box>
 				<Box p={4} ml={'auto'}>
-					{/* <Button onClick={toggleColorMode}>
-					Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
-				</Button> */}
 					{body}
 				</Box>
 			</Flex>

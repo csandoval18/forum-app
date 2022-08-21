@@ -222,7 +222,6 @@ __decorate([
 ], PostResolver.prototype, "deletePost", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Boolean),
-    (0, type_graphql_1.UseMiddleware)(isAuth_1.isAuth),
     __param(0, (0, type_graphql_1.Arg)('postId', () => type_graphql_1.Int)),
     __param(1, (0, type_graphql_1.Arg)('value', () => type_graphql_1.Int)),
     __param(2, (0, type_graphql_1.Ctx)()),
@@ -234,4 +233,4 @@ PostResolver = __decorate([
     (0, type_graphql_1.Resolver)(Posts_1.Posts)
 ], PostResolver);
 exports.PostResolver = PostResolver;
-//# sourceMappingURL=posts.js.map
+//# sourceMappingURL=posts%20copy.js.map

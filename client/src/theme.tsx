@@ -21,16 +21,22 @@ const theme = extendTheme({
 		Button: {
 			variants: {
 				primary: {
-					borderRadius: '15px',
-					bg: '#6ee7bf',
+					bg: 'primary',
 					color: '#1e2329',
 					_hover: {
 						bg: '#9ff1d6',
 					},
 				},
 				secondary: {
+					color: 'black',
+					bg: '#eeeeee',
+					_hover: {
+						bg: '#c7c7c7',
+						color: '#1e2329',
+					},
+				},
+				dark: {
 					color: 'white',
-					borderRadius: '15px',
 					bg: '#233349',
 					_hover: {
 						bg: '#eeeeee',
