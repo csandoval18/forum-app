@@ -1,15 +1,21 @@
-import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import {
 	Avatar,
 	Box,
 	Button,
+	Drawer,
+	DrawerBody,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerHeader,
+	DrawerOverlay,
 	Flex,
-	Link,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
 	useColorMode,
+	useDisclosure,
 } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
@@ -21,10 +27,12 @@ import { createUrqlClient } from '../../utils/createUrqlClient'
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
-	const router = useRouter()
-	const { colorMode, toggleColorMode } = useColorMode()
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const btnRef = React.useRef()
 	const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
 	const [{ data, fetching }] = useMeQuery({})
+	const router = useRouter()
+	const { colorMode, toggleColorMode } = useColorMode()
 	let body = null
 
 	//data is loading
@@ -33,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 	} else if (!data?.me) {
 		body = (
 			<Flex gap={8}>
-				{/* <NextLink href={'/login'}>
+				<NextLink href={'/login'}>
 					<Button variant='primary'>Login</Button>
 				</NextLink>
 				<NextLink href={'/register'}>
@@ -45,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 					) : (
 						<SunIcon fontSize={20} />
 					)}
-				</Button> */}
+				</Button>
 			</Flex>
 		)
 		//user is logged in
@@ -70,8 +78,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 				</Button>
 				<Menu>
 					<Avatar as={MenuButton}></Avatar>
-
-					<MenuList bg='secondary'>
+					<MenuList bg='secondary' color='white'>
 						<Flex
 							p={3}
 							justifyContent='center'
@@ -133,13 +140,61 @@ const Navbar: React.FC<NavbarProps> = () => {
 							fontWeight='extrabold'
 							letterSpacing={2}
 							_hover={{ bg: '#333e4e' }}
+							_active={{ bg: '#333e4e' }}
 						>
 							CAS
 						</Button>
 					</NextLink>
 				</Box>
+				{/*body*/}
 				<Box p={4} ml={'auto'}>
-					{body}
+					<Button
+						ref={btnRef}
+						variant='ghost'
+						_hover={{ bg: '#333e4e' }}
+						_active={{ bg: '#333e4e' }}
+						onClick={onOpen}
+					>
+						<HamburgerIcon fontSize={25} />
+					</Button>
+					<Drawer
+						isOpen={isOpen}
+						placement='right'
+						onClose={onClose}
+						finalFocusRef={btnRef}
+					>
+						<DrawerOverlay />
+						<DrawerContent>
+							<DrawerCloseButton />
+							<DrawerHeader pb={30}></DrawerHeader>
+							<DrawerBody>
+								<Flex flexDir='column' gap='4'>
+									<Button onClick={toggleColorMode} variant='secondary'>
+										{colorMode === 'light' ? (
+											<MoonIcon fontSize={20} />
+										) : (
+											<SunIcon fontSize={20} />
+										)}
+									</Button>
+									<NextLink href={'/'}>
+										<Button w='100%' h='4rem' bg='primary'>
+											Home
+										</Button>
+									</NextLink>
+									<NextLink href={'/login'}>
+										<Button w='100%' h='4rem' bg='primary'>
+											Login
+										</Button>
+									</NextLink>
+									<NextLink href={'/register'}>
+										<Button w='100%' h='4rem' bg='primary'>
+											Register
+										</Button>
+									</NextLink>
+								</Flex>
+							</DrawerBody>
+						</DrawerContent>
+					</Drawer>
 				</Box>
 			</Flex>
 		</Flex>

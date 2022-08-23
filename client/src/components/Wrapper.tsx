@@ -13,7 +13,7 @@ const Wrapper = ({ children, h, heading }: WrapperProps) => {
 				{heading}
 			</Heading>
 			<Box
-				w='23rem'
+				w='21.5rem'
 				h={h}
 				backgroundColor={'whiteAlpha.100'}
 				shadow='2xl'
