@@ -61,7 +61,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
 								<Box mt={2}>
 									Already have an account?
 									<NextLink href='/login'>
-										<Link ml={2} color='white'>
+										<Link ml={2} color='primary' textDecor='underline'>
 											Sign in
 										</Link>
 									</NextLink>

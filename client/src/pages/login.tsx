@@ -62,7 +62,7 @@ const Login: React.FC<LoginProps> = ({}) => {
 								<Box>
 									Dont have an account?
 									<NextLink href='/register'>
-										<Link ml={2} color={'white'}>
+										<Link ml={2} color='primary' textDecor='underline'>
 											Register
 										</Link>
 									</NextLink>

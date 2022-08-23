@@ -53,7 +53,7 @@ const InputField: React.FC<InputFieldProps> = ({
 						h='1.75rem'
 						size='sm'
 						onClick={handleShowPass}
-						bg='gray.300'
+						_light={{ bg: 'blackAlpha.100', _hover: { bg: 'primary' } }}
 						_hover={{
 							background: 'primary',
 						}}
@@ -63,11 +63,7 @@ const InputField: React.FC<InputFieldProps> = ({
 				</InputRightElement>
 			</InputGroup>
 			{error ? (
-				<Box
-					display='flex'
-					alignItems='end'
-					justifyContent='space-between'
-				>
+				<Box display='flex' alignItems='end' justifyContent='space-between'>
 					<FormErrorMessage>{error}</FormErrorMessage>
 					<NextLink href='/forgot-password'>
 						<Link

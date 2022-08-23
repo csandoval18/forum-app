@@ -51,7 +51,7 @@ const SetPasswordInputField: React.FC<InputFieldProps> = ({
 						h='1.75rem'
 						size='sm'
 						onClick={handleShowPass}
-						bg='gray.300'
+						_light={{ bg: 'blackAlpha.100', _hover: { bg: 'primary' } }}
 						_hover={{
 							background: 'primary',
 						}}

@@ -9,15 +9,13 @@ interface WrapperProps {
 const Wrapper = ({ children, h, heading }: WrapperProps) => {
 	return (
 		<>
-			<Heading mb={7} ml={2} width={'500px'} color='white'>
+			<Heading mb={7} ml={2} width='100%'>
 				{heading}
 			</Heading>
 			<Box
-				// mt={8}
-				mx='auto'
 				h={h}
-				backgroundColor={'whiteAlpha.500'}
-				shadow='xl'
+				backgroundColor={'whiteAlpha.100'}
+				shadow='2xl'
 				padding={'20px'}
 				borderRadius={15}
 			>

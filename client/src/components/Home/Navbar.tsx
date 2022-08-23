@@ -33,7 +33,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 	} else if (!data?.me) {
 		body = (
 			<Flex gap={8}>
-				<NextLink href={'/login'}>
+				{/* <NextLink href={'/login'}>
 					<Button variant='primary'>Login</Button>
 				</NextLink>
 				<NextLink href={'/register'}>
@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 					) : (
 						<SunIcon fontSize={20} />
 					)}
-				</Button>
+				</Button> */}
 			</Flex>
 		)
 		//user is logged in
@@ -72,9 +72,31 @@ const Navbar: React.FC<NavbarProps> = () => {
 					<Avatar as={MenuButton}></Avatar>
 
 					<MenuList bg='secondary'>
-						<Flex px={3}>{data.me.username} </Flex>
-						<MenuItem>Logout</MenuItem>
+						<Flex
+							p={3}
+							justifyContent='center'
+							bg='primary'
+							color='secondary'
+							fontWeight={700}
+							letterSpacing={1}
+						>
+							{data.me.username}{' '}
+						</Flex>
 						<MenuItem
+							p={2.5}
+							fontWeight={500}
+							justifyContent='center'
+							_hover={{ bg: '#333e4e' }}
+							_focus={{ bg: 'transparent' }}
+						>
+							Profile
+						</MenuItem>
+						<MenuItem
+							p={2.5}
+							fontWeight={500}
+							justifyContent='center'
+							_hover={{ bg: '#333e4e' }}
+							_focus={{ bg: 'transparent' }}
 							onClick={async () => {
 								await logout()
 								// Window route or refresh needs to used so cookie can be destroyed with the refresh of the page
@@ -92,14 +114,14 @@ const Navbar: React.FC<NavbarProps> = () => {
 
 	return (
 		<Flex
+			className='navbar-container'
 			h='4.2rem'
 			bg='secondary'
-			px={40}
 			color={'whiteAlpha.900'}
 			alignItems='center'
 			position={'sticky'}
 			top={0}
-			zIndex={5}
+			zIndex={100}
 		>
 			<Flex flex='1'>
 				<Box display='flex' alignItems='center' justifyContent='center'>

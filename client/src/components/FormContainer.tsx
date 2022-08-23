@@ -14,8 +14,8 @@ const FormContainer = ({ children, center }: BodyContainerProps) => {
 			<Flex
 				p={0}
 				w={'100%'}
-				minH='100vh'
-				bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
+				minH='91vh'
+				// bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 				justifyContent={'center'}
 				paddingTop={'10%'}
 			>
@@ -28,8 +28,8 @@ const FormContainer = ({ children, center }: BodyContainerProps) => {
 				justifyContent='center'
 				p={0}
 				pt={8}
-				minH='100vh'
-				bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
+				minH='91vh'
+				// bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 			>
 				<Box>{children}</Box>
 			</Flex>

@@ -20,7 +20,7 @@ const Posts: React.FC = () => {
 	}
 
 	return (
-		<Box className='posts-container' px={40}>
+		<Box className='posts-container'>
 			{/* Diplay posts */}
 			{!data && fetching ? (
 				<div>loading...</div>
