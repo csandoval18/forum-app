@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, Box, Button } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import FormContainer from '../components/FormContainer'
+import Container from '../components/Container'
 import InputField from '../components/InputFields/InputField'
 import Wrapper from '../components/Wrapper'
 import { useForgotPasswordMutation } from '../generated/graphql'
@@ -18,7 +18,7 @@ const ForgotPassword: React.FC<{}> = () => {
 	}
 
 	return (
-		<FormContainer center={true}>
+		<Container center={true}>
 			<Wrapper h='330px' heading='Forgot Password'>
 				<Formik initialValues={{ email: '' }} onSubmit={handleForgotPassword}>
 					{({ isSubmitting }) =>
@@ -68,7 +68,7 @@ const ForgotPassword: React.FC<{}> = () => {
 					}
 				</Formik>
 			</Wrapper>
-		</FormContainer>
+		</Container>
 	)
 }
 

@@ -1,23 +1,24 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, propNames } from '@chakra-ui/react'
 import Navbar from './Home/Navbar'
 
 interface BodyContainerProps {
 	children: any
 	center?: boolean
+	className?: string
 }
 
-const FormContainer = ({ children, center }: BodyContainerProps) => {
+const Container = ({ children, center, className }: BodyContainerProps) => {
 	let body = <div></div>
 
 	if (center) {
 		body = (
 			<Flex
-				p={0}
 				w={'100%'}
-				minH='91vh'
-				// bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
+				minH='94.8vh'
 				justifyContent={'center'}
 				paddingTop={'10%'}
+				className={className}
+				// bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 			>
 				<Box>{children}</Box>
 			</Flex>
@@ -26,9 +27,11 @@ const FormContainer = ({ children, center }: BodyContainerProps) => {
 		body = (
 			<Flex
 				justifyContent='center'
+				w='100%'
 				p={0}
 				pt={8}
-				minH='91vh'
+				minH='94.8vh'
+				className={className}
 				// bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 			>
 				<Box>{children}</Box>
@@ -44,4 +47,4 @@ const FormContainer = ({ children, center }: BodyContainerProps) => {
 	)
 }
 
-export default FormContainer
+export default Container

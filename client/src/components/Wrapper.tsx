@@ -8,11 +8,12 @@ interface WrapperProps {
 
 const Wrapper = ({ children, h, heading }: WrapperProps) => {
 	return (
-		<>
-			<Heading mb={7} ml={2} width='100%'>
+		<div className='loggin-content'>
+			<Heading mb={7} ml={1} width='100%'>
 				{heading}
 			</Heading>
 			<Box
+				w='23rem'
 				h={h}
 				backgroundColor={'whiteAlpha.100'}
 				shadow='2xl'
@@ -21,7 +22,7 @@ const Wrapper = ({ children, h, heading }: WrapperProps) => {
 			>
 				{children}
 			</Box>
-		</>
+		</div>
 	)
 }
 
