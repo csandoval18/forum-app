@@ -3,13 +3,14 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { usePostsQuery } from '../../../generated/graphql'
 import PostCard from './PostCard/PostCard'
+import PostCardDesktop from './PostCard/PostCardDesktop'
 
 interface PostsProps {}
 
 const Posts: React.FC = () => {
 	const router = useRouter()
 	const [variables, setVariables] = useState({
-		limit: 15,
+		limit: 10,
 		cursor: null as string | null,
 	})
 	const [{ data, fetching, ...other }] = usePostsQuery({
@@ -20,18 +21,18 @@ const Posts: React.FC = () => {
 	}
 
 	return (
-		<Flex className='posts-list-container' justifyContent='center'>
+		<Flex className='posts-list-container' flexDir='column' alignItems='center'>
 			{!data && fetching ? (
 				<div>loading...</div>
 			) : (
-				<Stack spacing={2} py={8}>
+				<Stack spacing={2} py={10}>
 					{data!.posts.posts.map((post) =>
 						!post ? null : (
-							<PostCard
+							<PostCardDesktop
 								key={post.id}
 								post={post}
 								pageProps={undefined}
-							></PostCard>
+							></PostCardDesktop>
 						),
 					)}
 				</Stack>
@@ -41,8 +42,9 @@ const Posts: React.FC = () => {
 				<Flex>
 					<Button
 						m='auto'
-						variant='secondary'
-						my={8}
+						bg='gray.700'
+						_hover={{ bg: 'gray.600' }}
+						mb={10}
 						isLoading={fetching}
 						onClick={() => {
 							setVariables({
@@ -51,7 +53,7 @@ const Posts: React.FC = () => {
 							})
 						}}
 					>
-						load more
+						Load More
 					</Button>
 				</Flex>
 			) : null}

@@ -1,27 +1,11 @@
-import {
-	Box,
-	chakra,
-	extendTheme,
-	Flex,
-	forwardRef,
-	Heading,
-	HTMLChakraProps,
-	Link,
-	Text,
-	ThemingProps,
-	useColorMode,
-	useStyleConfig,
-} from '@chakra-ui/react'
-import { StyleConfig } from '@chakra-ui/theme-tools'
+import { Box, Flex, Heading, Text, useColorMode } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
-import { CustomBadge } from '../../../../CustomComponentStyles/CustomBadge'
 import { PostSnippetFragment, useMeQuery } from '../../../../generated/graphql'
 import { createUrqlClient } from '../../../../utils/createUrqlClient'
-import EditDeletePostButtons from '../../../EditDeletePostButtons'
 import UpvoteSection from './UpvoteSection'
 
-interface PostCardProps {
+export interface PostCardProps {
 	post: PostSnippetFragment
 }
 
@@ -30,11 +14,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
 	return (
 		<Flex
-			flex={1}
 			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
 			className='post-card'
-			h='16rem'
-			w='22rem'
+			h={['10rem', '10rem', '10rem', '12rem']}
+			w={['22rem', '40rem', '40rem', '40rem', '60rem']}
 			pb={4}
 			borderRadius={8}
 			shadow='dark-lg'
