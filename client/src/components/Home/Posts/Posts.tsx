@@ -25,7 +25,7 @@ const Posts: React.FC = () => {
 			{!data && fetching ? (
 				<div>loading...</div>
 			) : (
-				<Stack spacing={2} py={10}>
+				<Stack spacing={[2, 2, 4, 4]} py={10}>
 					{data!.posts.posts.map((post) =>
 						!post ? null : (
 							<PostCardDesktop
@@ -43,6 +43,7 @@ const Posts: React.FC = () => {
 					<Button
 						m='auto'
 						bg='gray.700'
+						color='white'
 						_hover={{ bg: 'gray.600' }}
 						mb={10}
 						isLoading={fetching}

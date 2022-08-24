@@ -13,23 +13,39 @@ const PostCardDesktop: React.FC<PostCardProps> = ({ post }) => {
 		<Flex
 			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
 			className='post-card'
-			h={['10rem', '10rem', '10rem', '12rem']}
-			w={['22rem', '40rem', '40rem', '40rem', '60rem']}
-			pb={4}
+			h={['10rem', '10rem', '10rem', '14rem']}
+			w={['22rem', '40rem', '40rem', '40rem', '40rem']}
 			borderRadius={8}
 			shadow='dark-lg'
 		>
-			<Flex px={3} flexDir='column' bg='red'>
+			<Flex
+				px={3}
+				flexDir='column'
+				alignContent='center'
+				justifyContent='center'
+			>
 				<UpvoteSection post={post} variant={'desktop'}></UpvoteSection>
 			</Flex>
 			<NextLink href='/post/[id]' as={`/post/${post.id}`}>
-				<Box flex='1' cursor='pointer' minH='5rem' px={3}>
-					<Heading fontSize='xl' my={4} w='100%'>
+				<Flex
+					flexDir='column'
+					cursor='pointer'
+					minH='5rem'
+					px={3}
+					justifyContent='space-between'
+				>
+					<Heading
+						fontSize='xl'
+						my={5}
+						w='100%'
+						flex={1}
+						wordBreak='break-word'
+					>
 						{post.title}
 					</Heading>
-				</Box>
+					<Text my={5}>Posted by: {post.creator.username}</Text>
+				</Flex>
 			</NextLink>
-			<Text mt={4}>Posted by: {post.creator.username}</Text>
 		</Flex>
 	)
 }
