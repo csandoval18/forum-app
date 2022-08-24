@@ -84,7 +84,8 @@ const theme = extendTheme({
 	colors: {
 		black: '#1e2329',
 		primary: '#6ee7bf',
-		secondary: '#233349',
+		// secondary: '#233349',
+		secondary: 'grey.700',
 		complimentary: '#98d6e6',
 	},
 	fonts,

@@ -31,7 +31,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	return (
 		<Flex
 			flex={1}
-			backgroundColor={colorMode === 'light' ? 'white' : 'gray.800'}
+			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
 			className='post-card'
 			h='16rem'
 			w='22rem'
@@ -53,10 +53,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 			</Box>
 			<Flex justifyContent='right' gap={4}>
 				{/* Component can be null for users that do not own the post */}
-				{/* <EditDeletePostButtons
+				<EditDeletePostButtons
 					id={post.id}
 					creatorId={post.creator.id}
-				></EditDeletePostButtons> */}
+				></EditDeletePostButtons>
 			</Flex>
 			<Flex>
 				<UpvoteSection post={post}></UpvoteSection>

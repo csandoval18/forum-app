@@ -23,21 +23,16 @@ const Post: React.FC = ({}) => {
 		<>
 			<Navbar pageProps={undefined}></Navbar>
 			<Flex
-				width={'95%'}
-				justifyContent='space-between'
-				backgroundColor='primary'
-				alignItems='center'
-				py={8}
-				px={10}
-				mx={8}
-				my={8}
-				borderRadius='12px'
+				className='post-selection-container'
+				h='100vh'
+				width='100%'
+				flexDir={'column'}
 			>
 				<Box>
-					<Heading>{data?.post?.title}</Heading>
-					{data?.post?.text}
+					<Heading w='22rem'>{data?.post?.title}</Heading>
 				</Box>
-				<Flex gap={4}>
+				{data?.post?.text}
+				<Flex gap={4} bg='red'>
 					<EditDeletePostButtons
 						id={data.post.id}
 						creatorId={data.post.creator.id}

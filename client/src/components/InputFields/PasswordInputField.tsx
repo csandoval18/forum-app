@@ -41,9 +41,6 @@ const InputField: React.FC<InputFieldProps> = ({
 					{...field}
 					{...props}
 					id={field.name}
-					backgroundColor={'white'}
-					bgColor={'white'}
-					bg='white'
 					paddingLeft={3}
 					paddingRight={3}
 					type={show ? 'text' : 'password'}

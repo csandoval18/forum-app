@@ -7,18 +7,14 @@ import {
 	Textarea,
 } from '@chakra-ui/react'
 
-type TextInputFieldProps =
-	TextareaHTMLAttributes<HTMLTextAreaElement> & {
-		label: string
-		name: string
-	}
+type TextInputFieldProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+	label: string
+	name: string
+}
 
 // '' => false
 //'error message' => true
-const TextInputField: React.FC<TextInputFieldProps> = ({
-	label,
-	...props
-}) => {
+const TextInputField: React.FC<TextInputFieldProps> = ({ label, ...props }) => {
 	const [field, { error }] = useField(props)
 	return (
 		<FormControl isInvalid={!!error}>
@@ -29,11 +25,9 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
 				{...field}
 				{...props}
 				id={field.name}
-				backgroundColor={'white'}
-				bgColor={'white'}
-				bg='white'
 				paddingLeft={3}
 				paddingRight={3}
+				h={48}
 			/>
 			{error ? (
 				<FormErrorMessage>{error}</FormErrorMessage>
