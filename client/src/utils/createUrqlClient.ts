@@ -10,10 +10,10 @@ import {
 	RegisterMutation,
 	VoteMutationVariables,
 } from '../generated/graphql'
-import { betterUpdateQuery } from './betterUpdateQuery'
 import { cursorPagination } from './urqlCursorPagination'
 import { gql } from '@urql/core'
 import { isServer } from './isServer'
+import { betterUpdateQuery } from './betterUpdateQuery'
 
 const errorExchange: Exchange =
 	({ forward }) =>

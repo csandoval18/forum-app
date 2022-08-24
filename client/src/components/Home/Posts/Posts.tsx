@@ -1,7 +1,9 @@
 import { Box, Button, Flex, Stack } from '@chakra-ui/react'
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { usePostsQuery } from '../../../generated/graphql'
+import useWindowDimensions from '../../../utils/useWindowDimensions'
 import PostCard from './PostCard/PostCard'
 import PostCardDesktop from './PostCard/PostCardDesktop'
 
@@ -20,10 +22,21 @@ const Posts: React.FC = () => {
 		return <div>Cannot fetch posts from server</div>
 	}
 
-	return (
-		<Flex className='posts-list-container' flexDir='column' alignItems='center'>
-			{!data && fetching ? (
-				<div>loading...</div>
+	const { height, width } = useWindowDimensions()
+
+	let stack
+	if (!data && fetching) {
+		let stack = <div>loading...</div>
+	} else {
+		stack =
+			width < 500 ? (
+				<Stack spacing={[2, 2, 4, 4]} py={10}>
+					{data!.posts.posts.map((post) =>
+						!post ? null : (
+							<PostCard key={post.id} post={post} pageProps={undefined} />
+						),
+					)}
+				</Stack>
 			) : (
 				<Stack spacing={[2, 2, 4, 4]} py={10}>
 					{data!.posts.posts.map((post) =>
@@ -32,11 +45,19 @@ const Posts: React.FC = () => {
 								key={post.id}
 								post={post}
 								pageProps={undefined}
-							></PostCardDesktop>
+							/>
 						),
 					)}
 				</Stack>
-			)}
+			)
+	}
+
+	return (
+		<Flex className='posts-list-container' flexDir='column' alignItems='center'>
+			{/* <div>
+				w: {width}, h: {height}
+			</div> */}
+			{!data && fetching ? <div>loading...</div> : stack}
 
 			{data && data.posts.hasMore ? (
 				<Flex>
