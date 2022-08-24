@@ -9,6 +9,7 @@ import {
 	Link,
 	Text,
 	ThemingProps,
+	useColorMode,
 	useStyleConfig,
 } from '@chakra-ui/react'
 import { StyleConfig } from '@chakra-ui/theme-tools'
@@ -26,10 +27,10 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	const [{ data }] = useMeQuery()
-
+	const { colorMode, toggleColorMode } = useColorMode()
 	return (
 		<Flex
-			backgroundColor=''
+			backgroundColor={colorMode === 'light' ? 'white' : 'gray.800'}
 			className='post-card'
 			maxW={'60rem'}
 			p={6}
@@ -37,7 +38,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 			shadow='dark-lg'
 			alignItems={'center'}
 		>
-			<CustomBadge variant='custom'>hello</CustomBadge>
 			<UpvoteSection post={post}></UpvoteSection>
 			<Box flex='1'>
 				<NextLink href='/post/[id]' as={`/post/${post.id}`}>
