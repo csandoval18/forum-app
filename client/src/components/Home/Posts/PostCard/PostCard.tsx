@@ -35,30 +35,19 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 			className='post-card'
 			h='16rem'
 			w='22rem'
-			px={3}
 			pb={4}
 			borderRadius={8}
 			shadow='dark-lg'
 			flexDir='column'
 		>
-			<Box flex='1'>
-				<NextLink href='/post/[id]' as={`/post/${post.id}`}>
-					<Link>
-						<Heading fontSize='xl' my={4} w='100%'>
-							{post.title}
-						</Heading>
-					</Link>
-				</NextLink>
-				{/* <Text mt={4}>{post.textSnippet}</Text> */}
-			</Box>
-			<Flex justifyContent='right' gap={4}>
-				{/* Component can be null for users that do not own the post */}
-				<EditDeletePostButtons
-					id={post.id}
-					creatorId={post.creator.id}
-				></EditDeletePostButtons>
-			</Flex>
-			<Flex>
+			<NextLink href='/post/[id]' as={`/post/${post.id}`}>
+				<Box flex='1' cursor='pointer' minH='5rem' px={3}>
+					<Heading fontSize='xl' my={4} w='100%'>
+						{post.title}
+					</Heading>
+				</Box>
+			</NextLink>
+			<Flex px={3}>
 				<UpvoteSection post={post}></UpvoteSection>
 				<Text mt={4}>Posted by: {post.creator.username}</Text>
 			</Flex>

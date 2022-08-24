@@ -7,6 +7,7 @@ import { createUrqlClient } from '../utils/createUrqlClient'
 const Index: React.FC = () => {
 	return (
 		<Box
+			minH='100vh'
 			// bgGradient='linear(to-b, #222231 8%, #233349 30%, primary)'
 			bgGradient='linear(to-b, transparent 8%, #23334922 30%, primary)'
 		>

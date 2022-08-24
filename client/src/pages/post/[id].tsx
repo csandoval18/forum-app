@@ -27,12 +27,15 @@ const Post: React.FC = ({}) => {
 				h='100vh'
 				width='100%'
 				flexDir={'column'}
+				px={6}
 			>
-				<Box>
-					<Heading w='22rem'>{data?.post?.title}</Heading>
-				</Box>
+				<Flex my={6} justifyContent='center'>
+					<Heading w='20rem' fontSize={20}>
+						{data?.post?.title}
+					</Heading>
+				</Flex>
 				{data?.post?.text}
-				<Flex gap={4} bg='red'>
+				<Flex gap={4} justifyContent='right' bg='blue'>
 					<EditDeletePostButtons
 						id={data.post.id}
 						creatorId={data.post.creator.id}
