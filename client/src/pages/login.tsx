@@ -58,7 +58,7 @@ const Login: React.FC<LoginProps> = ({}) => {
 								justifyContent={'space-between'}
 								mt={12}
 							>
-								<Box>
+								<Box fontSize={13}>
 									Dont have an account?
 									<NextLink href='/register'>
 										<Link ml={2} color='primary' textDecor='underline'>

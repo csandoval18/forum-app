@@ -1,6 +1,20 @@
-import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react'
+import {
+	Box,
+	chakra,
+	extendTheme,
+	Flex,
+	forwardRef,
+	Heading,
+	HTMLChakraProps,
+	Link,
+	Text,
+	ThemingProps,
+	useStyleConfig,
+} from '@chakra-ui/react'
+import { StyleConfig } from '@chakra-ui/theme-tools'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
+import { CustomBadge } from '../../../../CustomComponentStyles/CustomBadge'
 import { PostSnippetFragment, useMeQuery } from '../../../../generated/graphql'
 import { createUrqlClient } from '../../../../utils/createUrqlClient'
 import EditDeletePostButtons from '../../../EditDeletePostButtons'
@@ -15,6 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
 	return (
 		<Flex
+			backgroundColor=''
 			className='post-card'
 			maxW={'60rem'}
 			p={6}
@@ -22,6 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 			shadow='dark-lg'
 			alignItems={'center'}
 		>
+			<CustomBadge variant='custom'>hello</CustomBadge>
 			<UpvoteSection post={post}></UpvoteSection>
 			<Box flex='1'>
 				<NextLink href='/post/[id]' as={`/post/${post.id}`}>

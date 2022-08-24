@@ -1,5 +1,12 @@
-import { extendTheme } from '@chakra-ui/react'
-import { createBreakpoints } from '@chakra-ui/theme-tools'
+import {
+	chakra,
+	extendTheme,
+	forwardRef,
+	HTMLChakraProps,
+	ThemingProps,
+	useStyleConfig,
+} from '@chakra-ui/react'
+import { createBreakpoints, StyleConfig } from '@chakra-ui/theme-tools'
 
 const fonts = { mono: `'Menlo', monospace` }
 
@@ -30,6 +37,7 @@ const theme = extendTheme({
 				secondary: {
 					border: '1px',
 					borderColor: 'gray.600',
+					// _light: { _hover: { bg: '#5f968634' } },
 					_hover: { bg: '#333e4e' },
 				},
 				dark: {

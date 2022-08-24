@@ -25,7 +25,7 @@ const Posts: React.FC = () => {
 			{!data && fetching ? (
 				<div>loading...</div>
 			) : (
-				<Stack spacing={8} my={8}>
+				<Stack spacing={8} py={8}>
 					{data!.posts.posts.map((post) =>
 						!post ? null : (
 							// Passing post fields to postcard component through props

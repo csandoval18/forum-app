@@ -14,6 +14,7 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
+	Switch,
 	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react'
@@ -40,82 +41,64 @@ const Navbar: React.FC<NavbarProps> = () => {
 		//user not logged in
 	} else if (!data?.me) {
 		body = (
-			<Flex gap={8}>
-				<NextLink href={'/login'}>
-					<Button variant='primary'>Login</Button>
-				</NextLink>
-				<NextLink href={'/register'}>
-					<Button variant='secondary'>Register</Button>
-				</NextLink>
-				<Button onClick={toggleColorMode} variant='secondary'>
+			<>
+				<Button onClick={toggleColorMode} variant='secondary' mt={4}>
 					{colorMode === 'light' ? (
-						<MoonIcon fontSize={20} />
+						<MoonIcon fontSize={20} color='white' />
 					) : (
-						<SunIcon fontSize={20} />
+						<SunIcon fontSize={20} color='white' />
 					)}
 				</Button>
-			</Flex>
+				{/* <Switch colorScheme='primary' size='lg' /> */}
+				<NextLink href={'/login'}>
+					<Button w='100%' h='4rem' bg='primary'>
+						Login
+					</Button>
+				</NextLink>
+				<NextLink href={'/register'}>
+					<Button w='100%' h='4rem' bg='primary'>
+						Register
+					</Button>
+				</NextLink>
+			</>
 		)
 		//user is logged in
 	} else {
 		body = (
-			<Flex gap={8} alignItems='center'>
+			<>
+				<Flex alignItems='center' gap={6} my={4}>
+					<Avatar></Avatar>
+					<Box color='white'>{data.me.username}</Box>
+				</Flex>
+				<Button onClick={toggleColorMode} variant='secondary'>
+					{colorMode === 'light' ? (
+						<MoonIcon fontSize={20} color='white' />
+					) : (
+						<SunIcon fontSize={20} color='white' />
+					)}
+				</Button>
 				<Button
-					variant='primary'
-					ml={'auto'}
-					onClick={() => {
-						router.replace('/create-post')
+					w='100%'
+					h='4rem'
+					bg='primary'
+					onClick={async () => {
+						router.push('/create-post')
 					}}
 				>
 					Create Post
 				</Button>
-				<Button onClick={toggleColorMode} variant='secondary'>
-					{colorMode === 'light' ? (
-						<MoonIcon fontSize={20} />
-					) : (
-						<SunIcon fontSize={20} />
-					)}
+				<Button
+					w='100%'
+					h='4rem'
+					bg='primary'
+					onClick={async () => {
+						await logout()
+						window.location.href = '/'
+					}}
+				>
+					Logout
 				</Button>
-				<Menu>
-					<Avatar as={MenuButton}></Avatar>
-					<MenuList bg='secondary' color='white'>
-						<Flex
-							p={3}
-							justifyContent='center'
-							bg='primary'
-							color='secondary'
-							fontWeight={700}
-							letterSpacing={1}
-						>
-							{data.me.username}{' '}
-						</Flex>
-						<MenuItem
-							p={2.5}
-							fontWeight={500}
-							justifyContent='center'
-							_hover={{ bg: '#333e4e' }}
-							_focus={{ bg: 'transparent' }}
-						>
-							Profile
-						</MenuItem>
-						<MenuItem
-							p={2.5}
-							fontWeight={500}
-							justifyContent='center'
-							_hover={{ bg: '#333e4e' }}
-							_focus={{ bg: 'transparent' }}
-							onClick={async () => {
-								await logout()
-								// Window route or refresh needs to used so cookie can be destroyed with the refresh of the page
-								window.location.href = '/'
-								// router.reload()
-							}}
-						>
-							Logout
-						</MenuItem>
-					</MenuList>
-				</Menu>
-			</Flex>
+			</>
 		)
 	}
 
@@ -146,7 +129,6 @@ const Navbar: React.FC<NavbarProps> = () => {
 						</Button>
 					</NextLink>
 				</Box>
-				{/*body*/}
 				<Box p={4} ml={'auto'}>
 					<Button
 						ref={btnRef}
@@ -159,38 +141,32 @@ const Navbar: React.FC<NavbarProps> = () => {
 					</Button>
 					<Drawer
 						isOpen={isOpen}
-						placement='right'
+						placement='left'
 						onClose={onClose}
 						finalFocusRef={btnRef}
 					>
 						<DrawerOverlay />
-						<DrawerContent>
-							<DrawerCloseButton />
-							<DrawerHeader pb={30}></DrawerHeader>
-							<DrawerBody>
-								<Flex flexDir='column' gap='4'>
-									<Button onClick={toggleColorMode} variant='secondary'>
-										{colorMode === 'light' ? (
-											<MoonIcon fontSize={20} />
-										) : (
-											<SunIcon fontSize={20} />
-										)}
+						<DrawerContent bg='secondary' color='white'>
+							<DrawerCloseButton fontSize={17} mr={2} />
+							<DrawerHeader borderBottom='1px' borderColor='gray.600'>
+								<NextLink href='/'>
+									<Button
+										w='5.1rem'
+										h={12}
+										variant='ghost'
+										fontSize={36}
+										fontWeight='extrabold'
+										letterSpacing={2}
+										_hover={{ bg: '#333e4e' }}
+										_active={{ bg: '#333e4e' }}
+									>
+										CAS
 									</Button>
-									<NextLink href={'/'}>
-										<Button w='100%' h='4rem' bg='primary'>
-											Home
-										</Button>
-									</NextLink>
-									<NextLink href={'/login'}>
-										<Button w='100%' h='4rem' bg='primary'>
-											Login
-										</Button>
-									</NextLink>
-									<NextLink href={'/register'}>
-										<Button w='100%' h='4rem' bg='primary'>
-											Register
-										</Button>
-									</NextLink>
+								</NextLink>
+							</DrawerHeader>
+							<DrawerBody>
+								<Flex flexDir='column' gap='4' color='black'>
+									{body}
 								</Flex>
 							</DrawerBody>
 						</DrawerContent>

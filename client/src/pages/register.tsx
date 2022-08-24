@@ -58,8 +58,8 @@ const Register: React.FC<RegisterProps> = ({}) => {
 								justifyContent='space-between'
 								mt={8}
 							>
-								<Box mt={2}>
-									Already have an account?
+								<Box mt={2} fontSize={13}>
+									Got an account?
 									<NextLink href='/login'>
 										<Link ml={2} color='primary' textDecor='underline'>
 											Sign in
