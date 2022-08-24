@@ -117,7 +117,9 @@ const Navbar: React.FC<NavbarProps> = () => {
 				<Box display='flex' alignItems='center' justifyContent='center'>
 					<NextLink href='/'>
 						<Button
+							w={'5.5rem'}
 							h={12}
+							ml={4}
 							variant='ghost'
 							fontSize={36}
 							fontWeight='extrabold'
