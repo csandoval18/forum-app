@@ -66,10 +66,17 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post, variant }) => {
 				/>
 			</Flex>
 		)
+	} else {
 	}
 
 	return (
-		<Flex justifyContent='left' alignItems='center' mr={6} gap={3}>
+		<Flex
+			justifyContent='left'
+			alignItems='center'
+			mr={6}
+			gap={2}
+			flexDir='column'
+		>
 			<IconButton
 				aria-label='Upvote'
 				icon={<ChevronUpIcon fontSize={20} />}
