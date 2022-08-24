@@ -43,7 +43,7 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
 	}
 
 	return (
-		<Flex direction='column' justifyContent='center' alignItems='center' mr={6}>
+		<Flex justifyContent='left' alignItems='center' mr={6} gap={3}>
 			<IconButton
 				aria-label='Upvote'
 				icon={<ChevronUpIcon fontSize={20} />}
@@ -56,7 +56,7 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
 			<IconButton
 				aria-label='Downvote'
 				icon={<ChevronDownIcon fontSize={20} />}
-				backgroundColor={post.voteStatus === -1 ? 'red' : 'transparent'}
+				backgroundColor={post.voteStatus === -1 ? '' : 'transparent'}
 				isLoading={loadingState === 'downvote-loading'}
 				onClick={handleDownvote}
 			/>

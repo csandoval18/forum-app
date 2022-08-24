@@ -30,30 +30,37 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
 	return (
 		<Flex
+			flex={1}
 			backgroundColor={colorMode === 'light' ? 'white' : 'gray.800'}
 			className='post-card'
-			maxW={'60rem'}
-			p={6}
-			borderRadius={12}
+			h='16rem'
+			w='22rem'
+			px={3}
+			pb={4}
+			borderRadius={8}
 			shadow='dark-lg'
-			alignItems={'center'}
+			flexDir='column'
 		>
-			<UpvoteSection post={post}></UpvoteSection>
 			<Box flex='1'>
 				<NextLink href='/post/[id]' as={`/post/${post.id}`}>
 					<Link>
-						<Heading fontSize='xl'>{post.title}</Heading>
+						<Heading fontSize='xl' my={4} w='100%'>
+							{post.title}
+						</Heading>
 					</Link>
 				</NextLink>
-				<Text mt={4}>Posted by {post.creator.username}</Text>
-				<Text mt={4}>{post.textSnippet}</Text>
+				{/* <Text mt={4}>{post.textSnippet}</Text> */}
 			</Box>
 			<Flex justifyContent='right' gap={4}>
 				{/* Component can be null for users that do not own the post */}
-				<EditDeletePostButtons
+				{/* <EditDeletePostButtons
 					id={post.id}
 					creatorId={post.creator.id}
-				></EditDeletePostButtons>
+				></EditDeletePostButtons> */}
+			</Flex>
+			<Flex>
+				<UpvoteSection post={post}></UpvoteSection>
+				<Text mt={4}>Posted by: {post.creator.username}</Text>
 			</Flex>
 		</Flex>
 	)

@@ -20,15 +20,13 @@ const Posts: React.FC = () => {
 	}
 
 	return (
-		<Box className='posts-container'>
-			{/* Diplay posts */}
+		<Flex className='posts-list-container' justifyContent='center'>
 			{!data && fetching ? (
 				<div>loading...</div>
 			) : (
-				<Stack spacing={8} py={8}>
+				<Stack spacing={2} py={8}>
 					{data!.posts.posts.map((post) =>
 						!post ? null : (
-							// Passing post fields to postcard component through props
 							<PostCard
 								key={post.id}
 								post={post}
@@ -57,7 +55,7 @@ const Posts: React.FC = () => {
 					</Button>
 				</Flex>
 			) : null}
-		</Box>
+		</Flex>
 	)
 }
 
