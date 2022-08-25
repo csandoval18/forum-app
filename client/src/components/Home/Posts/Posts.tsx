@@ -24,7 +24,7 @@ const Posts: React.FC = () => {
 
 	const { height, width } = useWindowDimensions()
 
-	let stack
+	let stack: ReactJSXElement
 	if (!data && fetching) {
 		let stack = <div>loading...</div>
 	} else {
@@ -57,7 +57,8 @@ const Posts: React.FC = () => {
 			{/* <div>
 				w: {width}, h: {height}
 			</div> */}
-			{!data && fetching ? <div>loading...</div> : stack}
+			{/* {!data && fetching ? <div>loading...</div> : stack} */}
+			{stack}
 
 			{data && data.posts.hasMore ? (
 				<Flex>
