@@ -10,11 +10,6 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	Flex,
-	Menu,
-	MenuButton,
-	MenuItem,
-	MenuList,
-	Switch,
 	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react'

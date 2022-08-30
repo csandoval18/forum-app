@@ -1,9 +1,9 @@
 import { Box, Button, Flex, Stack } from '@chakra-ui/react'
 import { ReactJSXElement } from '@emotion/react/types/jsx-namespace'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { usePostsQuery } from '../../../generated/graphql'
-import useWindowDimensions from '../../../utils/useWindowDimensions'
+import { useMediaQuery } from '../../../utils/useMediaQuery'
 import PostCard from './PostCard/PostCard'
 import PostCardDesktop from './PostCard/PostCardDesktop'
 
@@ -22,34 +22,29 @@ const Posts: React.FC = () => {
 		return <div>Cannot fetch posts from server</div>
 	}
 
-	const { height, width } = useWindowDimensions()
+	const widthBreakPoint = useMediaQuery(500)
 
 	let stack: ReactJSXElement
 	if (!data && fetching) {
 		let stack = <div>loading...</div>
 	} else {
-		stack =
-			width < 500 ? (
-				<Stack spacing={[2, 2, 4, 4]} py={10}>
-					{data!.posts.posts.map((post) =>
-						!post ? null : (
-							<PostCard key={post.id} post={post} pageProps={undefined} />
-						),
-					)}
-				</Stack>
-			) : (
-				<Stack spacing={[2, 2, 4, 4]} py={10}>
-					{data!.posts.posts.map((post) =>
-						!post ? null : (
-							<PostCardDesktop
-								key={post.id}
-								post={post}
-								pageProps={undefined}
-							/>
-						),
-					)}
-				</Stack>
-			)
+		stack = widthBreakPoint ? (
+			<Stack spacing={[2, 2, 4, 4]} py={10}>
+				{data!.posts.posts.map((post) =>
+					!post ? null : (
+						<PostCard key={post.id} post={post} pageProps={undefined} />
+					),
+				)}
+			</Stack>
+		) : (
+			<Stack spacing={[2, 2, 4, 4]} py={10}>
+				{data!.posts.posts.map((post) =>
+					!post ? null : (
+						<PostCardDesktop key={post.id} post={post} pageProps={undefined} />
+					),
+				)}
+			</Stack>
+		)
 	}
 
 	return (

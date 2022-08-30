@@ -14,8 +14,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
 	return (
 		<Flex
+			className='post-card-mobile'
 			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
-			className='post-card'
 			h={['10rem', '10rem', '10rem', '12rem']}
 			w={['22rem', '40rem', '40rem', '40rem', '60rem']}
 			pb={4}

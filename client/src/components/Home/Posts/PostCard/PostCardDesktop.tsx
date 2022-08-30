@@ -11,8 +11,8 @@ const PostCardDesktop: React.FC<PostCardProps> = ({ post }) => {
 	const { colorMode, toggleColorMode } = useColorMode()
 	return (
 		<Flex
+			className='post-card-desktop'
 			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
-			className='post-card'
 			h={['10rem', '10rem', '10rem', '14rem']}
 			w={['22rem', '40rem', '40rem', '40rem', '40rem']}
 			borderRadius={8}

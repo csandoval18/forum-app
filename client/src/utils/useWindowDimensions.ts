@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+// Does not work with SSR since it throws hydration error where SSR content is different from CSR content. Works well if component is CSR
 export default function useWindowDimensions() {
 	const hasWindow = typeof window !== 'undefined'
 
