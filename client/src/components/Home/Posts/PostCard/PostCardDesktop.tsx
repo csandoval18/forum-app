@@ -13,7 +13,7 @@ const PostCardDesktop: React.FC<PostCardProps> = ({ post }) => {
 		<Flex
 			className='post-card-desktop'
 			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
-			h={['10rem', '10rem', '10rem', '14rem']}
+			// h={['10rem', '10rem', '10rem', '14rem']}
 			w={['22rem', '40rem', '40rem', '40rem', '40rem']}
 			borderRadius={8}
 			shadow='dark-lg'
@@ -34,13 +34,7 @@ const PostCardDesktop: React.FC<PostCardProps> = ({ post }) => {
 					px={3}
 					justifyContent='space-between'
 				>
-					<Heading
-						fontSize='xl'
-						my={5}
-						w='100%'
-						flex={1}
-						wordBreak='break-word'
-					>
+					<Heading fontSize='xl' my={5} w='100%' wordBreak='break-word'>
 						{post.title}
 					</Heading>
 					<Text my={5}>Posted by: {post.creator.username}</Text>

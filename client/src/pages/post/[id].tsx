@@ -3,6 +3,7 @@ import { withUrqlClient } from 'next-urql'
 import React from 'react'
 import EditDeletePostButtons from '../../components/EditDeletePostButtons'
 import Navbar from '../../components/Home/Navbar'
+import UpvoteSection from '../../components/Home/Posts/PostCard/UpvoteSection'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl'
 
@@ -22,26 +23,43 @@ const Post: React.FC = ({}) => {
 	return (
 		<>
 			<Navbar pageProps={undefined}></Navbar>
-			<Flex
-				className='post-selection-container'
-				h='100vh'
-				width='100%'
-				flexDir={'column'}
-				px={6}
-			>
-				<Flex my={6} justifyContent='center'>
-					<Heading w='20rem' fontSize={20}>
-						{data?.post?.title}
-					</Heading>
+			<Box className='post-selection-container' width='100%' my={6} px={6}>
+				<Flex>
+					<UpvoteSection post={data.post} variant='desktop' />
+					<Flex width='100%' flexDir={'column'}>
+						<Flex
+							justifyContent='center'
+							alignItems='center'
+							flexDir='column'
+							gap={8}
+							bg='red'
+						>
+							<Heading
+								display='flex'
+								justifyContent='center'
+								alignItems='center'
+								w={['20rem', '40rem', '40rem', '40rem', '60rem']}
+								fontSize={20}
+							>
+								{data?.post?.title}
+							</Heading>
+							<Flex
+								w={['20rem', '40rem', '40rem', '40rem', '60rem']}
+								alignItems='center'
+								justifyContent='center'
+							>
+								{data?.post?.text}
+							</Flex>
+						</Flex>
+					</Flex>
 				</Flex>
-				{data?.post?.text}
 				<Flex gap={4} justifyContent='right' bg='blue'>
 					<EditDeletePostButtons
 						id={data.post.id}
 						creatorId={data.post.creator.id}
 					/>
 				</Flex>
-			</Flex>
+			</Box>
 		</>
 	)
 }

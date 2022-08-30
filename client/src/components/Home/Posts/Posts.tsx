@@ -49,12 +49,7 @@ const Posts: React.FC = () => {
 
 	return (
 		<Flex className='posts-list-container' flexDir='column' alignItems='center'>
-			{/* <div>
-				w: {width}, h: {height}
-			</div> */}
-			{/* {!data && fetching ? <div>loading...</div> : stack} */}
 			{stack}
-
 			{data && data.posts.hasMore ? (
 				<Flex>
 					<Button

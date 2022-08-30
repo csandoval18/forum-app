@@ -8,7 +8,7 @@ import {
 } from '../../../../generated/graphql'
 
 interface UpvoteSectionProps {
-	variant?: string
+	variant?: string // default: none, "desktop": desktop version
 	post: PostSnippetFragment
 }
 

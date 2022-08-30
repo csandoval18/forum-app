@@ -16,7 +16,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 		<Flex
 			className='post-card-mobile'
 			backgroundColor={colorMode === 'light' ? 'white' : 'secondary'}
-			h={['10rem', '10rem', '10rem', '12rem']}
+			// h={['10rem', '10rem', '10rem', '12rem']}
 			w={['22rem', '40rem', '40rem', '40rem', '60rem']}
 			pb={4}
 			borderRadius={8}
