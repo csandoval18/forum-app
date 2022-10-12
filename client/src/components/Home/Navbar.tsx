@@ -10,6 +10,7 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	Flex,
+	Switch,
 	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react'
@@ -44,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 						<SunIcon fontSize={20} color='white' />
 					)}
 				</Button>
-				{/* <Switch colorScheme='primary' size='lg' /> */}
+				<Switch colorScheme={"whiteAlpha"} size='lg' />
 				<NextLink href={'/login'}>
 					<Button w='100%' h='4rem' bg='primary'>
 						Login

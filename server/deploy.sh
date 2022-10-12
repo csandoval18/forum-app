@@ -1,5 +1,4 @@
 #!/bin/fish
-
 echo "What should the version be?"
 read VERSION
 
